@@ -1,0 +1,7 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Autor: Jonathan Comin Ribeiro
+<#if licenseLast??>
+${licenseLast}
+</#if>
