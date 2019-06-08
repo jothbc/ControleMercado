@@ -20,10 +20,19 @@ public class CDbl {
         double preco = Double.parseDouble(string);
         return preco;
     }
+
     public static String CDblDuasCasasString(double precoDouble) {
-    DecimalFormat fmt = new DecimalFormat("0.00");
-    String string = fmt.format(precoDouble);
-    string = string.replaceAll(",", ".");
-    return string;
-}
+        DecimalFormat fmt = new DecimalFormat("0.00");
+        String string = fmt.format(precoDouble);
+        string = string.replaceAll(",", ".");
+        return string;
+    }
+
+    public static double CDblTresCasas(double d) {
+        DecimalFormat fmt = new DecimalFormat("0.000");
+        String string = fmt.format(d);
+        string = string.replaceAll(",", ".");
+        double preco = Double.parseDouble(string);
+        return preco;
+    }
 }

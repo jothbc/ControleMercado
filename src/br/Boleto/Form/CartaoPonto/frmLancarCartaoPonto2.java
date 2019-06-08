@@ -8,6 +8,11 @@ package br.Boleto.Form.CartaoPonto;
 import JDBC.ConnectionFactory;
 import funcoes.CDbl;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,8 +20,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import model.DAO.funcionario.CartaoPontoDAO;
 import model.bean.CartaoPonto;
@@ -28,7 +35,7 @@ import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
- * @author User
+ * @author Jonathan CR
  */
 public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
 
@@ -57,7 +64,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         mes = calendario.get(Calendar.MONTH) + 1;
         ano = calendario.get(Calendar.YEAR);
         calendario.setFirstDayOfWeek(Calendar.SUNDAY);
-        //calendario.set(Calendar.DAY_OF_MONTH, 1);
         jSlider1.setValue(mes);
         anoSpinner.setValue(ano);
         diaSpinner = (SpinnerNumberModel) jSpinnerDia.getModel();
@@ -97,13 +103,13 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         entrada2 = new javax.swing.JFormattedTextField();
         saida2 = new javax.swing.JFormattedTextField();
         jSpinnerDia = new javax.swing.JSpinner();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        sabadoBtn = new javax.swing.JButton();
+        domingoBtn = new javax.swing.JButton();
+        folgaBtn = new javax.swing.JButton();
+        feriadoBtn = new javax.swing.JButton();
+        atestadoBtn = new javax.swing.JButton();
+        faltaBtn = new javax.swing.JButton();
+        limpaDiaBtn = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jornada6 = new javax.swing.JRadioButton();
         jornada7 = new javax.swing.JRadioButton();
@@ -145,11 +151,12 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         indenizacaoSpin = new javax.swing.JSpinner();
         jLabel18 = new javax.swing.JLabel();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        concluirBtn = new javax.swing.JButton();
+        imprimirBtn = new javax.swing.JButton();
         editbtn = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        importBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cartão Ponto");
@@ -340,52 +347,52 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Sábado");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        sabadoBtn.setText("Sábado");
+        sabadoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                sabadoBtnActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Domingo");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        domingoBtn.setText("Domingo");
+        domingoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                domingoBtnActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Folga");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        folgaBtn.setText("Folga");
+        folgaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                folgaBtnActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Feriado");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        feriadoBtn.setText("Feriado");
+        feriadoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                feriadoBtnActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Atestado");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        atestadoBtn.setText("Atestado");
+        atestadoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                atestadoBtnActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Falta");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        faltaBtn.setText("Falta");
+        faltaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                faltaBtnActionPerformed(evt);
             }
         });
 
-        jButton7.setText("Limpar Dia");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        limpaDiaBtn.setText("Limpar Dia");
+        limpaDiaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                limpaDiaBtnActionPerformed(evt);
             }
         });
 
@@ -698,17 +705,17 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton8.setText("Concluir");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        concluirBtn.setText("Concluir");
+        concluirBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                concluirBtnActionPerformed(evt);
             }
         });
 
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/printer.png"))); // NOI18N
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        imprimirBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/printer.png"))); // NOI18N
+        imprimirBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                imprimirBtnActionPerformed(evt);
             }
         });
 
@@ -738,6 +745,13 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        importBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/page_white_picture.png"))); // NOI18N
+        importBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -773,18 +787,21 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(2, 2, 2)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                            .addComponent(limpaDiaBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(sabadoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(faltaBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(atestadoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(feriadoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(folgaBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(domingoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(imprimirBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                     .addComponent(editbtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(concluirBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(importBtn))))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -814,26 +831,28 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(65, 65, 65)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(importBtn)
+                                .addGap(36, 36, 36)
                                 .addComponent(editbtn)
                                 .addGap(8, 8, 8)
-                                .addComponent(jButton1)
+                                .addComponent(sabadoBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2)
+                                .addComponent(domingoBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton3)
+                                .addComponent(folgaBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton4)
+                                .addComponent(feriadoBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton5)
+                                .addComponent(atestadoBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton6)
+                                .addComponent(faltaBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton7)
+                                .addComponent(limpaDiaBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton9)
+                                .addComponent(imprimirBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton8)
+                                .addComponent(concluirBtn)
                                 .addGap(5, 5, 5))))
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -857,45 +876,38 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jSlider1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSlider1MouseClicked
-        // TODO add your handling code here:
         definirMes();
     }//GEN-LAST:event_jSlider1MouseClicked
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
-        // TODO add your handling code here:
         definirMes();
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void anoSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_anoSpinnerStateChanged
-        // TODO add your handling code here:
         ano = (int) anoSpinner.getValue();
         calendario.set(Calendar.YEAR, ano);
         atualizardias();
     }//GEN-LAST:event_anoSpinnerStateChanged
 
     private void entradatxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_entradatxtKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             sintervalo.requestFocus();
         }
     }//GEN-LAST:event_entradatxtKeyPressed
 
     private void sintervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sintervaloKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             eintervalo.requestFocus();
         }
     }//GEN-LAST:event_sintervaloKeyPressed
 
     private void eintervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eintervaloKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             saidatxt.requestFocus();
         }
     }//GEN-LAST:event_eintervaloKeyPressed
 
     private void saidatxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_saidatxtKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             //lancar();
             lancarHorarios();
@@ -906,14 +918,12 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_saidatxtKeyPressed
 
     private void entrada2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_entrada2KeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             saida2.requestFocus();
         }
     }//GEN-LAST:event_entrada2KeyPressed
 
     private void saida2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_saida2KeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             //lancar();
             lancarHorarios();
@@ -924,38 +934,31 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_saida2KeyPressed
 
     private void jSpinnerDiaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerDiaStateChanged
-        // TODO add your handling code here:
-
         if ((int) diaSpinner.getValue() >= maior) {
             diaSpinner.setValue(maior);
         } else if ((int) diaSpinner.getValue() < 1) {
             diaSpinner.setValue(1);
         }
-        //se na jTable no dia selecionado ja tiver algum horario, tem q passar pros textField
-        //rever esse código
     }//GEN-LAST:event_jSpinnerDiaStateChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void sabadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabadoBtnActionPerformed
         //lancar();
         lancarHorarios();
         tb.setValueAt("S", (int) diaSpinner.getValue() - 1, 0);
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
         entradatxt.requestFocus();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_sabadoBtnActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+    private void domingoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domingoBtnActionPerformed
         //lancar();
         lancarHorarios();
         tb.setValueAt("D", (int) diaSpinner.getValue() - 1, 0);
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
         Horas();
         entradatxt.requestFocus();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_domingoBtnActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    private void folgaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_folgaBtnActionPerformed
         //lancar();
         lancarHorarios();
         tb.setValueAt("R", (int) diaSpinner.getValue() - 1, 0);
@@ -963,19 +966,17 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
         Horas();
         entradatxt.requestFocus();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_folgaBtnActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+    private void feriadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feriadoBtnActionPerformed
         //lancar();
         lancarHorarios();
         tb.setValueAt("H", (int) diaSpinner.getValue() - 1, 0);
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
         entradatxt.requestFocus();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_feriadoBtnActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+    private void atestadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atestadoBtnActionPerformed
         //lancar();
         lancarHorarios();
         tb.setValueAt("A", (int) diaSpinner.getValue() - 1, 0);
@@ -983,10 +984,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
         Horas();
         entradatxt.requestFocus();
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_atestadoBtnActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+    private void faltaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_faltaBtnActionPerformed
         //lancar();
         lancarHorarios();
         tb.setValueAt("F", (int) diaSpinner.getValue() - 1, 0);
@@ -994,10 +994,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
         Horas();
         entradatxt.requestFocus();
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_faltaBtnActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+    private void limpaDiaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpaDiaBtnActionPerformed
         int linha = (int) diaSpinner.getValue() - 1;
         tb.setValueAt(linha + 1, linha, 0);
         tb.setValueAt(null, linha, 1);
@@ -1009,10 +1008,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         tb.setValueAt(null, linha, 7);
         Horas();
         entradatxt.requestFocus();
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_limpaDiaBtnActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
         if (jTable1.getSelectedRow() < 0) {
             return;
         }
@@ -1020,11 +1018,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jornada6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jornada6MouseClicked
-        // TODO add your handling code here:
     }//GEN-LAST:event_jornada6MouseClicked
 
     private void jornada7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jornada7ActionPerformed
-        // TODO add your handling code here:
         if (jornada7.isSelected()) {
             jornadaString = "07:20";
             System.out.println("07:20");
@@ -1032,7 +1028,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_jornada7ActionPerformed
 
     private void jornada6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jornada6ActionPerformed
-        // TODO add your handling code here:
         if (jornada6.isSelected()) {
             jornadaString = "06:00";
             System.out.println("06:00");
@@ -1040,11 +1035,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_jornada6ActionPerformed
 
     private void saidatxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saidatxtActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_saidatxtActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
+    private void concluirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_concluirBtnActionPerformed
         if (!jaLancado) {
             salvar();
         } else {
@@ -1055,10 +1048,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
             atualizar();
         }
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_concluirBtnActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
+    private void imprimirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirBtnActionPerformed
         Connection conn = ConnectionFactory.getConnection();
         String scr = "C:\\CartaoPontojs.jasper";
         JasperPrint js = null;
@@ -1077,10 +1069,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         vw.setVisible(true);
         ConnectionFactory.closeConnection(conn);
 
-    }//GEN-LAST:event_jButton9ActionPerformed
+    }//GEN-LAST:event_imprimirBtnActionPerformed
 
     private void editbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editbtnActionPerformed
-        // TODO add your handling code here:
         StatusBtn(true);
     }//GEN-LAST:event_editbtnActionPerformed
 
@@ -1093,9 +1084,12 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_jornada5ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
         calcularAproximacao();
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void importBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importBtnActionPerformed
+        importCVS();
+    }//GEN-LAST:event_importBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1137,29 +1131,28 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField INSS;
     private javax.swing.JSpinner anoSpinner;
+    private javax.swing.JButton atestadoBtn;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton concluirBtn;
     private javax.swing.JSpinner descontoSpin;
+    private javax.swing.JButton domingoBtn;
     private javax.swing.JButton editbtn;
     private javax.swing.JFormattedTextField eintervalo;
     private javax.swing.JFormattedTextField entrada2;
     private javax.swing.JFormattedTextField entradatxt;
+    private javax.swing.JButton faltaBtn;
+    private javax.swing.JButton feriadoBtn;
     private javax.swing.JSpinner feriadosSpin;
+    private javax.swing.JButton folgaBtn;
     private javax.swing.JTextField horaDSR;
     private javax.swing.JTextField horasExtrasNoturnastxt;
     private javax.swing.JTextField horasExtrastxt;
     private javax.swing.JTextField horasFaltastxt;
+    private javax.swing.JButton importBtn;
+    private javax.swing.JButton imprimirBtn;
     private javax.swing.JSpinner indenizacaoSpin;
     private javax.swing.JSpinner inssSpin;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1192,9 +1185,11 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     private javax.swing.JRadioButton jornada5;
     private javax.swing.JRadioButton jornada6;
     private javax.swing.JRadioButton jornada7;
+    private javax.swing.JButton limpaDiaBtn;
     private javax.swing.JLabel mestxt;
     private javax.swing.JTextField nomeLbl;
     private javax.swing.JTextField reducaoNoturnotxt;
+    private javax.swing.JButton sabadoBtn;
     private javax.swing.JFormattedTextField saida2;
     private javax.swing.JFormattedTextField saidatxt;
     private javax.swing.JSpinner salarioBase;
@@ -1273,7 +1268,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }
 
     @Deprecated
-    public Calendar iniciarCalendarZerado(Calendar c) {
+    public Calendar iniHorarioZeradoNoCalendar(Calendar c) {
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.MILLISECOND, 0);
@@ -1326,68 +1321,17 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             //verifica se o funcionário fez horas extras
             if (horasTrabalhadas > base) {
                 // extra recebe as horas trabalhadas - jornada:
+                //System.out.println("EXTRA DIA "+(x+1)+": "+(horasTrabalhadas - base));
                 extra += horasTrabalhadas - base;
+                double[] horarios = {entrada, saida_intervalo, entrada_intervalo, saida, entrada_ex, saida_ex};
                 //##############calculo noturno#####################//
-                if (saida_ex > 21.99) {
-                } else {
-                    if (saida_ex < 5.01) {
-                        saida_ex += 24;
-                    } else {
-                        saida_ex = 0;
-                    }
-                }
-                if (entrada_ex > 21.99) {
-                } else {
-                    if (entrada_ex < 5.01) {
-                        entrada_ex += 24;
-                    } else {
-                        if (saida_ex > 0) {
-                            entrada_ex = 22;
-                        } else {
-                            entrada_ex = 0;
-                        }
-                    }
-                }
-                if (saida > 21.99) {
-                } else {
-                    if (saida < 5.01) {
-                        saida += 24;
-                    } else {
-                        saida = 0;
-                    }
-                }
-                if (entrada_intervalo > 21.99) {
-                } else {
-                    if (entrada_intervalo < 5.01) {
-                        entrada_intervalo += 24;
-                    } else {
-                        if (saida > 0) {
-                            entrada_intervalo = 22;
-                        } else {
-                            entrada_intervalo = 0;
-                        }
-                    }
-                }
-                if (saida_intervalo > 21.99) {
-                } else {
-                    if (saida_intervalo < 5.01) {
-                        saida_intervalo += 24;
-                    } else {
-                        saida_intervalo = 0;
-                    }
-                }
-                if (entrada > 21.99) {
-                } else {
-                    if (entrada < 5.01) {
-                        entrada += 24;
-                    } else {
-                        if (saida_intervalo > 0) {
-                            entrada = 22;
-                        } else {
-                            entrada = 0;
-                        }
-                    }
-                }
+                horarios = calculoNoturno(horarios);
+                entrada = horarios[0];
+                saida_intervalo = horarios[1];
+                entrada_intervalo = horarios[2];
+                saida = horarios[3];
+                entrada_ex = horarios[4];
+                saida_ex = horarios[5];
                 horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
                 if (horasTrabalhadas > 6.99) {
                     horasTrabalhadas = 7;
@@ -1455,9 +1399,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             saida_ex = valorTbparaDouble(saida_2S);
         }
         horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
-
-        System.out.println("DIA " + diaAtual + ": " + horasTrabalhadas);
-        tb.setValueAt(decimalPHora(horasTrabalhadas), diaAtual - 1, 7);
+        double horasTrabalhadas2 = CDbl.CDblDuasCasas(horasTrabalhadas);
+        System.out.println("DIA " + diaAtual + ": " + horasTrabalhadas2 + " Horas Extras do dia: " + (horasTrabalhadas2 - 7.33));
+        tb.setValueAt(decimalPHora(horasTrabalhadas2), diaAtual - 1, 7);
         limpaCampos();
         Horas();
     }
@@ -1488,12 +1432,12 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         entrada2Calendar.set(ano, mes, (int) diaSpinner.getValue());
         saida2Calendar.set(ano, mes, (int) diaSpinner.getValue());
         //inicia horarios dos calendarios zerados
-        entradaCalendar = iniciarCalendarZerado(entradaCalendar);
-        s_intervaloCalendar = iniciarCalendarZerado(s_intervaloCalendar);
-        e_intervaloCalendar = iniciarCalendarZerado(e_intervaloCalendar);
-        saidaCalendar = iniciarCalendarZerado(saidaCalendar);
-        entrada2Calendar = iniciarCalendarZerado(entrada2Calendar);
-        saida2Calendar = iniciarCalendarZerado(saida2Calendar);
+        entradaCalendar = iniHorarioZeradoNoCalendar(entradaCalendar);
+        s_intervaloCalendar = iniHorarioZeradoNoCalendar(s_intervaloCalendar);
+        e_intervaloCalendar = iniHorarioZeradoNoCalendar(e_intervaloCalendar);
+        saidaCalendar = iniHorarioZeradoNoCalendar(saidaCalendar);
+        entrada2Calendar = iniHorarioZeradoNoCalendar(entrada2Calendar);
+        saida2Calendar = iniHorarioZeradoNoCalendar(saida2Calendar);
         //inicializa horarios String em 00:00
         String[] entradaString = {"00", "00"};
         String[] s_intervaloString = {"00", "00"};
@@ -1702,25 +1646,25 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
      */
     private float valorTbparaDouble(String valorTB) {
         double valor = Double.parseDouble(valorTB.replaceAll(":", "."));
-
-        //valor = (((valor - (int) valor) * 100 / 60) + (int) valor);
-        //float fracao = (float) (CDbl.CDblDuasCasas(valor) - (int) valor);
         float fracao = (float) ((valor) - (int) valor);
         fracao = (fracao * 100) / 60;
-        fracao += (int) valor;
-
-        //caso valor esteja em 0.005 joga para 0.015
-        float temp = fracao;
-        temp = temp * 100;
-        temp = temp - (int) temp;
-        if (temp > (float) 0.5) {
+        double duas = CDbl.CDblDuasCasas(fracao);
+        duas *= 100;
+        if (duas % 10 > 5) {
             fracao += 0.01;
         }
-
-        return fracao;
+        fracao += (int) valor;
+        //System.out.println("ValorTbparaDouble>> recebido: "+valor+ " entregue: "+(float)CDbl.CDblDuasCasas(fracao));
+        return (float) CDbl.CDblDuasCasas(fracao);
     }
 
+    /*
+    *@param @decimal
+    * recebe valor no formato ##.## (decimal)
+    * e retorna em ##:## (horas)
+     */
     private String decimalPHora(double decimal) {
+        //double valorExtato = CDbl.CDblTresCasas(((decimal - (int) decimal) * 60 / 100) + (int) decimal);
         double valor = CDbl.CDblDuasCasas(((decimal - (int) decimal) * 60 / 100) + (int) decimal);
         String retorno = Double.toString(valor);
         retorno = retorno.replaceAll("\\.", ":");
@@ -1847,14 +1791,14 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }
 
     private void StatusBtn(boolean habilitado) {
-        jButton1.setVisible(habilitado);
-        jButton2.setVisible(habilitado);
-        jButton3.setVisible(habilitado);
-        jButton4.setVisible(habilitado);
-        jButton5.setVisible(habilitado);
-        jButton6.setVisible(habilitado);
-        jButton7.setVisible(habilitado);
-        jButton8.setVisible(habilitado);
+        sabadoBtn.setVisible(habilitado);
+        domingoBtn.setVisible(habilitado);
+        folgaBtn.setVisible(habilitado);
+        feriadoBtn.setVisible(habilitado);
+        atestadoBtn.setVisible(habilitado);
+        faltaBtn.setVisible(habilitado);
+        limpaDiaBtn.setVisible(habilitado);
+        concluirBtn.setVisible(habilitado);
         entradatxt.setEnabled(habilitado);
         sintervalo.setEnabled(habilitado);
         eintervalo.setEnabled(habilitado);
@@ -1880,42 +1824,236 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         double jornada = valorTbparaDouble(jornadaString);
         double horas_mes = jornada * 30;
         try {
-            double valor_hora = ((double)salarioBase.getValue()) / horas_mes;
-            
+            double valor_hora = ((double) salarioBase.getValue()) / horas_mes;
+
             valorHora.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora)));
             valorHoraExtra.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora) * 1.55));
-            
+
             double total = valor_hora * horas_mes;
-            
+
             double extra = 0;
             try {
                 extra = valorTbparaDouble(horasExtrastxt.getText()) + valorTbparaDouble(horasExtrasNoturnastxt.getText());
                 extra *= Double.parseDouble(valorHoraExtra.getText());
             } catch (Exception e) {
             }
-            
+
             double dsr = 0;
-            try{
-                dsr = CDbl.CDblDuasCasas((extra/(totalDias-domingos))*domingos);
-            }catch(Exception i){}
+            try {
+                dsr = CDbl.CDblDuasCasas((extra / (totalDias - domingos)) * domingos);
+            } catch (Exception i) {
+            }
             String horadsr = "00:00";
-            if (dsr!=0){
-                double dsrdecimal= dsr/valor_hora;
+            if (dsr != 0) {
+                double dsrdecimal = dsr / valor_hora;
                 horadsr = decimalPHora(dsrdecimal);
             }
             valorTotalExtra.setText(Double.toString(CDbl.CDblDuasCasas(extra)));
             valorDSR.setText(Double.toString(CDbl.CDblDuasCasas(dsr)));
             horaDSR.setText(horadsr);
-            total += extra + dsr +(double)indenizacaoSpin.getValue();
-            total-=(double)descontoSpin.getValue();
-            double inss = total*(((int)inssSpin.getValue()/(double)100));
+            total += extra + dsr + (double) indenizacaoSpin.getValue();
+            total -= (double) descontoSpin.getValue();
+            double inss = total * (((int) inssSpin.getValue() / (double) 100));
             inss = CDbl.CDblDuasCasas(inss);
-            total-=inss;
+            total -= inss;
             valorTotalSalario.setText(Double.toString(CDbl.CDblDuasCasas(total)));
             INSS.setText(Double.toString(inss));
-            
+
         } catch (Exception ex) {
             System.out.println(ex);
         }
+    }
+
+    public void importCVS() {
+        JFileChooser fl = new JFileChooser();
+        fl.setDialogTitle("Importar arquivo CSV");
+        fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo CSV", "csv");
+        fl.setFileFilter(filter);
+        int op = fl.showOpenDialog(null);
+        if (op != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File file = fl.getSelectedFile();
+        String arquivoCSV = file.getPath();
+        //String arquivoCSV = "C:\\Users\\User\\Desktop\\MAIO-2019.csv";
+        BufferedReader br = null;
+        String linha = "";
+        String csvDivisor = ";";
+        int countLinha = 0;
+        String[][] tabela = new String[31][7];
+        for (int x = 0; x < 31; x++) {
+            for (int i = 0; i < 7; i++) {
+                tabela[x][i] = "";
+            }
+        }
+        try {
+            br = new BufferedReader(new FileReader(arquivoCSV));
+            while ((linha = br.readLine()) != null) {
+                String[] produto = linha.split(csvDivisor);
+                for (int x = 0; x < produto.length; x++) {
+                    if (countLinha >= 6 && countLinha <= 36 && x < 7) {
+                        tabela[countLinha - 6][x] = produto[x];
+                    }
+                }
+                countLinha++;
+            }
+            lancarImport(tabela);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    private void lancarImport(String[][] tabela) {
+        for (int x = 0; x < tb.getRowCount(); x++) {
+            char situacao = tabela[x][0].toCharArray()[0];
+            //System.out.println(situacao);
+            boolean verificacao = true;
+            switch (situacao) {
+                case 'R':
+                    folgaBtnActionPerformed(null);
+                    verificacao = false;
+                    break;
+                case 'S':
+                    sabadoBtnActionPerformed(null);
+                    verificacao = false;
+                    break;
+                case 'D':
+                    if (tabela[x][1].equals("")) {
+                        domingoBtnActionPerformed(null);
+                        verificacao = false;
+                    } else {
+                        verificacao = true;
+                    }
+                    break;
+                case 'H':
+                    feriadoBtnActionPerformed(null);
+                    verificacao = false;
+                    break;
+                case 'A':
+                    if (tabela[x][1].equals("")) {
+                        atestadoBtnActionPerformed(null);
+                        verificacao = false;
+                    } else {
+                        verificacao = true;
+                    }
+                    break;
+                case 'F':
+                    faltaBtnActionPerformed(null);
+                    verificacao = false;
+                    break;
+            }
+            if (verificacao) {
+                entradatxt.setText(verificaStringHorario(tabela[x][1].replaceAll(",", ":")));
+                sintervalo.setText(verificaStringHorario(tabela[x][2].replaceAll(",", ":")));
+                eintervalo.setText(verificaStringHorario(tabela[x][3].replaceAll(",", ":")));
+                saidatxt.setText(verificaStringHorario(tabela[x][4].replaceAll(",", ":")));
+                entrada2.setText(verificaStringHorario(tabela[x][5].replaceAll(",", ":")));
+                saida2.setText(verificaStringHorario(tabela[x][6].replaceAll(",", ":")));
+                lancarDiaImport();
+            }
+        }
+    }
+
+    private void lancarDiaImport() {
+        lancarHorarios();
+        diaSpinner.setValue((int) diaSpinner.getValue() + 1);
+        entradatxt.requestFocus();
+        Horas();
+    }
+
+    private String verificaStringHorario(String temp) {
+        temp = temp.trim();
+        System.out.println("e>>>" + temp);
+        if ("".equals(temp) || temp == null || "-".equals(temp)) {
+            return "  :  ";
+        }
+        String[] s = temp.split(":");
+        if (Integer.parseInt(s[0]) < 10) {     //s[0] = 12 : s[1] = 21
+            s[0] = "0" + s[0];
+        }
+        System.out.println("s>>" + s[0] + ":" + s[1]);
+        return s[0] + ":" + s[1];
+    }
+
+    private double[] calculoNoturno(double[] horarios) {
+        double entrada, saida_intervalo, entrada_intervalo, saida, entrada_ex, saida_ex;
+        entrada = horarios[0];
+        saida_intervalo = horarios[1];
+        entrada_intervalo = horarios[2];
+        saida = horarios[3];
+        entrada_ex = horarios[4];
+        saida_ex = horarios[5];
+        if (saida_ex <= 21.99) {
+            if (saida_ex < 5.01) {
+                saida_ex += 24;
+            } else {
+                saida_ex = 0;
+            }
+        }
+        if (entrada_ex <= 21.99) {
+            if (entrada_ex < 5.01) {
+                entrada_ex += 24;
+            } else {
+                if (saida_ex > 0) {
+                    entrada_ex = 22;
+                } else {
+                    entrada_ex = 0;
+                }
+            }
+        }
+        if (saida <= 21.99) {
+            if (saida < 5.01) {
+                saida += 24;
+            } else {
+                saida = 0;
+            }
+        }
+        if (entrada_intervalo <= 21.99) {
+            if (entrada_intervalo < 5.01) {
+                entrada_intervalo += 24;
+            } else {
+                if (saida > 0) {
+                    entrada_intervalo = 22;
+                } else {
+                    entrada_intervalo = 0;
+                }
+            }
+        }
+        if (saida_intervalo <= 21.99) {
+            if (saida_intervalo < 5.01) {
+                saida_intervalo += 24;
+            } else {
+                saida_intervalo = 0;
+            }
+        }
+        if (entrada <= 21.99) {
+            if (entrada < 5.01) {
+                entrada += 24;
+            } else {
+                if (saida_intervalo > 0) {
+                    entrada = 22;
+                } else {
+                    entrada = 0;
+                }
+            }
+        }
+        horarios[0] = entrada;
+        horarios[1] = saida_intervalo;
+        horarios[2] = entrada_intervalo;
+        horarios[3] = saida;
+        horarios[4] = entrada_ex;
+        horarios[5] = saida_ex;
+        return horarios;
     }
 }
