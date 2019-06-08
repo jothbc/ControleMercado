@@ -47,6 +47,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     String jornadaString;
     boolean jaLancado;
     int reg, reg_sub;
+    boolean infoMensagem = true;
 
     /**
      * Creates new form frmLancarCartao2
@@ -892,24 +893,28 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     private void entradatxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_entradatxtKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             sintervalo.requestFocus();
+            verificacaoMeiaNoite(entradatxt.getText());
         }
     }//GEN-LAST:event_entradatxtKeyPressed
 
     private void sintervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sintervaloKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             eintervalo.requestFocus();
+            verificacaoMeiaNoite(sintervalo.getText());
         }
     }//GEN-LAST:event_sintervaloKeyPressed
 
     private void eintervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eintervaloKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             saidatxt.requestFocus();
+            verificacaoMeiaNoite(eintervalo.getText());
         }
     }//GEN-LAST:event_eintervaloKeyPressed
 
     private void saidatxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_saidatxtKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             //lancar();
+            verificacaoMeiaNoite(saidatxt.getText());
             lancarHorarios();
             diaSpinner.setValue((int) diaSpinner.getValue() + 1);
             entradatxt.requestFocus();
@@ -920,12 +925,14 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     private void entrada2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_entrada2KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             saida2.requestFocus();
+            verificacaoMeiaNoite(entrada2.getText());
         }
     }//GEN-LAST:event_entrada2KeyPressed
 
     private void saida2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_saida2KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             //lancar();
+            verificacaoMeiaNoite(saida2.getText());
             lancarHorarios();
             diaSpinner.setValue((int) diaSpinner.getValue() + 1);
             entradatxt.requestFocus();
@@ -1015,6 +1022,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             return;
         }
         diaSpinner.setValue((int) jTable1.getSelectedRow() + 1);
+        carregarDiaClickado((int) jTable1.getSelectedRow());
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jornada6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jornada6MouseClicked
@@ -1288,7 +1296,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 falta = 0,
                 noturna = 0;
         //define base com valor da jornada em decimal
-        double base = valorTbparaDouble(jornadaString);
+        double base = horaPDecimal(jornadaString);
         //executa o procedimento em todas as linhas da tabela, sendo "x" a linha
         for (int x = 0; x < jTable1.getRowCount(); x++) {
             entrada = 0;
@@ -1299,22 +1307,22 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             saida_ex = 0;
             horasTrabalhadas = 0;
             if (tb.getValueAt(x, 1) != null) {
-                entrada = valorTbparaDouble((String) tb.getValueAt(x, 1));
+                entrada = horaPDecimal((String) tb.getValueAt(x, 1));
             }
             if (tb.getValueAt(x, 2) != null) {
-                saida_intervalo = valorTbparaDouble((String) tb.getValueAt(x, 2));
+                saida_intervalo = horaPDecimal((String) tb.getValueAt(x, 2));
             }
             if (tb.getValueAt(x, 3) != null) {
-                entrada_intervalo = valorTbparaDouble((String) tb.getValueAt(x, 3));
+                entrada_intervalo = horaPDecimal((String) tb.getValueAt(x, 3));
             }
             if (tb.getValueAt(x, 4) != null) {
-                saida = valorTbparaDouble((String) tb.getValueAt(x, 4));
+                saida = horaPDecimal((String) tb.getValueAt(x, 4));
             }
             if (tb.getValueAt(x, 5) != null) {
-                entrada_ex = valorTbparaDouble((String) tb.getValueAt(x, 5));
+                entrada_ex = horaPDecimal((String) tb.getValueAt(x, 5));
             }
             if (tb.getValueAt(x, 6) != null) {
-                saida_ex = valorTbparaDouble((String) tb.getValueAt(x, 6));
+                saida_ex = horaPDecimal((String) tb.getValueAt(x, 6));
             }
             //horas trabalhadas do dia:
             horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
@@ -1376,27 +1384,27 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         //lancar na tabela e setar valores double
         if (!entradaS.equals("  :  ")) {
             tb.setValueAt(entradaS, diaAtual - 1, 1);
-            entrada = valorTbparaDouble(entradaS);
+            entrada = horaPDecimal(entradaS);
         }
         if (!s_intervaloS.equals("  :  ")) {
             tb.setValueAt(s_intervaloS, diaAtual - 1, 2);
-            saida_intervalo = valorTbparaDouble(s_intervaloS);
+            saida_intervalo = horaPDecimal(s_intervaloS);
         }
         if (!e_intervaloS.equals("  :  ")) {
             tb.setValueAt(e_intervaloS, diaAtual - 1, 3);
-            entrada_intervalo = valorTbparaDouble(e_intervaloS);
+            entrada_intervalo = horaPDecimal(e_intervaloS);
         }
         if (!saidaS.equals("  :  ")) {
             tb.setValueAt(saidaS, diaAtual - 1, 4);
-            saida = valorTbparaDouble(saidaS);
+            saida = horaPDecimal(saidaS);
         }
         if (!entrada_2S.equals("  :  ")) {
             tb.setValueAt(entrada_2S, diaAtual - 1, 5);
-            entrada_ex = valorTbparaDouble(entrada_2S);
+            entrada_ex = horaPDecimal(entrada_2S);
         }
         if (!saida_2S.equals("  :  ")) {
             tb.setValueAt(saida_2S, diaAtual - 1, 6);
-            saida_ex = valorTbparaDouble(saida_2S);
+            saida_ex = horaPDecimal(saida_2S);
         }
         horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
         double horasTrabalhadas2 = CDbl.CDblDuasCasas(horasTrabalhadas);
@@ -1644,7 +1652,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     * recebe valor no formato ##:## (horas)
     * e retorna em ##,## (decimais)
      */
-    private float valorTbparaDouble(String valorTB) {
+    private float horaPDecimal(String valorTB) {
         double valor = Double.parseDouble(valorTB.replaceAll(":", "."));
         float fracao = (float) ((valor) - (int) valor);
         fracao = (fracao * 100) / 60;
@@ -1821,7 +1829,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             } catch (Exception e) {
             }
         }
-        double jornada = valorTbparaDouble(jornadaString);
+        double jornada = horaPDecimal(jornadaString);
         double horas_mes = jornada * 30;
         try {
             double valor_hora = ((double) salarioBase.getValue()) / horas_mes;
@@ -1833,7 +1841,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
 
             double extra = 0;
             try {
-                extra = valorTbparaDouble(horasExtrastxt.getText()) + valorTbparaDouble(horasExtrasNoturnastxt.getText());
+                extra = horaPDecimal(horasExtrastxt.getText()) + horaPDecimal(horasExtrasNoturnastxt.getText());
                 extra *= Double.parseDouble(valorHoraExtra.getText());
             } catch (Exception e) {
             }
@@ -2055,5 +2063,32 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         horarios[4] = entrada_ex;
         horarios[5] = saida_ex;
         return horarios;
+    }
+
+    private void carregarDiaClickado(int i) {
+        entradatxt.setText((String) jTable1.getValueAt(i, 1));
+        sintervalo.setText((String) jTable1.getValueAt(i, 2));
+        eintervalo.setText((String) jTable1.getValueAt(i, 3));
+        saidatxt.setText((String) jTable1.getValueAt(i, 4));
+        entrada2.setText((String) jTable1.getValueAt(i, 5));
+        saida2.setText((String) jTable1.getValueAt(i, 6));
+    }
+
+    private void verificacaoMeiaNoite(String text) {
+        if (!"  :  ".equals(text)) {
+            double temp = horaPDecimal(text);
+            if (temp>0 && temp<3){
+                exibirMensagemHorario();
+            }
+        }
+    }
+
+    private void exibirMensagemHorario() {
+        if (infoMensagem){
+            JOptionPane.showMessageDialog(this, "Se o horário informado for respectivo a outro dia deve-se somar 24Horas"+
+                    "\nEx: Entrada: 20:00\nSaida: 02:00 (do outro dia)"+
+                    "\nEntão:\nEntrada: 20:00\nSaida: 26:00","Verificação de Horário",JOptionPane.WARNING_MESSAGE);
+            infoMensagem=false;
+        }
     }
 }

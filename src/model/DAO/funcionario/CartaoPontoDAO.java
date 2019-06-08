@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.bean.CartaoPonto;
 import model.bean.Funcionario;
@@ -91,6 +92,7 @@ public class CartaoPontoDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex,"ERRO",JOptionPane.ERROR_MESSAGE);
             return false;
         } finally {
             ConnectionFactory.closeConnection(con, stmt);
