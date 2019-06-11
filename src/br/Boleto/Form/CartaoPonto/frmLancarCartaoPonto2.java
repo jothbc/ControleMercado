@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -158,6 +160,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         importBtn = new javax.swing.JButton();
+        fakebtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cartão Ponto");
@@ -754,6 +757,13 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         });
 
+        fakebtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/page_white_code.png"))); // NOI18N
+        fakebtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fakebtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -802,6 +812,8 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                                 .addComponent(concluirBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(fakebtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(importBtn))))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -833,7 +845,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(importBtn)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(importBtn)
+                                    .addComponent(fakebtn))
                                 .addGap(36, 36, 36)
                                 .addComponent(editbtn)
                                 .addGap(8, 8, 8)
@@ -1099,6 +1113,10 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         importCVS();
     }//GEN-LAST:event_importBtnActionPerformed
 
+    private void fakebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fakebtnActionPerformed
+        cartaoFicticio();
+    }//GEN-LAST:event_fakebtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1148,6 +1166,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField eintervalo;
     private javax.swing.JFormattedTextField entrada2;
     private javax.swing.JFormattedTextField entradatxt;
+    private javax.swing.JButton fakebtn;
     private javax.swing.JButton faltaBtn;
     private javax.swing.JButton feriadoBtn;
     private javax.swing.JSpinner feriadosSpin;
@@ -1408,7 +1427,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         }
         horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
         double horasTrabalhadas2 = CDbl.CDblDuasCasas(horasTrabalhadas);
-        System.out.println("DIA " + diaAtual + ": " + horasTrabalhadas2 + " Horas Extras do dia: " + (horasTrabalhadas2 - 7.33));
+        //System.out.println("DIA " + diaAtual + ": " + horasTrabalhadas2 + " Horas Extras do dia: " + (horasTrabalhadas2 - 7.33));
         tb.setValueAt(decimalPHora(horasTrabalhadas2), diaAtual - 1, 7);
         limpaCampos();
         Horas();
@@ -1705,7 +1724,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         cartao.setAno(ano);
         cartao.setMes(mes);
         cartao.setDias(tb.getRowCount());
-
         cartao.setExtra(horasExtrastxt.getText());
         cartao.setFalta(horasFaltastxt.getText());
         cartao.setNoturna(horasExtrasNoturnastxt.getText());
@@ -1815,6 +1833,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         saida2.setEnabled(habilitado);
         jornada6.setEnabled(habilitado);
         jornada7.setEnabled(habilitado);
+        jornada5.setEnabled(habilitado);
         editbtn.setVisible(!habilitado); //contrário
     }
 
@@ -1833,12 +1852,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         double horas_mes = jornada * 30;
         try {
             double valor_hora = ((double) salarioBase.getValue()) / horas_mes;
-
             valorHora.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora)));
             valorHoraExtra.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora) * 1.55));
-
             double total = valor_hora * horas_mes;
-
             double extra = 0;
             try {
                 extra = horaPDecimal(horasExtrastxt.getText()) + horaPDecimal(horasExtrasNoturnastxt.getText());
@@ -1923,6 +1939,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }
 
     private void lancarImport(String[][] tabela) {
+        diaSpinner.setValue(1);
         for (int x = 0; x < tb.getRowCount(); x++) {
             char situacao = tabela[x][0].toCharArray()[0];
             //System.out.println(situacao);
@@ -1982,7 +1999,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
 
     private String verificaStringHorario(String temp) {
         temp = temp.trim();
-        System.out.println("e>>>" + temp);
+        //System.out.println("e>>>" + temp);
         if ("".equals(temp) || temp == null || "-".equals(temp)) {
             return "  :  ";
         }
@@ -1990,7 +2007,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         if (Integer.parseInt(s[0]) < 10) {     //s[0] = 12 : s[1] = 21
             s[0] = "0" + s[0];
         }
-        System.out.println("s>>" + s[0] + ":" + s[1]);
+        //System.out.println("s>>" + s[0] + ":" + s[1]);
         return s[0] + ":" + s[1];
     }
 
@@ -2077,18 +2094,64 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     private void verificacaoMeiaNoite(String text) {
         if (!"  :  ".equals(text)) {
             double temp = horaPDecimal(text);
-            if (temp>0 && temp<3){
+            if (temp > 0 && temp < 3) {
                 exibirMensagemHorario();
             }
         }
     }
 
     private void exibirMensagemHorario() {
-        if (infoMensagem){
-            JOptionPane.showMessageDialog(this, "Se o horário informado for respectivo a outro dia deve-se somar 24Horas"+
-                    "\nEx: Entrada: 20:00\nSaida: 02:00 (do outro dia)"+
-                    "\nEntão:\nEntrada: 20:00\nSaida: 26:00","Verificação de Horário",JOptionPane.WARNING_MESSAGE);
-            infoMensagem=false;
+        if (infoMensagem) {
+            JOptionPane.showMessageDialog(this, "Se o horário informado for respectivo a outro dia deve-se somar 24Horas"
+                    + "\nEx: Entrada: 20:00\nSaida: 02:00 (do outro dia)"
+                    + "\nEntão:\nEntrada: 20:00\nSaida: 26:00", "Verificação de Horário", JOptionPane.WARNING_MESSAGE);
+            infoMensagem = false;
+        }
+    }
+
+    private void cartaoFicticio() {
+        CartaoFicticio_JD jd = new CartaoFicticio_JD(this, true);
+        jd.setVisible(true);
+        if (jd.getValores() != null) {
+            diaSpinner.setValue(1);
+            List<String> valores = jd.getValores();
+            Random gerador;
+            int variacao = Integer.parseInt(valores.get(4));
+            boolean positivo = true;
+            double valor = 0;
+            for (int x = 0; x < jTable1.getRowCount(); x++) {
+                if (jTable1.getValueAt(x, 0) != "D") {
+                    for (int i = 0; i < 4; i++) {
+                        gerador = new Random();
+                        double horaDecimal = horaPDecimal(valores.get(i));
+                        valor = ((double) (gerador.nextInt() % variacao + 1) / 100);
+                        positivo = gerador.nextBoolean();
+                        if (positivo) {
+                            horaDecimal += valor;
+                        } else {
+                            horaDecimal -= valor;
+                        }
+                        switch (i) {
+                            case 0:
+                                entradatxt.setText(decimalPHora(horaDecimal));
+                                break;
+                            case 1:
+                                sintervalo.setText(decimalPHora(horaDecimal));
+                                break;
+                            case 2:
+                                eintervalo.setText(decimalPHora(horaDecimal));
+                                break;
+                            default:
+                                saidatxt.setText(decimalPHora(horaDecimal));
+                                break;
+                        }
+                    }
+                    lancarDiaImport();
+                } else {
+                    diaSpinner.setValue((int) diaSpinner.getValue() + 1);
+                }
+            }
+
         }
     }
 }
