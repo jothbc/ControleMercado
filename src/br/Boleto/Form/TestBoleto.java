@@ -3,18 +3,21 @@
  */
 package br.Boleto.Form;
 
+import JDBC.ConnectionFactory;
 import funcoes.AutoCompletion;
 import funcoes.CDate;
 import funcoes.CDbl;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +30,11 @@ import model.DAO.BoletoDAO;
 import model.DAO.FornecedorDAO;
 import model.bean.Boleto;
 import model.bean.Fornecedor;
+import model.bean.cellRenderBoleto;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -44,6 +52,7 @@ public class TestBoleto extends javax.swing.JFrame {
         this.setExtendedState(TestBoleto.MAXIMIZED_BOTH);
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         jTable1.setRowSorter(new TableRowSorter(modelo));
+        //jTable1.setDefaultRenderer(Object.class, new cellRenderBoleto());
         atualizarValorTotalAberto();
         AutoCompletion.enable(jComboBoxFornecedor);
         jButton1ActionPerformed(null);
@@ -105,6 +114,7 @@ public class TestBoleto extends javax.swing.JFrame {
         valorAbertotxt = new javax.swing.JTextField();
         totalLinhas = new javax.swing.JLabel();
         totalLinhasAberto = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Boletos");
@@ -598,6 +608,13 @@ public class TestBoleto extends javax.swing.JFrame {
 
         totalLinhasAberto.setText("Total de Linhas em Aberto: ");
 
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/printer.png"))); // NOI18N
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -606,15 +623,17 @@ public class TestBoleto extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(valorTotalEmAbertotxt)
-                    .addComponent(valorAbertotxt)
-                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(valorTotalEmAbertotxt)
+                        .addComponent(valorAbertotxt)
+                        .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(totalLinhas, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -646,7 +665,9 @@ public class TestBoleto extends javax.swing.JFrame {
                         .addComponent(valorAbertotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton6)
+                        .addGap(18, 18, 18)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -734,6 +755,10 @@ public class TestBoleto extends javax.swing.JFrame {
     private void valorTotalEmAbertotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valorTotalEmAbertotxtActionPerformed
     }//GEN-LAST:event_valorTotalEmAbertotxtActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        imprimirBoleto();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -782,6 +807,7 @@ public class TestBoleto extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBoxFornecedor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1252,5 +1278,28 @@ public class TestBoleto extends javax.swing.JFrame {
             jLabel10.setIcon(new ImageIcon(getClass().getResource("/Imagens/flag_green.png")));
         }
         valor_boleto_txt.setText(Double.toString(Double.parseDouble(cd_barras_leitor.getText().substring(9, 19)) / 100));
+    }
+
+    private void imprimirBoleto() {
+        if (jTable1.getSelectedRow()<0){
+            return;
+        }
+        int seq = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+        String fornecedor = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
+        Connection conn = ConnectionFactory.getConnection();
+        String scr = "C:\\CodigoBarras.jasper";
+        JasperPrint js = null;
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("seq", seq);
+            map.put("fornecedor", fornecedor);
+            js = JasperFillManager.fillReport(scr, map, conn);
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
+        }
+        JasperViewer vw = new JasperViewer(js, false);
+        vw.setTitle("Boleto");
+        vw.setVisible(true);
+        ConnectionFactory.closeConnection(conn);
     }
 }
