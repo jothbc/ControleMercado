@@ -92,7 +92,7 @@ public class CartaoPontoDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, ex,"ERRO",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, ex, "ERRO", JOptionPane.ERROR_MESSAGE);
             return false;
         } finally {
             ConnectionFactory.closeConnection(con, stmt);
@@ -148,7 +148,7 @@ public class CartaoPontoDAO {
             sql = "SELECT * FROM cartao_ponto";
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
-            boolean test = false,setreg=true;
+            boolean test = false, setreg = true;
             DefaultTableModel t = new DefaultTableModel();
             t.setColumnCount(8);
             while (rs.next()) {
@@ -158,13 +158,13 @@ public class CartaoPontoDAO {
                 int codigofun = rs.getInt("codigo");
                 if ((codigofun == fun.getCodigo() && diatemp == 1 && mestemp == mes && anotemp == ano) || test) {
                     if (mes != mestemp || ano != anotemp || codigofun != fun.getCodigo()) {
-                        System.out.println("mudou");
+                        //System.out.println("mudou");
                         break;
                     } else {
                         test = true;
-                        if (setreg){
+                        if (setreg) {
                             cartao.setReg(rs.getInt("reg"));
-                            setreg=false;
+                            setreg = false;
                         }
                         String situacao = null, entrada = null, sintervalo = null, eintervalo = null, saida = null, e2 = null, s2 = null, ht = null;
                         if (rs.getString("situacao").equals("P")) {
@@ -210,23 +210,31 @@ public class CartaoPontoDAO {
             return cartao;
         } catch (SQLException ex) {
             Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             ConnectionFactory.closeConnection(con, stmt, rs);
         }
         return cartao;
     }
 
     public boolean atualizar(CartaoPonto cartao) {
+        //só lança situação P, tem q ver por que nao ta lançando outras situações
         int dias, mes, ano;
         dias = cartao.getDias();
         mes = cartao.getMes();
         ano = cartao.getAno();
 
         String sql = "UPDATE cartao_ponto "
-                + "SET codigo = ?,nome= ?,dia=?,mes=?,ano=?,situacao=?,entrada=?,saida_intervalo=?,entrada_intervalo=?,saida=?,entrada2=?,saida2=?,horas_trabalhadas=? "
+                + "SET codigo = ?,nome= ?,"
+                + "dia=?,mes=?,ano=?,"
+                + "situacao=?,"
+                + "entrada=?,saida_intervalo=?,entrada_intervalo=?,saida=?,"
+                + "entrada2=?,saida2=?,"
+                + "horas_trabalhadas=? "
                 + "WHERE reg = ?";
         String sql2 = "UPDATE cartao_ponto_sub "
-                + "SET codigo=?,nome=?,mes=?,ano=?,hora_extra=?,hora_falta=?,hora_noturna=?,reducao_noturna=?,jornada=? "
+                + "SET codigo=?,nome=?,"
+                + "mes=?,ano=?,"
+                + "hora_extra=?,hora_falta=?,hora_noturna=?,reducao_noturna=?,jornada=? "
                 + "WHERE reg = ?";
         PreparedStatement stmt = null;
         try {
@@ -241,9 +249,19 @@ public class CartaoPontoDAO {
                 stmt.setInt(4, mes);
                 stmt.setInt(5, ano);
                 //defini situação (p = presença, d = domingo, f=falta... etc)
-                if (cartao.getTabela().getValueAt(x, 0) == "S" || cartao.getTabela().getValueAt(x, 0) == "D" || cartao.getTabela().getValueAt(x, 0) == "R" || cartao.getTabela().getValueAt(x, 0) == "H" || cartao.getTabela().getValueAt(x, 0) == "A" || cartao.getTabela().getValueAt(x, 0) == "F") {
-                    stmt.setString(6, (String) cartao.getTabela().getValueAt(x, 0));
-                } else {
+                //System.out.println(cartao.getTabela().getValueAt(x, 0));
+                try {
+                    if ("S".equals((String)cartao.getTabela().getValueAt(x, 0))
+                            || "D".equals((String)cartao.getTabela().getValueAt(x, 0))
+                            || "R".equals((String)cartao.getTabela().getValueAt(x, 0))
+                            || "H".equals((String)cartao.getTabela().getValueAt(x, 0))
+                            || "A".equals((String)cartao.getTabela().getValueAt(x, 0))
+                            || "F".equals((String)cartao.getTabela().getValueAt(x, 0))) {
+                        stmt.setString(6, (String) cartao.getTabela().getValueAt(x, 0));
+                    }else{
+                        stmt.setString(6, "P");
+                    }
+                } catch (NumberFormatException ex) {
                     stmt.setString(6, "P");
                 }
                 //defini horas
@@ -262,8 +280,8 @@ public class CartaoPontoDAO {
                 stmt.setString(11, e1);
                 stmt.setString(12, s1);
                 stmt.setString(13, horas);
-                stmt.setInt(14, cartao.getReg()+x);
-                System.out.println("reg:"+cartao.getReg()+"\tdia: "+ (x+1));
+                stmt.setInt(14, cartao.getReg() + x);
+                //System.out.println("reg:"+cartao.getReg()+"\tdia: "+ (x+1));
                 stmt.executeUpdate();
             }
             stmt = null;
@@ -279,6 +297,30 @@ public class CartaoPontoDAO {
             stmt.setString(9, cartao.getJornada());
             stmt.setInt(10, cartao.getReg_sub());
             stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt);
+        }
+    }
+
+    public boolean removerAlteracoes(CartaoPonto cartao) {
+        String sql = "DELETE FROM cartao_ponto WHERE codigo = ? and mes = ? and ano = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, cartao.getFuncionario().getCodigo());
+            stmt.setInt(2, cartao.getMes());
+            stmt.setInt(3, cartao.getAno());
+            stmt.execute();
+            sql = "DELETE FROM cartao_ponto_sub WHERE codigo = ? and mes = ? and ano = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, cartao.getFuncionario().getCodigo());
+            stmt.setInt(2, cartao.getMes());
+            stmt.setInt(3, cartao.getAno());
+            stmt.execute();
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);

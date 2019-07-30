@@ -78,7 +78,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         buttonGroup1.add(jornada6);
         buttonGroup1.add(jornada7);
         buttonGroup1.add(jornada5);
-
     }
 
     /**
@@ -927,7 +926,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
 
     private void saidatxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_saidatxtKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            //lancar();
             verificacaoMeiaNoite(saidatxt.getText());
             lancarHorarios();
             diaSpinner.setValue((int) diaSpinner.getValue() + 1);
@@ -945,7 +943,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
 
     private void saida2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_saida2KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            //lancar();
             verificacaoMeiaNoite(saida2.getText());
             lancarHorarios();
             diaSpinner.setValue((int) diaSpinner.getValue() + 1);
@@ -963,7 +960,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_jSpinnerDiaStateChanged
 
     private void sabadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabadoBtnActionPerformed
-        //lancar();
         lancarHorarios();
         tb.setValueAt("S", (int) diaSpinner.getValue() - 1, 0);
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
@@ -971,7 +967,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_sabadoBtnActionPerformed
 
     private void domingoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domingoBtnActionPerformed
-        //lancar();
         lancarHorarios();
         tb.setValueAt("D", (int) diaSpinner.getValue() - 1, 0);
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
@@ -980,7 +975,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_domingoBtnActionPerformed
 
     private void folgaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_folgaBtnActionPerformed
-        //lancar();
         lancarHorarios();
         tb.setValueAt("R", (int) diaSpinner.getValue() - 1, 0);
         tb.setValueAt("00:00", (int) diaSpinner.getValue() - 1, 7);
@@ -990,7 +984,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_folgaBtnActionPerformed
 
     private void feriadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feriadoBtnActionPerformed
-        //lancar();
         lancarHorarios();
         tb.setValueAt("H", (int) diaSpinner.getValue() - 1, 0);
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
@@ -998,7 +991,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_feriadoBtnActionPerformed
 
     private void atestadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atestadoBtnActionPerformed
-        //lancar();
         lancarHorarios();
         tb.setValueAt("A", (int) diaSpinner.getValue() - 1, 0);
         tb.setValueAt(jornada(), (int) diaSpinner.getValue() - 1, 7);
@@ -1008,7 +1000,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_atestadoBtnActionPerformed
 
     private void faltaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_faltaBtnActionPerformed
-        //lancar();
         lancarHorarios();
         tb.setValueAt("F", (int) diaSpinner.getValue() - 1, 0);
         tb.setValueAt("00:00", (int) diaSpinner.getValue() - 1, 7);
@@ -1073,24 +1064,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_concluirBtnActionPerformed
 
     private void imprimirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirBtnActionPerformed
-        Connection conn = ConnectionFactory.getConnection();
-        String scr = "C:\\CartaoPontojs.jasper";
-        JasperPrint js = null;
-        try {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("cdfun", fun.getCodigo());
-            map.put("anofun", ano);
-            map.put("mesfun", mes);
-            map.put("jornadafun", jornadaString);
-            js = JasperFillManager.fillReport(scr, map, conn);
-        } catch (JRException e) {
-            JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
-        }
-        JasperViewer vw = new JasperViewer(js, false);
-        vw.setTitle("Cartão Ponto");
-        vw.setVisible(true);
-        ConnectionFactory.closeConnection(conn);
-
+        imprimir();
     }//GEN-LAST:event_imprimirBtnActionPerformed
 
     private void editbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editbtnActionPerformed
@@ -1294,14 +1268,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         verificarExistente();
     }
 
-    @Deprecated
-    public Calendar iniHorarioZeradoNoCalendar(Calendar c) {
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        return c;
-    }
-
     private void Horas() {
         //inicia variáveis zeradas
         double entrada = 0,
@@ -1309,8 +1275,8 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 entrada_intervalo = 0,
                 saida = 0,
                 entrada_ex = 0,
-                saida_ex = 0;
-        double horasTrabalhadas = 0,
+                saida_ex = 0,
+                horasTrabalhadas = 0,
                 extra = 0,
                 falta = 0,
                 noturna = 0;
@@ -1433,237 +1399,8 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         Horas();
     }
 
-    @Deprecated
-    private void lancar() {
-        String entrada, s_intervalo, e_intervalo, saida, entrada_2, saida_2;
-        entrada = entradatxt.getText();
-        s_intervalo = sintervalo.getText();
-        e_intervalo = eintervalo.getText();
-        saida = saidatxt.getText();
-        entrada_2 = entrada2.getText();
-        saida_2 = saida2.getText();
-        int diaAtual = (int) diaSpinner.getValue();
-
-        //Instancia calendarios
-        Calendar entradaCalendar = Calendar.getInstance();
-        Calendar s_intervaloCalendar = Calendar.getInstance();
-        Calendar e_intervaloCalendar = Calendar.getInstance();
-        Calendar saidaCalendar = Calendar.getInstance();
-        Calendar entrada2Calendar = Calendar.getInstance();
-        Calendar saida2Calendar = Calendar.getInstance();
-        //seta dia,mes,ano atual (dia do spinner)
-        entradaCalendar.set(ano, mes, (int) diaSpinner.getValue());
-        s_intervaloCalendar.set(ano, mes, (int) diaSpinner.getValue());
-        e_intervaloCalendar.set(ano, mes, (int) diaSpinner.getValue());
-        saidaCalendar.set(ano, mes, (int) diaSpinner.getValue());
-        entrada2Calendar.set(ano, mes, (int) diaSpinner.getValue());
-        saida2Calendar.set(ano, mes, (int) diaSpinner.getValue());
-        //inicia horarios dos calendarios zerados
-        entradaCalendar = iniHorarioZeradoNoCalendar(entradaCalendar);
-        s_intervaloCalendar = iniHorarioZeradoNoCalendar(s_intervaloCalendar);
-        e_intervaloCalendar = iniHorarioZeradoNoCalendar(e_intervaloCalendar);
-        saidaCalendar = iniHorarioZeradoNoCalendar(saidaCalendar);
-        entrada2Calendar = iniHorarioZeradoNoCalendar(entrada2Calendar);
-        saida2Calendar = iniHorarioZeradoNoCalendar(saida2Calendar);
-        //inicializa horarios String em 00:00
-        String[] entradaString = {"00", "00"};
-        String[] s_intervaloString = {"00", "00"};
-        String[] e_intervaloString = {"00", "00"};
-        String[] saidaString = {"00", "00"};
-        String[] entrada2String = {"00", "00"};
-        String[] saida2String = {"00", "00"};
-
-        if (!entrada.equals("  :  ")) {
-            tb.setValueAt(entrada, diaAtual - 1, 1);
-            entradaString = entrada.split(":");
-            entradaCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(entradaString[0]));
-            entradaCalendar.set(Calendar.MINUTE, Integer.parseInt(entradaString[1]));
-            entradaCalendar.set(Calendar.MILLISECOND, 0);
-        }
-        if (!s_intervalo.equals("  :  ")) {
-            tb.setValueAt(s_intervalo, diaAtual - 1, 2);
-            s_intervaloString = s_intervalo.split(":");
-            s_intervaloCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(s_intervaloString[0]));
-            s_intervaloCalendar.set(Calendar.MINUTE, Integer.parseInt(s_intervaloString[1]));
-            s_intervaloCalendar.set(Calendar.MILLISECOND, 0);
-        }
-        if (!e_intervalo.equals("  :  ")) {
-            tb.setValueAt(e_intervalo, diaAtual - 1, 3);
-            e_intervaloString = e_intervalo.split(":");
-            e_intervaloCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(e_intervaloString[0]));
-            e_intervaloCalendar.set(Calendar.MINUTE, Integer.parseInt(e_intervaloString[1]));
-            e_intervaloCalendar.set(Calendar.MILLISECOND, 0);
-        }
-        if (!saida.equals("  :  ")) {
-            tb.setValueAt(saida, diaAtual - 1, 4);
-            saidaString = saida.split(":");
-            saidaCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(saidaString[0]));
-            saidaCalendar.set(Calendar.MINUTE, Integer.parseInt(saidaString[1]));
-            saidaCalendar.set(Calendar.MILLISECOND, 0);
-        }
-        if (!entrada_2.equals("  :  ")) {
-            tb.setValueAt(entrada_2, diaAtual - 1, 5);
-            entrada2String = entrada_2.split(":");
-            entrada2Calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(entrada2String[0]));
-            entrada2Calendar.set(Calendar.MINUTE, Integer.parseInt(entrada2String[1]));
-            entrada2Calendar.set(Calendar.MILLISECOND, 0);
-        }
-        if (!saida_2.equals("  :  ")) {
-            tb.setValueAt(saida_2, diaAtual - 1, 6);
-            saida2String = saida_2.split(":");
-            saida2Calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(saida2String[0]));
-            saida2Calendar.set(Calendar.MINUTE, Integer.parseInt(saida2String[1]));
-            saida2Calendar.set(Calendar.MILLISECOND, 0);
-        }
-        //hora saida
-        Calendar horasSaida = saidaCalendar;
-        horasSaida.add(Calendar.HOUR_OF_DAY, s_intervaloCalendar.get(Calendar.HOUR_OF_DAY));
-        horasSaida.add(Calendar.MINUTE, s_intervaloCalendar.get(Calendar.MINUTE));
-        horasSaida.add(Calendar.HOUR_OF_DAY, saida2Calendar.get(Calendar.HOUR_OF_DAY));
-        horasSaida.add(Calendar.MINUTE, saida2Calendar.get(Calendar.MINUTE));
-        //horas entrada
-        Calendar horasEntrada = e_intervaloCalendar;
-        horasEntrada.add(Calendar.HOUR_OF_DAY, entradaCalendar.get(Calendar.HOUR_OF_DAY));
-        horasEntrada.add(Calendar.MINUTE, entradaCalendar.get(Calendar.MINUTE));
-        horasEntrada.add(Calendar.HOUR_OF_DAY, entrada2Calendar.get(Calendar.HOUR_OF_DAY));
-        horasEntrada.add(Calendar.MINUTE, entrada2Calendar.get(Calendar.MINUTE));
-        //media de horas saida - entrada
-        Calendar media = horasSaida;
-        media.add(Calendar.HOUR_OF_DAY, -horasEntrada.get(Calendar.HOUR_OF_DAY));
-        media.add(Calendar.MINUTE, -horasEntrada.get(Calendar.MINUTE));
-        //convertendo em formato date
-        Date mediaDate = media.getTime();
-        SimpleDateFormat formato = new SimpleDateFormat("HH:mm");
-        String mediaString = formato.format(mediaDate);
-        //colocando na tabela
-        tb.setValueAt(mediaString, diaAtual - 1, 7);
-        limpaCampos();
-        Horas();
-    }
-
     private Object jornada() {
         return jornadaString;
-    }
-
-    @Deprecated
-    private void horasFaltas() {
-        Calendar hrTrabalhada = Calendar.getInstance(),
-                totalFalta = Calendar.getInstance(),
-                compara = Calendar.getInstance(),
-                extra = Calendar.getInstance(),
-                noturna = Calendar.getInstance();
-        String[] temp = {"00", "00"};
-        String[] jornadaS = jornadaString.split(":");
-        //zera horas faltas e extras e noturna
-        totalFalta.set(Calendar.MINUTE, 0);
-        totalFalta.set(Calendar.HOUR_OF_DAY, 0);
-        totalFalta.set(Calendar.MILLISECOND, 0);
-        extra.set(Calendar.MINUTE, 0);
-        extra.set(Calendar.HOUR_OF_DAY, 0);
-        extra.set(Calendar.MILLISECOND, 0);
-        noturna.set(Calendar.MINUTE, 0);
-        noturna.set(Calendar.HOUR_OF_DAY, 0);
-        noturna.set(Calendar.MILLISECOND, 0);
-        //seta o comparativo
-        compara.set(Calendar.MINUTE, Integer.parseInt(jornadaS[1]));
-        compara.set(Calendar.HOUR_OF_DAY, Integer.parseInt(jornadaS[0]));
-        compara.set(Calendar.MILLISECOND, 0);
-        for (int x = 0; x < jTable1.getRowCount(); x++) {
-            if (tb.getValueAt(x, 0) == "D" && tb.getValueAt(x, 7) == "00:00") {
-                System.out.println("1");
-            } else if (jTable1.getValueAt(x, 7) != null) {
-                Calendar falta = Calendar.getInstance();       //falta = 07:20
-                falta.set(Calendar.MINUTE, Integer.parseInt(jornadaS[1]));
-                falta.set(Calendar.HOUR_OF_DAY, Integer.parseInt(jornadaS[0]));
-
-                String temp2 = (String) jTable1.getValueAt(x, 7);
-                temp = temp2.split(":");        //temp[0] hora, temp[1] minuto
-                //seta horas trabalhadas do dia
-                hrTrabalhada.set(Calendar.HOUR_OF_DAY, Integer.parseInt(temp[0]));
-                hrTrabalhada.set(Calendar.MINUTE, Integer.parseInt(temp[1]));
-
-                Date c1, c2;                    //Date para comparação nos ifs
-                c1 = hrTrabalhada.getTime();
-                c2 = compara.getTime();
-                if (c1.equals(c2)) {
-
-                } else if (c1.after(c2)) {
-                    if (verificaHorasNoturnas(x)) {
-                        hrTrabalhada.add(Calendar.MINUTE, -compara.get(Calendar.MINUTE));
-                        hrTrabalhada.add(Calendar.HOUR_OF_DAY, -compara.get(Calendar.HOUR_OF_DAY));
-                        extra.add(Calendar.MINUTE, hrTrabalhada.get(Calendar.MINUTE));
-                        extra.add(Calendar.HOUR_OF_DAY, hrTrabalhada.get(Calendar.HOUR_OF_DAY));
-                    } else {
-                        //código incompleto
-                    }
-
-                } else if (c1.before(c2)) {
-                    if (tb.getValueAt(x, 0) != "D" && !"00:00".equals((String) tb.getValueAt(x, 7))) {   //se for domingo nao contabiliza horas faltas
-                        falta.add(Calendar.MINUTE, -hrTrabalhada.get(Calendar.MINUTE));
-                        falta.add(Calendar.HOUR_OF_DAY, -hrTrabalhada.get(Calendar.HOUR_OF_DAY));
-                        totalFalta.add(Calendar.MINUTE, falta.get(Calendar.MINUTE));
-                        totalFalta.add(Calendar.HOUR_OF_DAY, falta.get(Calendar.HOUR_OF_DAY));
-                    }
-                }
-            }
-        }
-        SimpleDateFormat formato = new SimpleDateFormat("HH:mm");
-        horasFaltastxt.setText(formato.format(totalFalta.getTime()));
-        horasExtrastxt.setText(formato.format(extra.getTime()));
-        //quando exede mais de 24 horas de hora extra
-        if (compara.get(Calendar.DAY_OF_YEAR) < extra.get(Calendar.DAY_OF_YEAR)) {
-            int totalDias = extra.get(Calendar.DAY_OF_YEAR) - compara.get(Calendar.DAY_OF_YEAR);
-        }
-    }
-
-    @Deprecated
-    private boolean verificaHorasNoturnas(int x) {
-        //inicia verificação de horas noturnas
-        String entrada = "0", saida_intervalo = "0", entrada_intervalo = "0", saida = "0", entrada_2 = "0", saida_2 = "0";
-        try {
-            if (tb.getValueAt(x, 1) != null) {
-                entrada = (String) tb.getValueAt(x, 1);
-                entrada = entrada.substring(0, 2);
-            }
-        } catch (Exception ex) {
-        }
-        try {
-            if (tb.getValueAt(x, 2) != null) {
-                saida_intervalo = (String) tb.getValueAt(x, 2);
-                saida_intervalo = saida_intervalo.substring(0, 2);
-            }
-        } catch (Exception ex) {
-        }
-        try {
-            if (tb.getValueAt(x, 3) != null) {
-                entrada_intervalo = (String) tb.getValueAt(x, 3);
-                entrada_intervalo = entrada_intervalo.substring(0, 2);
-            }
-        } catch (Exception ex) {
-        }
-        try {
-            if (tb.getValueAt(x, 4) != null) {
-                saida = (String) tb.getValueAt(x, 4);
-                saida = saida.substring(0, 2);
-            }
-        } catch (Exception ex) {
-        }
-        try {
-            if (tb.getValueAt(x, 5) != null) {
-                entrada_2 = (String) tb.getValueAt(x, 5);
-                entrada_2 = entrada_2.substring(0, 2);
-            }
-        } catch (Exception ex) {
-        }
-        try {
-            if (tb.getValueAt(x, 6) != null) {
-                saida_2 = (String) tb.getValueAt(x, 6);
-                saida_2 = saida_2.substring(0, 2);
-            }
-        } catch (Exception ex) {
-        }
-        //retorna verdadeiro se nao tiver horas noturnas
-        return Integer.parseInt(entrada) < 22 && Integer.parseInt(saida_intervalo) < 22 && Integer.parseInt(entrada_intervalo) < 22 && Integer.parseInt(saida) < 22 && Integer.parseInt(entrada_2) < 22 && Integer.parseInt(saida_2) < 22;
     }
 
     /*
@@ -1731,8 +1468,12 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         cartao.setJornada(jornadaString);
         if (new CartaoPontoDAO().salvar(cartao)) {
             JOptionPane.showMessageDialog(this, "Salvo com sucesso!");
+            StatusBtn(false);
         } else {
-            JOptionPane.showMessageDialog(this, "Algo deu errado!");
+            JOptionPane.showMessageDialog(this, "Algo deu errado! Desfazendo alterações no banco de dados...", "Erro", JOptionPane.WARNING_MESSAGE);
+            if (!new CartaoPontoDAO().removerAlteracoes(cartao)) {
+                JOptionPane.showMessageDialog(null, "Erro ao tentar remover alterações no banco de dados, por favor informe o programador passando as informações do Funcionário, mês e ano, para serem removidas manualmente", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -1754,14 +1495,14 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 v6 = (String) ponto.getTabela().getValueAt(x, 5);
                 v7 = (String) ponto.getTabela().getValueAt(x, 6);
                 v8 = (String) ponto.getTabela().getValueAt(x, 7);
-                tb.setValueAt(v1, x, 0);
-                tb.setValueAt(v2, x, 1);
-                tb.setValueAt(v3, x, 2);
-                tb.setValueAt(v4, x, 3);
-                tb.setValueAt(v5, x, 4);
-                tb.setValueAt(v6, x, 5);
-                tb.setValueAt(v7, x, 6);
-                tb.setValueAt(v8, x, 7);
+                jTable1.setValueAt(v1, x, 0);
+                jTable1.setValueAt(v2, x, 1);
+                jTable1.setValueAt(v3, x, 2);
+                jTable1.setValueAt(v4, x, 3);
+                jTable1.setValueAt(v5, x, 4);
+                jTable1.setValueAt(v6, x, 5);
+                jTable1.setValueAt(v7, x, 6);
+                jTable1.setValueAt(v8, x, 7);
             }
             jaLancado = true;
             reg = ponto.getReg();
@@ -1780,13 +1521,13 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             horasExtrasNoturnastxt.setText("");
             reducaoNoturnotxt.setText("");
             for (int x = 0; x < jTable1.getRowCount(); x++) {
-                tb.setValueAt(null, x, 1);
-                tb.setValueAt(null, x, 2);
-                tb.setValueAt(null, x, 3);
-                tb.setValueAt(null, x, 4);
-                tb.setValueAt(null, x, 5);
-                tb.setValueAt(null, x, 6);
-                tb.setValueAt(null, x, 7);
+                jTable1.setValueAt(null, x, 1);
+                jTable1.setValueAt(null, x, 2);
+                jTable1.setValueAt(null, x, 3);
+                jTable1.setValueAt(null, x, 4);
+                jTable1.setValueAt(null, x, 5);
+                jTable1.setValueAt(null, x, 6);
+                jTable1.setValueAt(null, x, 7);
             }
             jaLancado = false;
             reg = -1;
@@ -1811,8 +1552,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         cartao.setJornada(jornadaString);
         if (new CartaoPontoDAO().atualizar(cartao)) {
             JOptionPane.showMessageDialog(this, "Atualizado com sucesso!");
+            StatusBtn(false);
         } else {
-            JOptionPane.showMessageDialog(this, "Algo deu errado!");
+            JOptionPane.showMessageDialog(this, "Algo deu errado!...");
         }
     }
 
@@ -1834,6 +1576,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         jornada6.setEnabled(habilitado);
         jornada7.setEnabled(habilitado);
         jornada5.setEnabled(habilitado);
+        imprimirBtn.setVisible(!habilitado); //contrário
         editbtn.setVisible(!habilitado); //contrário
     }
 
@@ -1861,7 +1604,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 extra *= Double.parseDouble(valorHoraExtra.getText());
             } catch (Exception e) {
             }
-
             double dsr = 0;
             try {
                 dsr = CDbl.CDblDuasCasas((extra / (totalDias - domingos)) * domingos);
@@ -1882,7 +1624,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             total -= inss;
             valorTotalSalario.setText(Double.toString(CDbl.CDblDuasCasas(total)));
             INSS.setText(Double.toString(inss));
-
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -2151,7 +1892,57 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                     diaSpinner.setValue((int) diaSpinner.getValue() + 1);
                 }
             }
-
+            SemHorasExtrasEFaltas();
         }
+    }
+
+    private void SemHorasExtrasEFaltas() {
+        new Thread(() -> {
+            double jorn = horaPDecimal(jornadaString);
+            double trab;
+            double calculo;
+            double valor_dia = 0;
+            for (int x = 0; x < jTable1.getRowCount(); x++) {
+                if (jTable1.getValueAt(x, 7) != null) {
+                    trab = horaPDecimal((String) jTable1.getValueAt(x, 7));
+                    calculo = jorn - trab;
+                    if (trab != 0) {
+                        if (calculo != 0) {
+                            jTable1.setRowSelectionInterval(x, x);
+                            jSpinnerDia.setValue(x + 1);
+                            carregarDiaClickado(x);
+                            if (calculo > 0) {
+                                saidatxt.setText(decimalPHora(horaPDecimal(saidatxt.getText()) + 0.01));
+                                lancarDiaImport();
+                            } else if (calculo < 0) {
+                                saidatxt.setText(decimalPHora(horaPDecimal(saidatxt.getText()) - 0.01));
+                                lancarDiaImport();
+                            }
+
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private void imprimir() {
+        Connection conn = ConnectionFactory.getConnection();
+        String scr = "C:\\CartaoPontojs.jasper";
+        JasperPrint js = null;
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("cdfun", fun.getCodigo());
+            map.put("anofun", ano);
+            map.put("mesfun", mes);
+            map.put("jornadafun", jornadaString);
+            js = JasperFillManager.fillReport(scr, map, conn);
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
+        }
+        JasperViewer vw = new JasperViewer(js, false);
+        vw.setTitle("Cartão Ponto");
+        vw.setVisible(true);
+        ConnectionFactory.closeConnection(conn);
     }
 }

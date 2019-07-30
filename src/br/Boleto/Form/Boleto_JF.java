@@ -40,16 +40,16 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author User
  */
-public class TestBoleto extends javax.swing.JFrame {
+public class Boleto_JF extends javax.swing.JFrame {
 
     private int banco;
 
     /**
      * Creates new form TestBoleto
      */
-    public TestBoleto() {
+    public Boleto_JF() {
         initComponents();
-        this.setExtendedState(TestBoleto.MAXIMIZED_BOTH);
+        this.setExtendedState(Boleto_JF.MAXIMIZED_BOTH);
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         jTable1.setRowSorter(new TableRowSorter(modelo));
         //jTable1.setDefaultRenderer(Object.class, new cellRenderBoleto());
@@ -628,7 +628,7 @@ public class TestBoleto extends javax.swing.JFrame {
                         .addComponent(valorTotalEmAbertotxt)
                         .addComponent(valorAbertotxt)
                         .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)
+                        .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -702,7 +702,6 @@ public class TestBoleto extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         atualizarBtn();
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cd_barras_leitorKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cd_barras_leitorKeyPressed
@@ -776,20 +775,21 @@ public class TestBoleto extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TestBoleto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Boleto_JF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TestBoleto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Boleto_JF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TestBoleto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Boleto_JF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TestBoleto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Boleto_JF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TestBoleto().setVisible(true);
+                new Boleto_JF().setVisible(true);
             }
         });
     }
@@ -1240,7 +1240,7 @@ public class TestBoleto extends javax.swing.JFrame {
     }
 
     private void atualizarInfo() {
-        if (!cd_barras_leitor.getText().equals("") && (cd_barras_leitor.getText().length() != 44 && cd_barras_leitor.getText().length() != 47)) {
+        if (!cd_barras_leitor.getText().equals("") && (cd_barras_leitor.getText().length() != 44 && cd_barras_leitor.getText().length() != 47 && cd_barras_leitor.getText().length() != 48)) {
             JOptionPane.showMessageDialog(null, "Cógido de barras inválido! Verifique se o código de barras esta foi escaneado/digitado corretamente.");
             cd_barras_leitor.setText("");
             return;
@@ -1257,6 +1257,8 @@ public class TestBoleto extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Algo deu errado ao tentar converter o código de barras manual.");
                 return;
             }
+        }else if (cd_barras_leitor.getText().length() == 48){
+            cd_barras_leitor.setText(arrumar48_44(cd_barras_leitor.getText()));
         }
         setbanco(Integer.parseInt(cd_barras_leitor.getText().substring(0, 3)));
         atualizarFornecedor(getbanco(), cd_barras_leitor.getText());
@@ -1301,5 +1303,18 @@ public class TestBoleto extends javax.swing.JFrame {
         vw.setTitle("Boleto");
         vw.setVisible(true);
         ConnectionFactory.closeConnection(conn);
+    }
+    public String arrumar48_44(String cd_barras) {
+        String temp = "";
+        char[] c = new char[48];
+        for (int x = 0; x < 48; x++) {
+            c[x] = cd_barras.charAt(x);
+        }
+        for (int x = 0; x < 48; x++) {
+            if (x != 11 && x != 23 && x != 35 && x != 47) {
+                temp += c[x];
+            }
+        }
+        return temp;
     }
 }
