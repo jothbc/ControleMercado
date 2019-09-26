@@ -82,7 +82,7 @@ public class Menu extends javax.swing.JFrame{
         jLabel1.setToolTipText("");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("V1.2");
+        jLabel2.setText("V2.3");
 
         jDesktopPane1.setLayer(BGImg, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -245,63 +245,47 @@ public class Menu extends javax.swing.JFrame{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-        FornecedorCadastrarFrm forncad = new FornecedorCadastrarFrm();
-        forncad.setVisible(true);
+        new FornecedorCadastrarFrm().setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-        FornecedorAtualizarFrm fornatualizar = new FornecedorAtualizarFrm();
-        fornatualizar.setVisible(true);
+        new FornecedorAtualizarFrm().setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        // TODO add your handling code here:
         ChequeFrm telavisucheque = new ChequeFrm();
         jDesktopPane1.add(telavisucheque);
         telavisucheque.show();
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        // TODO add your handling code here:
         ImpostoFrm tl = new ImpostoFrm();
         jDesktopPane1.add(tl);
         tl.show();
     }//GEN-LAST:event_jMenuItem9ActionPerformed
     
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        // TODO add your handling code here:
-        FornecedorRefinarNumeroFrm fornecedor = new FornecedorRefinarNumeroFrm();
-        fornecedor.setVisible(true);
+        new FornecedorRefinarNumeroFrm().setVisible(true);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        // TODO add your handling code here:
         frm.setVisible(true);
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        // TODO add your handling code here:
-        frmFuncionarios fun = new frmFuncionarios();
-        fun.setVisible(true);
+        new frmFuncionarios().setVisible(true);
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
-        // TODO add your handling code here:
-        frmLancarCartaoPonto cartaoPonto = new frmLancarCartaoPonto();
-        cartaoPonto.setVisible(true);
+        new frmLancarCartaoPonto().setVisible(true);
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
-        Boleto_JF boleto = new Boleto_JF();
-        boleto.setVisible(true);
+        new Boleto_JF().setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        PendenciaJF pendencia = new PendenciaJF();
-        pendencia.setVisible(true);
+        new PendenciaJF().setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     /**

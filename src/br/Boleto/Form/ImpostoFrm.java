@@ -33,7 +33,6 @@ public class ImpostoFrm extends javax.swing.JInternalFrame {
         tabela.setRowCount(0);
         ImpostoDAO dao = new ImpostoDAO();
         List<Imposto> impostos = dao.findAll();
-        CDate conv = new CDate();
         String desc, venc, pago;
         double valor;
         int seq;
@@ -42,10 +41,10 @@ public class ImpostoFrm extends javax.swing.JInternalFrame {
             desc = impostos.get(i).getDescricao();
             valor = impostos.get(i).getValor();
             venc = impostos.get(i).getVencimento();
-            venc = conv.DataMySQLtoDataStringPT(venc);
+            venc = CDate.MYSQLtoPTBR(venc);
             pago = impostos.get(i).getPago();
             if (pago != null) {
-                pago = conv.DataMySQLtoDataStringPT(pago);
+                pago = CDate.MYSQLtoPTBR(pago);
             }
             Object[] dado = {seq, desc, venc, valor, pago};
             switch (op) {
@@ -438,9 +437,8 @@ public class ImpostoFrm extends javax.swing.JInternalFrame {
         try {
             int index = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
             Imposto imposto = new Imposto();
-            CDate conv = new CDate();
             imposto.setSeq(index);
-            imposto.setPago(conv.DataPTBRAtual());
+            imposto.setPago(CDate.getHojePTBR());
             ImpostoDAO dao = new ImpostoDAO();
             if (dao.pago(imposto)) {
                 JOptionPane.showMessageDialog(null, "Baixa realizada com sucesso!");
@@ -456,19 +454,16 @@ public class ImpostoFrm extends javax.swing.JInternalFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        int op = -1;
-        op = JOptionPane.showOptionDialog(null, "Deseja dar baixa em todos os Impostos em Aberto?", "Baixar Todos os Impostos", 1, op, frameIcon, null, null);
-        if (op == 0) {
+        int op = JOptionPane.showOptionDialog(null, "Deseja dar baixa em todos os Impostos em Aberto?", "Baixar Todos os Impostos", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, frameIcon, null, null);
+        if (op == JOptionPane.YES_OPTION) {
             for (int i = 0; i < jTable1.getRowCount(); i++) {
                 if (jTable1.getValueAt(i, 4) == null) {
                     try {
                         int index = (int) jTable1.getValueAt(i, 0);
                         Imposto imposto = new Imposto();
-                        CDate conv = new CDate();
                         imposto.setSeq(index);
-                        imposto.setPago(conv.DataPTBRAtual());
-                        ImpostoDAO dao = new ImpostoDAO();
-                        if (dao.pago(imposto)) {
+                        imposto.setPago(CDate.getHojePTBR());
+                        if (new ImpostoDAO().pago(imposto)) {
                             jTable1.setValueAt(imposto.getPago(), i, 4);
                         } else {
                             throw new Exception("Falha ao tentar dar baixa no banco de dados!");
@@ -498,10 +493,7 @@ public class ImpostoFrm extends javax.swing.JInternalFrame {
             if (desctxt.getText().equals("") || valortxt.getText().equals("")) {
                 throw new Exception("Faltam campos a serem preenchidos.");
             }
-            ImpostoDAO dao = new ImpostoDAO();
-            if (dao.save(imposto)) {
-                JOptionPane.showMessageDialog(null, "Imposto salvo com sucesso!");
-            } else {
+            if (!new ImpostoDAO().save(imposto)) {
                 throw new Exception("Erro ao tentar salvar no banco de dados.");
             }
         } catch (Exception ex) {

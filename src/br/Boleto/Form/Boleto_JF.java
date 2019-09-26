@@ -5,17 +5,15 @@ package br.Boleto.Form;
 
 import JDBC.ConnectionFactory;
 import funcoes.AutoCompletion;
+import funcoes.BoletoFuncoes;
 import funcoes.CDate;
 import funcoes.CDbl;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +28,6 @@ import model.DAO.BoletoDAO;
 import model.DAO.FornecedorDAO;
 import model.bean.Boleto;
 import model.bean.Fornecedor;
-import model.bean.cellRenderBoleto;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -43,6 +40,8 @@ import net.sf.jasperreports.view.JasperViewer;
 public class Boleto_JF extends javax.swing.JFrame {
 
     private int banco;
+    private int[] index_busca;
+    private int index_atual_busca = 0;
 
     /**
      * Creates new form TestBoleto
@@ -115,6 +114,8 @@ public class Boleto_JF extends javax.swing.JFrame {
         totalLinhas = new javax.swing.JLabel();
         totalLinhasAberto = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
+        busca_valor_btn = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Boletos");
@@ -608,12 +609,23 @@ public class Boleto_JF extends javax.swing.JFrame {
 
         totalLinhasAberto.setText("Total de Linhas em Aberto: ");
 
+        jButton6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/printer.png"))); // NOI18N
+        jButton6.setText("Imprimir");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
+
+        busca_valor_btn.setText("Buscar Valor");
+        busca_valor_btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                busca_valor_btnActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText("Buscar Fornecedor");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -623,24 +635,29 @@ public class Boleto_JF extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(valorTotalEmAbertotxt)
-                        .addComponent(valorAbertotxt)
-                        .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(valorTotalEmAbertotxt)
+                    .addComponent(valorAbertotxt)
+                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(totalLinhas, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)
-                        .addComponent(totalLinhasAberto, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(totalLinhas, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
+                                .addComponent(totalLinhasAberto, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(busca_valor_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -648,13 +665,6 @@ public class Boleto_JF extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(totalLinhas)
-                            .addComponent(totalLinhasAberto))
-                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
@@ -671,7 +681,18 @@ public class Boleto_JF extends javax.swing.JFrame {
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44))))
+                        .addGap(10, 10, 10))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(totalLinhas)
+                            .addComponent(totalLinhasAberto))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(busca_valor_btn)
+                    .addComponent(jButton8))
+                .addContainerGap())
         );
 
         jScrollPane2.setViewportView(jPanel1);
@@ -706,7 +727,7 @@ public class Boleto_JF extends javax.swing.JFrame {
 
     private void cd_barras_leitorKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cd_barras_leitorKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            atualizar_info_btnActionPerformed(null);
+            atualizarInfo();
         }
     }//GEN-LAST:event_cd_barras_leitorKeyPressed
 
@@ -758,6 +779,62 @@ public class Boleto_JF extends javax.swing.JFrame {
         imprimirBoleto();
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    private void busca_valor_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busca_valor_btnActionPerformed
+        if (index_busca != null) {
+            if (index_atual_busca < index_busca.length - 1) {
+                index_atual_busca++;
+                jTable1.setRowSelectionInterval(index_busca[index_atual_busca], index_busca[index_atual_busca]);
+                setPosicaoViewPort((JViewport) jTable1.getParent(), jTable1.getCellRect(index_busca[index_atual_busca], 0, true));
+                if (index_atual_busca == index_busca.length - 1) {
+                    busca_valor_btn.setText("Buscar Valor");
+                    index_atual_busca = 0;
+                    index_busca = null;
+                }
+            } else {
+                busca_valor_btn.setText("Buscar Valor");
+                index_atual_busca = 0;
+                index_busca = null;
+            }
+        } else {
+            String a = JOptionPane.showInputDialog(null, "Informe o valor a ser localizado:", "0");
+            if (a != null && !a.equals("")) {
+                try {
+                    double valor = Double.parseDouble(a.replaceAll(",", "\\."));
+                    CheckBoxPagos.setSelected(false);
+                    datatxt.setText("  /  /    ");
+                    data2txt.setText("  /  /    ");
+                    jButton1ActionPerformed(null);
+                    int count = 0;
+                    int[] temp = new int[jTable1.getRowCount()];
+                    for (int x = 0; x < jTable1.getRowCount(); x++) {
+                        double valor_temp = (double) jTable1.getValueAt(x, 3);
+                        if (valor_temp == valor) {
+                            temp[count] = x;
+                            count++;
+                        }
+                    }
+                    if (count == 0) {
+                        JOptionPane.showMessageDialog(null, "Valor não encontrado.");
+                        return;
+                    }
+                    index_busca = new int[count];
+                    index_atual_busca = 0;
+                    for (int x = 0; x < count; x++) {
+                        index_busca[x] = temp[x];
+                    }
+
+                    jTable1.setRowSelectionInterval(index_busca[index_atual_busca], index_busca[index_atual_busca]);
+                    setPosicaoViewPort((JViewport) jTable1.getParent(), jTable1.getCellRect(index_busca[index_atual_busca], 0, true));
+                    if (count > 0) {
+                        busca_valor_btn.setText("Próximo");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Formato de numero inválido.");
+                }
+            }
+        }
+    }//GEN-LAST:event_busca_valor_btnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -769,7 +846,7 @@ public class Boleto_JF extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -798,6 +875,7 @@ public class Boleto_JF extends javax.swing.JFrame {
     private javax.swing.JCheckBox CheckBoxPagos;
     private javax.swing.JButton atualizar_info_btn;
     private javax.swing.JTextField bancotxt;
+    private javax.swing.JButton busca_valor_btn;
     private javax.swing.JButton buscar_fornecedor_btn;
     private javax.swing.JTextField cd_barras_leitor;
     private javax.swing.JFormattedTextField data2txt;
@@ -808,6 +886,7 @@ public class Boleto_JF extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton8;
     private javax.swing.JComboBox<String> jComboBoxFornecedor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -845,37 +924,20 @@ public class Boleto_JF extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField vencimento_boleto_txt;
     // End of variables declaration//GEN-END:variables
 
-    private String DataMySQLtoDataStringPT(String data_) {
-        DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date data = null;
-        try {
-            data = (Date) f.parse(data_);
-        } catch (ParseException ex) {
-            System.err.println("Erro ao converter data :" + ex);
-        }
-        String temp2 = sdf.format(data);
-        return temp2;
-    }
-
     private void pagar(int id, int index) {
         int colunaPago = 5;
-        try {
-            Boleto b = new Boleto();
-            b.setId(id);
-            SimpleDateFormat databr = new SimpleDateFormat("dd/MM/yyyy");
-            String pago = databr.format(new Date());
-            b.setPago(pago);
-            BoletoDAO dao = new BoletoDAO();
-            CDate conv = new CDate();
-            if (dao.update(b)) {
-                Date dado = conv.DataPTBRStringToDate(b.getPago());
+        Boleto b = new Boleto();
+        b.setId(id);
+        b.setPago(CDate.getHojePTBR());
+        if (new BoletoDAO().update(b)) {
+            try {
+                Date dado = CDate.PTBRtoDate(b.getPago());
                 jTable1.setValueAt(dado, index, colunaPago);
-            } else {
-                JOptionPane.showMessageDialog(null, "Erro ao tentar gravar no banco de dados! Boleto ainda consta como não pago.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao tentar converter data e exibi-la na tabela." + ex);
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao tentar salvar!\n" + ex.getMessage());
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao tentar gravar no banco de dados! Boleto ainda consta como não pago.");
         }
         valorTotalEmAbertotxt.setText(Double.toString(totalEmAberto()));
         valorEmAbertoTabela();
@@ -885,12 +947,10 @@ public class Boleto_JF extends javax.swing.JFrame {
         List<Fornecedor> fornecedores = new FornecedorDAO().findAll();
         List<Fornecedor> atualizado = new ArrayList<>();
         jComboBoxFornecedor.removeAllItems();
-        System.out.println("Combobox sem ordenar::");
         for (Fornecedor f : fornecedores) {
             if (f.getNumero() != null) {
                 if (f.getBanco() == banco && cd_barras.contains(f.getNumero())) {
                     atualizado.add(f);
-                    System.out.println(f.getNome());
                 }
             }
         }
@@ -903,26 +963,9 @@ public class Boleto_JF extends javax.swing.JFrame {
             }
             return 0;
         });
-        System.out.println("Combobox ordenado::");
         for (Fornecedor f : atualizado) {
             jComboBoxFornecedor.addItem(f.getNome());
-            System.out.println(f.getNome());
         }
-    }
-
-    public String Cdate(int temp) {
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        Date dataInicial = null;
-        try {
-            dataInicial = formato.parse("07/10/1997");
-        } catch (ParseException ex) {
-        }
-        Calendar calendarData = Calendar.getInstance();
-        calendarData.setTime(dataInicial);
-        int somar = temp;
-        calendarData.add(Calendar.DATE, somar);
-        Date vencimento = calendarData.getTime();
-        return formato.format(vencimento);
     }
 
     public void acaoLancarAtualizarBtn() {
@@ -984,11 +1027,11 @@ public class Boleto_JF extends javax.swing.JFrame {
     }
 
     public double totalEmAberto() {
-        return CDbl.CDblDuasCasas(new BoletoDAO().findAllAberto());
+        return CDbl.CDblDuasCasas(new BoletoDAO().getValorEmAberto());
     }
 
     private void valorEmAbertoTabela() {
-        int colunaVerificacao=5;
+        int colunaVerificacao = 5;
         int colunaValor = 3;
         double valorTemp = 0;
         try {
@@ -1021,7 +1064,7 @@ public class Boleto_JF extends javax.swing.JFrame {
     }
 
     private void totalLinhas() {
-        int colunaVerificacao=5;
+        int colunaVerificacao = 5;
         int aberto = 0;
         for (int x = 0; x < jTable1.getRowCount(); x++) {
             if (jTable1.getValueAt(x, colunaVerificacao) == null) {
@@ -1042,11 +1085,9 @@ public class Boleto_JF extends javax.swing.JFrame {
     }
 
     private void atualizarBtn() {
-        DefaultTableModel boletosTable = (DefaultTableModel) jTable1.getModel();
-        boletosTable.setRowCount(0);
-        BoletoDAO dao = new BoletoDAO();
-        CDate conv = new CDate();
-        List<Boleto> boletos = dao.findAll();
+        DefaultTableModel tb = (DefaultTableModel) jTable1.getModel();
+        tb.setRowCount(0);
+        List<Boleto> boletos = new BoletoDAO().findAll();
         String nome, cd_barras;
         Date vencimento_ = null, pago_;
         int id;
@@ -1057,52 +1098,51 @@ public class Boleto_JF extends javax.swing.JFrame {
             data2txt.setText(datatxt.getText());
         }
         try {
-            ini = conv.DataPTBRStringToDate(datatxt.getText());
+            ini = CDate.PTBRtoDate(datatxt.getText());
         } catch (Exception ex) {
-            System.out.println("Boleto--> Botao Filtro Atualizar--> Sem data inicial");
         }
         try {
-            fim = conv.DataPTBRStringToDate(data2txt.getText());
+            fim = CDate.PTBRtoDate(data2txt.getText());
         } catch (Exception ex) {
-            System.out.println("Boleto--> Botao Filtro Atualizar--> Sem data final");
         }
 
-        for (Boleto boleto:boletos) {
+        for (Boleto boleto : boletos) {
             id = boleto.getId();
             try {
-                vencimento_ = conv.DataPTBRStringToDate(DataMySQLtoDataStringPT(boleto.getVencimento()));
+                vencimento_ = CDate.PTBRtoDate(CDate.MYSQLtoPTBR(boleto.getVencimento()));
             } catch (Exception ex) {
-                Logger.getLogger(BoletoFrm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Boleto_JF.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
             nome = boleto.getFornecedor_id().getNome();
             valor = boleto.getValor();
             valor = CDbl.CDblDuasCasas(valor);
             try {
-                pago_ = conv.DataPTBRStringToDate(DataMySQLtoDataStringPT(boleto.getPago()));
+                pago_ = CDate.PTBRtoDate(CDate.MYSQLtoPTBR(boleto.getPago()));
             } catch (Exception ex) {
                 pago_ = null;
             }
             cd_barras = boleto.getCd_barras();
-            
-            Object[] dados = {id, vencimento_, nome, valor,null, pago_, cd_barras};
-            
+
+            Object[] dados = {id, vencimento_, nome, valor, null, pago_, cd_barras};
+
             Date dboleto = null;
             try {
-                dboleto = conv.DataMYSQLtoDate(boleto.getVencimento());
+                dboleto = CDate.MYSQLtoDate(boleto.getVencimento());
             } catch (Exception ex) {
-                Logger.getLogger(BoletoFrm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Boleto_JF.class.getName()).log(Level.SEVERE, null, ex);
             }
             if ("  /  /    ".equals(datatxt.getText())) {
                 if (CheckBoxPagos.isSelected()) {
-                    boletosTable.addRow(dados);
+                    tb.addRow(dados);
                 } else if (pago_ == null) {
-                    boletosTable.addRow(dados);
+                    tb.addRow(dados);
                 }
             } else if (dboleto.compareTo(ini) >= 0 && dboleto.compareTo(fim) <= 0) {
                 if (CheckBoxPagos.isSelected()) {
-                    boletosTable.addRow(dados);
+                    tb.addRow(dados);
                 } else if (pago_ == null) {
-                    boletosTable.addRow(dados);
+                    tb.addRow(dados);
                 }
             }
         }
@@ -1115,9 +1155,8 @@ public class Boleto_JF extends javax.swing.JFrame {
         if (jTable1.getSelectedRow() >= 0) {
             DefaultTableModel tb = (DefaultTableModel) jTable1.getModel();
             int seq = (int) tb.getValueAt(jTable1.getSelectedRow(), colunaSeq);
-            int op = -1;
-            op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir o boleto selecionado?", "Excluir Boleto", 1, op, null, null, null);
-            if (op != 0) {
+            int op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir o boleto selecionado?", "Excluir Boleto", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+            if (op != JOptionPane.YES_OPTION) {
                 return;
             }
             if (new BoletoDAO().delete(seq)) {
@@ -1125,7 +1164,7 @@ public class Boleto_JF extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao tentar remover o boleto do Banco de Dados!");
             }
-            jButton1ActionPerformed(null);
+            atualizarBtn();
         }
     }
 
@@ -1148,13 +1187,11 @@ public class Boleto_JF extends javax.swing.JFrame {
     }
 
     private void baixarTodos() {
-        int colunaId= 0;
-        int op = -1;
-        op = JOptionPane.showOptionDialog(null, "Deseja dar baixa em todos os Boletos em aberto exibidos nessa tabela?", "Baixar Todos os Boletos", 1, op, null, null, null);
-        if (op == 0) {
-            int id;
+        int colunaId = 0;
+        int op = JOptionPane.showOptionDialog(null, "Deseja dar baixa em todos os Boletos em aberto exibidos nessa tabela?", "Baixar Todos os Boletos", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+        if (op == JOptionPane.YES_OPTION) {
             for (int i = 0; i < jTable1.getRowCount(); i++) {
-                id = (int) jTable1.getValueAt(i, colunaId);
+                int id = (int) jTable1.getValueAt(i, colunaId);
                 pagar(id, i);
             }
         }
@@ -1177,9 +1214,9 @@ public class Boleto_JF extends javax.swing.JFrame {
     private void buscarFornecedorBtn() {
         Fornecedor_ListaBancoJD dj = new Fornecedor_ListaBancoJD(null, true, getbanco());
         dj.setVisible(true);
-        if (dj.desc != null) {
+        if (dj.getDescricao() != null) {
             jComboBoxFornecedor.removeAllItems();
-            jComboBoxFornecedor.addItem(dj.desc);
+            jComboBoxFornecedor.addItem(dj.getDescricao());
         }
     }
 
@@ -1244,57 +1281,49 @@ public class Boleto_JF extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Cógido de barras inválido! Verifique se o código de barras esta foi escaneado/digitado corretamente.");
             cd_barras_leitor.setText("");
             return;
-        } else if (cd_barras_leitor.getText().length() == 47) {
-            String temp = "";
-            temp = temp + cd_barras_leitor.getText().substring(0, 4);
-            temp = temp + cd_barras_leitor.getText().substring(32);
-            temp = temp + cd_barras_leitor.getText().substring(4, 9);
-            temp = temp + cd_barras_leitor.getText().substring(10, 20);
-            temp = temp + cd_barras_leitor.getText().substring(21, 31);
-            if (temp.length() == 44) {
-                cd_barras_leitor.setText(temp);
-            } else {
-                JOptionPane.showMessageDialog(null, "Algo deu errado ao tentar converter o código de barras manual.");
-                return;
-            }
-        }else if (cd_barras_leitor.getText().length() == 48){
-            cd_barras_leitor.setText(arrumar48_44(cd_barras_leitor.getText()));
         }
-        setbanco(Integer.parseInt(cd_barras_leitor.getText().substring(0, 3)));
+        if (cd_barras_leitor.getText().length() == 47 || cd_barras_leitor.getText().length() == 48) {
+            cd_barras_leitor.setText(BoletoFuncoes.linhaDigitavelEmCodigoDeBarras(cd_barras_leitor.getText()));
+        }
+        setbanco(BoletoFuncoes.getBanco(cd_barras_leitor.getText()));
         atualizarFornecedor(getbanco(), cd_barras_leitor.getText());
         if (jComboBoxFornecedor.getItemCount() == 0) {
             Fornecedor_ListaBancoJD jd = new Fornecedor_ListaBancoJD(null, true, getbanco());
             jd.setVisible(true);
-            if (jd.desc != null) {
+            if (jd.getDescricao() != null) {
                 jComboBoxFornecedor.removeAllItems();
-                jComboBoxFornecedor.addItem(jd.desc);
+                jComboBoxFornecedor.addItem(jd.getDescricao());
             } else {
                 return;
             }
         }
         bancotxt.setText(Integer.toString(getbanco()));
-        vencimento_boleto_txt.setText(Cdate(Integer.parseInt(cd_barras_leitor.getText().substring(5, 9))));
-        if (vencimento_boleto_txt.getText().equals("07/10/1997")) {
+        vencimento_boleto_txt.setText(BoletoFuncoes.getVencimento(cd_barras_leitor.getText()));
+        if (vencimento_boleto_txt.getText().equals(CDate.getDataInicialBanco())) {
             jLabel10.setIcon(new ImageIcon(getClass().getResource("/Imagens/exclamation.png")));
+            jLabel10.requestFocus();
         } else {
             jLabel10.setIcon(new ImageIcon(getClass().getResource("/Imagens/flag_green.png")));
+            lancar_boleto_btn.requestFocus();
         }
-        valor_boleto_txt.setText(Double.toString(Double.parseDouble(cd_barras_leitor.getText().substring(9, 19)) / 100));
+        valor_boleto_txt.setText(Double.toString(BoletoFuncoes.getValorBoleto(cd_barras_leitor.getText())));
     }
 
     private void imprimirBoleto() {
-        if (jTable1.getSelectedRow()<0){
+        if (jTable1.getSelectedRow() < 0) {
             return;
         }
-        int seq = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+        int sequencia = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
         String fornecedor = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
+        String linha_digitavel = BoletoFuncoes.codigoDeBarrasEmLinhaDigitavel((String) jTable1.getValueAt(jTable1.getSelectedRow(), 6), false);
         Connection conn = ConnectionFactory.getConnection();
-        String scr = "C:\\CodigoBarras.jasper";
+        String scr = "C:\\JCR\\RELATORIOS DESPESA\\CodigoBarras.jasper";
         JasperPrint js = null;
         try {
             HashMap<String, Object> map = new HashMap<>();
-            map.put("seq", seq);
+            map.put("seq", sequencia);
             map.put("fornecedor", fornecedor);
+            map.put("linha_digitavel", linha_digitavel);
             js = JasperFillManager.fillReport(scr, map, conn);
         } catch (JRException e) {
             JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
@@ -1304,6 +1333,7 @@ public class Boleto_JF extends javax.swing.JFrame {
         vw.setVisible(true);
         ConnectionFactory.closeConnection(conn);
     }
+
     public String arrumar48_44(String cd_barras) {
         String temp = "";
         char[] c = new char[48];

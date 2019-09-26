@@ -251,14 +251,17 @@ public class CartaoPontoDAO {
                 //defini situação (p = presença, d = domingo, f=falta... etc)
                 //System.out.println(cartao.getTabela().getValueAt(x, 0));
                 try {
-                    if ("S".equals((String)cartao.getTabela().getValueAt(x, 0))
-                            || "D".equals((String)cartao.getTabela().getValueAt(x, 0))
-                            || "R".equals((String)cartao.getTabela().getValueAt(x, 0))
-                            || "H".equals((String)cartao.getTabela().getValueAt(x, 0))
-                            || "A".equals((String)cartao.getTabela().getValueAt(x, 0))
-                            || "F".equals((String)cartao.getTabela().getValueAt(x, 0))) {
+                    if (
+                            "S".equals((String) cartao.getTabela().getValueAt(x, 0))
+                            || "D".equals((String) cartao.getTabela().getValueAt(x, 0))
+                            || "R".equals((String) cartao.getTabela().getValueAt(x, 0))
+                            || "H".equals((String) cartao.getTabela().getValueAt(x, 0))
+                            || "A".equals((String) cartao.getTabela().getValueAt(x, 0))
+                            || "F".equals((String) cartao.getTabela().getValueAt(x, 0))
+                        ) 
+                    {
                         stmt.setString(6, (String) cartao.getTabela().getValueAt(x, 0));
-                    }else{
+                    } else {
                         stmt.setString(6, "P");
                     }
                 } catch (NumberFormatException ex) {

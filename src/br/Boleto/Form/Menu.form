@@ -262,7 +262,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="V1.2"/>
+            <Property name="text" type="java.lang.String" value="V2.3"/>
           </Properties>
         </Component>
       </SubComponents>

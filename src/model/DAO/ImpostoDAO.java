@@ -31,11 +31,10 @@ public class ImpostoDAO {
     public boolean save(Imposto imposto){
         String sql = "INSERT INTO impostos (nome,vencimento,valor) VALUES (?,?,?)";
         PreparedStatement stmt = null;
-        CDate conv= new CDate();
         try {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, imposto.getDescricao());
-            stmt.setString(2, conv.DataPTBRtoDataMySQL(imposto.getVencimento()));
+            stmt.setString(2, CDate.PTBRtoMYSQL(imposto.getVencimento()));
             stmt.setDouble(3, imposto.getValor());
             stmt.executeUpdate();
             return true;
@@ -50,10 +49,9 @@ public class ImpostoDAO {
     public boolean pago(Imposto imposto) { 
         String sql = "UPDATE impostos SET pago = ? WHERE seq = ?";
         PreparedStatement stmt = null;
-        CDate conv = new CDate();
         try {
             stmt = con.prepareStatement(sql);
-            stmt.setString(1,conv.DataPTBRtoDataMySQL(imposto.getPago()));
+            stmt.setString(1,CDate.PTBRtoMYSQL(imposto.getPago()));
             stmt.setInt(2, imposto.getSeq());
             stmt.executeUpdate();
             return true;
@@ -106,7 +104,7 @@ public class ImpostoDAO {
         return impostos;
     }
     
-     public double findAllAberto() {
+     public double getValorEmAberto() {
         String sql = "SELECT valor FROM impostos WHERE pago is null";
         PreparedStatement stmt = null;
         ResultSet rs = null;

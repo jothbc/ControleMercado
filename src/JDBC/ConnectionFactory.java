@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class ConnectionFactory {
 
     private static final String DRIVER = "com.mysql.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://192.168.1.158/financeiro";
+    private static final String URL = "jdbc:mysql://187.4.229.36:3306/financeiro";
     private static final String USER = "root";
     private static final String PASS = "";
     public static Connection getConnection() {

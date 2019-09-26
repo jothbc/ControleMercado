@@ -74,6 +74,7 @@ public class FuncionarioDAO {
             ConnectionFactory.closeConnection(con, stmt);
         }
     }
+
     public boolean inativar(int codigo) {
         String sql = "UPDATE funcionarios SET ativo = 0 WHERE codigo = ?";
         PreparedStatement stmt = null;
@@ -89,6 +90,7 @@ public class FuncionarioDAO {
             ConnectionFactory.closeConnection(con, stmt);
         }
     }
+
     public boolean ativar(int codigo) {
         String sql = "UPDATE funcionarios SET ativo = 1 WHERE codigo = ?";
         PreparedStatement stmt = null;
@@ -165,6 +167,45 @@ public class FuncionarioDAO {
         } finally {
             ConnectionFactory.closeConnection(con, stmt);
         }
+    }
+
+    public Funcionario getFuncionario(int i) {
+        String sql = "SELECT * FROM funcionarios WHERE codigo = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, i);
+            rs = stmt.executeQuery();
+            rs.first();
+            Funcionario funcionario = new Funcionario();
+            funcionario.setNome(rs.getString("nome"));
+            funcionario.setCodigo(rs.getInt("codigo"));
+            if (rs.getString("cpf") != null) {
+                funcionario.setCpf(rs.getString("cpf"));
+            }
+            if (rs.getString("pis") != null) {
+                funcionario.setPis(rs.getString("pis"));
+            }
+            if (rs.getString("cargo") != null) {
+                funcionario.setCargo(rs.getString("cargo"));
+            }
+            if (rs.getString("admissao") != null) {
+                try {
+                    funcionario.setAdmissao(rs.getString("admissao"), "SQL");
+                } catch (Exception ex) {
+                    Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            funcionario.setAtivo(rs.getInt("ativo"));
+            return funcionario;
+        } catch (SQLException ex) {
+            Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt, rs);
+        }
+
     }
 
 }

@@ -15,32 +15,36 @@ import model.bean.Fornecedor;
  * @author User
  */
 public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
-    List<Fornecedor> fornecedores;
-    DefaultTableModel tb;
-    String desc;
-    int banco_bkp;
+
+    private List<Fornecedor> fornecedores;
+    private DefaultTableModel tb;
+    private String desc;
+    private int banco_bkp;
+
     /**
      * Creates new form Fornecedor_ListaBancoJD
      */
-    public void preencherTB(String s){
+    public void preencherTB(String s) {
         tb.setRowCount(0);
-        for (Fornecedor f:fornecedores){
-            if (f.getNome().contains(s) && f.getBanco()==banco_bkp){
-                Object[] dado = {f.getId(),f.getNome(),f.getNumero()};
+        for (Fornecedor f : fornecedores) {
+            if (f.getNome().contains(s) && f.getBanco() == banco_bkp) {
+                Object[] dado = {f.getId(), f.getNome(), f.getNumero()};
                 tb.addRow(dado);
             }
         }
     }
-    public void preencherTB(int banco){
+
+    public void preencherTB(int banco) {
         tb.setRowCount(0);
-        for (Fornecedor f:fornecedores){
-            if (f.getBanco()==banco){
-                Object[] dado = {f.getId(),f.getNome(),f.getNumero()};
+        for (Fornecedor f : fornecedores) {
+            if (f.getBanco() == banco) {
+                Object[] dado = {f.getId(), f.getNome(), f.getNumero()};
                 tb.addRow(dado);
             }
         }
     }
-    public Fornecedor_ListaBancoJD(java.awt.Frame parent, boolean modal,int banco) {
+
+    public Fornecedor_ListaBancoJD(java.awt.Frame parent, boolean modal, int banco) {
         super(parent, modal);
         initComponents();
         fornecedores = new FornecedorDAO().findAll();
@@ -66,7 +70,6 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -102,6 +105,11 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -126,15 +134,6 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(0, 0, 0));
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton3.setText("Achei!");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -152,20 +151,21 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(151, 151, 151)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -173,8 +173,7 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -202,24 +201,14 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        FornecedorCadastrarFrm tl = new FornecedorCadastrarFrm();
-        tl.setVisible(true);
+        new FornecedorCadastrarFrm().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-            this.dispose();
-            FornecedorAtualizarFrm frm = new FornecedorAtualizarFrm();
-            frm.setVisible(true);
+        this.dispose();
+        new FornecedorAtualizarFrm().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        if (jTable1.getSelectedRow()>=0){
-            desc = (String) tb.getValueAt(jTable1.getSelectedRow(), 1);
-            this.dispose();
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
         // TODO add your handling code here:
@@ -229,6 +218,15 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        if (evt.getClickCount() == 2) {
+            if (jTable1.getSelectedRow() >= 0) {
+                desc = (String) tb.getValueAt(jTable1.getSelectedRow(), 1);
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -263,7 +261,7 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Fornecedor_ListaBancoJD dialog = new Fornecedor_ListaBancoJD(new javax.swing.JFrame(), true,0);
+                Fornecedor_ListaBancoJD dialog = new Fornecedor_ListaBancoJD(new javax.swing.JFrame(), true, 0);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -278,11 +276,13 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+    public String getDescricao() {
+        return this.desc;
+    }
 }

@@ -25,76 +25,74 @@ import model.bean.Fornecedor;
  */
 public class ChequeFrm extends javax.swing.JInternalFrame {
 
-    
+    private DefaultTableModel tb;
+    private List<Cheque> cheques;
+    private List<Fornecedor> fornecedores;
 
     /**
      * Creates new form TelaChequeVisualizar
      */
-    
-
     public ChequeFrm() {
         initComponents();
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        jTable1.setRowSorter(new TableRowSorter(modelo));
-        valorAbertoLblAtualizar();
+        tb = (DefaultTableModel) jTable1.getModel();
         AutoCompletion.enable(jComboBox1);
+        jTable1.setRowSorter(new TableRowSorter<>(tb));
+        cheques = new ChequeDAO().findAll();
+        fornecedores = new FornecedorDAO().findAll();
+        buscarTodosBtnActionPerformed(null);
+        atualizarValorEmAberto();
         atualizarFornecedor();
-        jButton2ActionPerformed(null);
     }
 
     private void atualizartable(int op) {
-        CDate conv = new CDate();
-        DefaultTableModel chequestable = (DefaultTableModel) jTable1.getModel();
-        chequestable.setRowCount(0);
-        ChequeDAO cdao = new ChequeDAO();
-        List<Cheque> cheques = cdao.findAll();
+        tb.setRowCount(0);
         long seq;
         String fornecedor;
         Date vencimento = null, emissao = null, pago = null;
         double valor;
-        for (int x = 0; x < cheques.size(); x++) {
-            seq = cheques.get(x).getSeq();
-
+        cheques = new ChequeDAO().findAll();
+        for (Cheque cheque : cheques) {
+            seq = cheque.getSeq();
             try {
-                emissao = conv.DataMYSQLtoDate(cheques.get(x).getEmissao());
+                emissao = CDate.MYSQLtoDate(cheque.getEmissao());
             } catch (Exception ex) {
                 emissao = null;
             }
             try {
-                vencimento = conv.DataMYSQLtoDate(cheques.get(x).getPredatado());
+                vencimento = CDate.MYSQLtoDate(cheque.getPredatado());
             } catch (Exception ex) {
                 vencimento = null;
             }
             try {
-                pago = conv.DataMYSQLtoDate(cheques.get(x).getSaque());
+                pago = CDate.MYSQLtoDate(cheque.getSaque());
             } catch (Exception ex) {
                 pago = null;
             }
-            fornecedor = cheques.get(x).getFornecedor().getNome();
-            valor = cheques.get(x).getValor();
+            fornecedor = cheque.getFornecedor().getNome();
+            valor = cheque.getValor();
             Object[] dados = {seq, emissao, vencimento, fornecedor, valor, pago};
             switch (op) {
                 case 1:
-                    chequestable.addRow(dados);
+                    tb.addRow(dados);
                     break;
                 case 2:
                     if (pago == null && valor != 0) {
-                        chequestable.addRow(dados);
+                        tb.addRow(dados);
                     }
                     break;
                 case 3:
                     if (pago != null && valor != 0) {
-                        chequestable.addRow(dados);
+                        tb.addRow(dados);
                     }
                     break;
                 case 4:
                     if (pago == null & valor == 0) {
-                        chequestable.addRow(dados);
+                        tb.addRow(dados);
                     }
                     break;
                 case 5:
                     if (seq == Integer.parseInt(seqtxt.getText())) {
-                        chequestable.addRow(dados);
+                        tb.addRow(dados);
                     }
                     break;
             }
@@ -115,13 +113,13 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
         jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         seqtxt = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
+        buscarSequenciaBtn = new javax.swing.JButton();
         jPanel17 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        buscarTodosBtn = new javax.swing.JButton();
+        buscarEmAbertoBtn = new javax.swing.JButton();
+        buscarPagosBtn = new javax.swing.JButton();
+        buscarNulosBtn = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -132,10 +130,10 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
         jPanel7 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         nulobtn = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        proximoBtn = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
+        atualizarFornecedoresBtn = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         seqtxt1 = new javax.swing.JTextField();
@@ -143,27 +141,6 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
         emissaotxt = new javax.swing.JFormattedTextField();
         predatadotxt = new javax.swing.JFormattedTextField();
         valortxt = new javax.swing.JTextField();
-        jPanel10 = new javax.swing.JPanel();
-        seqtxtbaixa = new javax.swing.JTextField();
-        pesquisarbaixa = new javax.swing.JButton();
-        fornecedortxtbaixa = new javax.swing.JTextField();
-        emissaotxtbaixa = new javax.swing.JTextField();
-        vencimentotxtbaixa = new javax.swing.JTextField();
-        valortxtbaixa = new javax.swing.JTextField();
-        baixar = new javax.swing.JButton();
-        saquetxtbaixa = new javax.swing.JFormattedTextField();
-        jPanel11 = new javax.swing.JPanel();
-        jlb1 = new javax.swing.JLabel();
-        jPanel12 = new javax.swing.JPanel();
-        jlb6 = new javax.swing.JLabel();
-        jPanel13 = new javax.swing.JPanel();
-        jlb2 = new javax.swing.JLabel();
-        jPanel14 = new javax.swing.JPanel();
-        jlb3 = new javax.swing.JLabel();
-        jPanel15 = new javax.swing.JPanel();
-        jlb4 = new javax.swing.JLabel();
-        jPanel16 = new javax.swing.JPanel();
-        jlb5 = new javax.swing.JLabel();
         valorEmAbertotxt = new javax.swing.JTextField();
 
         setClosable(true);
@@ -201,11 +178,11 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "Filtro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
-        jButton5.setBackground(new java.awt.Color(0, 0, 0));
-        jButton5.setText("Buscar");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        buscarSequenciaBtn.setBackground(new java.awt.Color(0, 0, 0));
+        buscarSequenciaBtn.setText("Buscar");
+        buscarSequenciaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                buscarSequenciaBtnActionPerformed(evt);
             }
         });
 
@@ -231,35 +208,35 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                 .addGap(0, 9, Short.MAX_VALUE))
         );
 
-        jButton2.setBackground(new java.awt.Color(0, 0, 0));
-        jButton2.setText("Todos");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        buscarTodosBtn.setBackground(new java.awt.Color(0, 0, 0));
+        buscarTodosBtn.setText("Todos");
+        buscarTodosBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                buscarTodosBtnActionPerformed(evt);
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 0));
-        jButton1.setText("Em Aberto");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buscarEmAbertoBtn.setBackground(new java.awt.Color(0, 0, 0));
+        buscarEmAbertoBtn.setText("Em Aberto");
+        buscarEmAbertoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buscarEmAbertoBtnActionPerformed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(0, 0, 0));
-        jButton3.setText("Pagos");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        buscarPagosBtn.setBackground(new java.awt.Color(0, 0, 0));
+        buscarPagosBtn.setText("Pagos");
+        buscarPagosBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                buscarPagosBtnActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(0, 0, 0));
-        jButton4.setText("Nulos");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        buscarNulosBtn.setBackground(new java.awt.Color(0, 0, 0));
+        buscarNulosBtn.setText("Nulos");
+        buscarNulosBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                buscarNulosBtnActionPerformed(evt);
             }
         });
 
@@ -269,35 +246,42 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(seqtxt))
-                .addGap(0, 0, 0)
-                .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(buscarTodosBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                            .addComponent(buscarPagosBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(buscarEmAbertoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buscarNulosBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(seqtxt))
+                        .addGap(0, 0, 0)
+                        .addComponent(buscarSequenciaBtn)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(buscarSequenciaBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(seqtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(6, 6, 6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(seqtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buscarTodosBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscarEmAbertoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buscarNulosBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscarPagosBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(0, 0, 0));
@@ -393,20 +377,21 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                 .addGap(0, 3, Short.MAX_VALUE))
         );
 
-        nulobtn.setBackground(new java.awt.Color(0, 0, 0));
+        nulobtn.setBackground(new java.awt.Color(255, 255, 255));
+        nulobtn.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         nulobtn.setText("Nulo");
-        nulobtn.setBorder(null);
         nulobtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nulobtnActionPerformed(evt);
             }
         });
 
-        jButton6.setBackground(new java.awt.Color(0, 0, 0));
-        jButton6.setText("Próximo");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        proximoBtn.setBackground(new java.awt.Color(255, 255, 255));
+        proximoBtn.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        proximoBtn.setText("Próximo");
+        proximoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                proximoBtnActionPerformed(evt);
             }
         });
 
@@ -432,11 +417,12 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton7.setBackground(new java.awt.Color(0, 0, 0));
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/database_refresh.png"))); // NOI18N
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        atualizarFornecedoresBtn.setBackground(new java.awt.Color(0, 0, 0));
+        atualizarFornecedoresBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/database_refresh.png"))); // NOI18N
+        atualizarFornecedoresBtn.setToolTipText("Atualizar Fornecedores");
+        atualizarFornecedoresBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                atualizarFornecedoresBtnActionPerformed(evt);
             }
         });
 
@@ -518,14 +504,14 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(nulobtn, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(proximoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
                     .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(seqtxt1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(atualizarFornecedoresBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
@@ -548,7 +534,7 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                         .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(seqtxt1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(atualizarFornecedoresBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(5, 5, 5)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -568,217 +554,8 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(nulobtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(proximoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2))
-        );
-
-        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "Baixar", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
-
-        pesquisarbaixa.setBackground(new java.awt.Color(0, 0, 0));
-        pesquisarbaixa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/magnifier.png"))); // NOI18N
-        pesquisarbaixa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pesquisarbaixaActionPerformed(evt);
-            }
-        });
-
-        fornecedortxtbaixa.setEditable(false);
-
-        emissaotxtbaixa.setEditable(false);
-
-        vencimentotxtbaixa.setEditable(false);
-
-        valortxtbaixa.setEditable(false);
-
-        baixar.setBackground(new java.awt.Color(0, 0, 0));
-        baixar.setText("Baixar");
-        baixar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                baixarActionPerformed(evt);
-            }
-        });
-
-        try {
-            saquetxtbaixa.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        saquetxtbaixa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saquetxtbaixaActionPerformed(evt);
-            }
-        });
-
-        jPanel11.setBackground(new java.awt.Color(0, 0, 0));
-
-        jlb1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jlb1.setForeground(new java.awt.Color(255, 255, 255));
-        jlb1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jlb1.setText("Sequência");
-
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb1, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-        );
-
-        jPanel12.setBackground(new java.awt.Color(0, 0, 0));
-
-        jlb6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jlb6.setForeground(new java.awt.Color(255, 255, 255));
-        jlb6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jlb6.setText("Saque");
-
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        jPanel13.setBackground(new java.awt.Color(0, 0, 0));
-
-        jlb2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jlb2.setForeground(new java.awt.Color(255, 255, 255));
-        jlb2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jlb2.setText("Fornecedor");
-
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb2, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-        );
-
-        jPanel14.setBackground(new java.awt.Color(0, 0, 0));
-
-        jlb3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jlb3.setForeground(new java.awt.Color(255, 255, 255));
-        jlb3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jlb3.setText("Emissão");
-
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb3, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-        );
-
-        jPanel15.setBackground(new java.awt.Color(0, 0, 0));
-
-        jlb4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jlb4.setForeground(new java.awt.Color(255, 255, 255));
-        jlb4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jlb4.setText("Vencimento");
-
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-        );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb4, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-        );
-
-        jPanel16.setBackground(new java.awt.Color(0, 0, 0));
-
-        jlb5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jlb5.setForeground(new java.awt.Color(255, 255, 255));
-        jlb5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jlb5.setText("Valor");
-
-        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
-        jPanel16.setLayout(jPanel16Layout);
-        jPanel16Layout.setHorizontalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel16Layout.setVerticalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jlb5, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(saquetxtbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(baixar, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(seqtxtbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pesquisarbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(valortxtbaixa, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(vencimentotxtbaixa, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(emissaotxtbaixa, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(fornecedortxtbaixa, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pesquisarbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(seqtxtbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fornecedortxtbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(emissaotxtbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(vencimentotxtbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)
-                        .addComponent(valortxtbaixa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(baixar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(saquetxtbaixa)))
-                .addContainerGap())
         );
 
         valorEmAbertotxt.setEditable(false);
@@ -792,36 +569,30 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(valorEmAbertotxt)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
+                        .addComponent(valorEmAbertotxt))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2))
+                    .addComponent(jScrollPane2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(84, 84, 84)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(valorEmAbertotxt))
-                        .addGap(0, 31, Short.MAX_VALUE)))
-                .addGap(0, 0, 0))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -838,32 +609,27 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+    private void buscarTodosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarTodosBtnActionPerformed
         atualizartable(1);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_buscarTodosBtnActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void buscarEmAbertoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarEmAbertoBtnActionPerformed
         atualizartable(2);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_buscarEmAbertoBtnActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    private void buscarPagosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarPagosBtnActionPerformed
         atualizartable(3);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_buscarPagosBtnActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+    private void buscarNulosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarNulosBtnActionPerformed
         atualizartable(4);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_buscarNulosBtnActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+    private void buscarSequenciaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarSequenciaBtnActionPerformed
         if (!"".equals(seqtxt.getText())) {
             atualizartable(5);
         }
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_buscarSequenciaBtnActionPerformed
 
     private void seqtxt1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_seqtxt1FocusLost
         // TODO add your handling code here:
@@ -874,7 +640,6 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void nulobtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nulobtnActionPerformed
-        // TODO add your handling code here:
         if (!seqtxt1.getText().equals("")) {
             Fornecedor fornecedor = new Fornecedor();
             fornecedor.setId(1);
@@ -882,7 +647,7 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
             ChequeDAO dao = new ChequeDAO();
             if (dao.anular(cheque)) {
                 seqtxt1.setText(String.valueOf(Integer.parseInt(seqtxt1.getText()) + 1));
-                atualizartable(2);
+                atualizartable(4);
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao anular cheque no banco de dados!");
             }
@@ -891,16 +656,13 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_nulobtnActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-        ChequeDAO dao = new ChequeDAO();
-        int op = -1;
+    private void proximoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proximoBtnActionPerformed
         /*
         *Caso o campo de numero esteja vazio, obtem o maior numero de cheque ja lançado e incrementa em 1 e retorna
          */
         if (seqtxt1.getText().equals("")) {
             int max = 0;
-            for (Cheque c : dao.findAll()) {
+            for (Cheque c : new ChequeDAO().findAll()) {
                 if (c.getSeq() > max) {
                     max = c.getSeq();
                 }
@@ -912,40 +674,36 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
         /*
         *verifica se ja existe algum cheque com o mesmo numero lançado, caso sim da opção de atualizar o cheque.
          */
-        for (Cheque c : dao.findAll()) {
+        boolean chequeExiste = false;
+        for (Cheque c : new ChequeDAO().findAll()) {
             if (c.getSeq() == Integer.parseInt(seqtxt1.getText())) {
-                //JOptionPane.showMessageDialog(null, "Cheque ja lançado!");
-                op = JOptionPane.showOptionDialog(null, "Cheque ja lançado, deseja atualizar as informações desse cheque?", "Cheque ja lançado", 1, op, frameIcon, null, null);
-                if (op != 0) {
+                int op = JOptionPane.showOptionDialog(null, "Cheque ja lançado, deseja atualizar as informações desse cheque?", "Cheque ja lançado", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, frameIcon, null, null);
+                if (op != JOptionPane.YES_OPTION) {
                     return;
                 }
+                chequeExiste = true;
             }
         }
         try {
             Fornecedor fornecedor = new Fornecedor();
-            FornecedorDAO fdao = new FornecedorDAO();
-            for (Fornecedor ff : fdao.findAll()) {
-                if (ff.getNome().equals(jComboBox1.getItemAt(jComboBox1.getSelectedIndex()))) {
-                    fornecedor.setId(ff.getId());
+            for (Fornecedor f : new FornecedorDAO().findAll()) {
+                if (f.getNome().equals(jComboBox1.getItemAt(jComboBox1.getSelectedIndex()))) {
+                    fornecedor.setId(f.getId());
                 }
             }
             if (predatadotxt.getText().equals("  /  /    ")) {          //iguala datas caso o campo prédatado esteja vazio.
                 predatadotxt.setText(emissaotxt.getText());
             }
-            String value;
-            value = valortxt.getText().replaceAll(",", ".");
-            Cheque cheque = new Cheque(Integer.parseInt(seqtxt1.getText()), fornecedor, emissaotxt.getText(), predatadotxt.getText(), Double.parseDouble(value));
-            ChequeDAO cdao = new ChequeDAO();
-            if (op == -1) {
-                if (cdao.save(cheque)) {
-                    JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
+            double valor = Double.parseDouble(valortxt.getText().replaceAll(",", "."));
+            Cheque cheque = new Cheque(Integer.parseInt(seqtxt1.getText()), fornecedor, emissaotxt.getText(), predatadotxt.getText(), valor);
+            if (!chequeExiste) {
+                if (new ChequeDAO().save(cheque)) {
                     seqtxt1.setText(String.valueOf(Integer.parseInt(seqtxt1.getText()) + 1));
                 } else {
                     throw new Exception("Falha ao salvar cheque!");
                 }
             } else {
-                if (cdao.update(cheque)) {
-                    JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
+                if (new ChequeDAO().update(cheque)) {
                     seqtxt1.setText(String.valueOf(Integer.parseInt(seqtxt1.getText()) + 1));
                 } else {
                     throw new Exception("Falha ao atualizar cheque!");
@@ -957,65 +715,12 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
             limpartxt();
             atualizartable(2);
         }
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_proximoBtnActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+    private void atualizarFornecedoresBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarFornecedoresBtnActionPerformed
         atualizarFornecedor();
         jComboBox1.requestFocus();
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void pesquisarbaixaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesquisarbaixaActionPerformed
-        // TODO add your handling code here:
-        limpartxtbaixa();
-        if (!"".equals(seqtxtbaixa.getText())) {
-            ChequeDAO cdao = new ChequeDAO();
-            CDate conv = new CDate();
-            for (Cheque cheque : cdao.findAll()) {
-                if (cheque.getSeq() == Integer.parseInt(seqtxtbaixa.getText())) {
-                    fornecedortxtbaixa.setText(cheque.getFornecedor().getNome());
-                    emissaotxtbaixa.setText(conv.DataMySQLtoDataStringPT(cheque.getEmissao()));
-                    vencimentotxtbaixa.setText(conv.DataMySQLtoDataStringPT(cheque.getPredatado()));
-                    valortxtbaixa.setText(Double.toString(cheque.getValor()));
-                    return;
-                }
-            }
-            JOptionPane.showMessageDialog(null, "Sequencia não localizada.");
-            limpartxtbaixa();
-        }
-    }//GEN-LAST:event_pesquisarbaixaActionPerformed
-
-    private void baixarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baixarActionPerformed
-        // TODO add your handling code here:
-        if (!"NULO".equals(fornecedortxtbaixa.getText()) && !"".equals(fornecedortxtbaixa.getText())) {
-            try {
-                Cheque cheque = new Cheque();
-                ChequeDAO dao = new ChequeDAO();
-                cheque.setSeq(Integer.parseInt(seqtxtbaixa.getText()));
-                cheque.setSaque(saquetxtbaixa.getText());
-                if (dao.pagar(cheque)) {
-                    JOptionPane.showMessageDialog(null, "Baixa realizada com sucesso!");
-                    limpartxtbaixa();
-                    //atualizartable(3);
-                    for (int x=0;x<jTable1.getRowCount();x++){
-                        int test = Integer.parseInt(Long.toString((long) jTable1.getValueAt(x, 0)));
-                        if (test == cheque.getSeq()){
-                            DefaultTableModel tb= (DefaultTableModel) jTable1.getModel();
-                            tb.removeRow(x);
-                            valorAbertoLblAtualizar();
-                            break;
-                        }
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Problemas ao tentar dar baixa no cheque.");
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Falha ao tentar dar baixa no cheque, verifique se a data esta preenchida corretamente\nExemplo 01/01/2001\n" + ex);
-            }
-        } else if ("NULO".equals(fornecedortxtbaixa.getText())) {
-            JOptionPane.showMessageDialog(null, "Impossivel baixar um cheque nulo!");
-        }
-    }//GEN-LAST:event_baixarActionPerformed
+    }//GEN-LAST:event_atualizarFornecedoresBtnActionPerformed
 
     private void jComboBox1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jComboBox1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -1032,35 +737,40 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
 
     private void valortxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_valortxtKeyPressed
         // TODO add your handling code here:
-        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
-            jButton6.requestFocus();
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            proximoBtn.requestFocus();
         }
     }//GEN-LAST:event_valortxtKeyPressed
 
-    private void saquetxtbaixaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saquetxtbaixaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_saquetxtbaixaActionPerformed
-
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        if (jTable1.getRowCount()>=0){
-            seqtxtbaixa.setText(Long.toString((Long)jTable1.getValueAt(jTable1.getSelectedRow(), 0)));
-            pesquisarbaixaActionPerformed(null);
+        if (jTable1.getRowCount() >= 0 && evt.getClickCount() == 2) {
+            if (!"NULO".equals((String) jTable1.getValueAt(jTable1.getSelectedRow(), 3))) {
+                long seq = (long) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+                for (Cheque cheque : new ChequeDAO().findAll()) {
+                    if (seq == cheque.getSeq()) {
+                        BaixarChequeJD ch = new BaixarChequeJD(null, true, cheque);
+                        ch.setVisible(true);
+                        if (ch.concluido) {
+                            tb.removeRow(jTable1.getSelectedRow());
+                            atualizarValorEmAberto();
+                            totalEmAberto();
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton baixar;
+    private javax.swing.JButton atualizarFornecedoresBtn;
+    private javax.swing.JButton buscarEmAbertoBtn;
+    private javax.swing.JButton buscarNulosBtn;
+    private javax.swing.JButton buscarPagosBtn;
+    private javax.swing.JButton buscarSequenciaBtn;
+    private javax.swing.JButton buscarTodosBtn;
     private javax.swing.JFormattedTextField emissaotxt;
-    private javax.swing.JTextField emissaotxtbaixa;
-    private javax.swing.JTextField fornecedortxtbaixa;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1070,13 +780,6 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1088,68 +791,49 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel jlb1;
-    private javax.swing.JLabel jlb2;
-    private javax.swing.JLabel jlb3;
-    private javax.swing.JLabel jlb4;
-    private javax.swing.JLabel jlb5;
-    private javax.swing.JLabel jlb6;
     private javax.swing.JButton nulobtn;
-    private javax.swing.JButton pesquisarbaixa;
     private javax.swing.JFormattedTextField predatadotxt;
-    private javax.swing.JFormattedTextField saquetxtbaixa;
+    private javax.swing.JButton proximoBtn;
     private javax.swing.JTextField seqtxt;
     private javax.swing.JTextField seqtxt1;
-    private javax.swing.JTextField seqtxtbaixa;
     private javax.swing.JTextField valorEmAbertotxt;
     private javax.swing.JTextField valortxt;
-    private javax.swing.JTextField valortxtbaixa;
-    private javax.swing.JTextField vencimentotxtbaixa;
     // End of variables declaration//GEN-END:variables
 
-    public void limpartxtbaixa() {
-        fornecedortxtbaixa.setText("");
-        emissaotxtbaixa.setText("");
-        vencimentotxtbaixa.setText("");
-        valortxtbaixa.setText("");
-        saquetxtbaixa.setText("");
+    public void atualizarValorEmAberto() {
+        valorEmAbertotxt.setText("R$ " + colocarPonto(Double.toString(totalEmAberto()).replaceAll("\\.", ",")));
     }
-    public void valorAbertoLblAtualizar(){
-        Double total = totalEmAberto();
-        String totalString= Double.toString(total);
-        totalString = totalString.replaceAll("\\.", ",");
-        totalString = colocarPonto(totalString);
-        valorEmAbertotxt.setText("R$ " + totalString);
-    }
-    public String colocarPonto(String s){
+
+    public String colocarPonto(String s) {
         int index = s.indexOf(",");
-        if (index>3){
+        if (index > 3) {
             String sub = s.substring(0, index);
-            int controle =0;
-            String temp ="";
-            for(int x=0;x<index+1;x++){
-                if (x==index-3){
-                    temp+= '.';
-                }else {
-                    temp+= sub.charAt(controle);
+            int controle = 0;
+            String temp = "";
+            for (int x = 0; x < index + 1; x++) {
+                if (x == index - 3) {
+                    temp += '.';
+                } else {
+                    temp += sub.charAt(controle);
                     controle++;
                 }
             }
-            temp+= s.substring(index);
+            temp += s.substring(index);
             s = temp;
         }
         return s;
     }
+
     public double totalEmAberto() {
         double soma = 0;
-        ChequeDAO dao = new ChequeDAO();
-        for (Cheque c : dao.findAll()) {
+        for (Cheque c : new ChequeDAO().findAll()) {
             if (c.getSaque() == null) {
                 soma += c.getValor();
             }
         }
         return CDbl.CDblDuasCasas(soma);
     }
+
     private void limpartxt() {
         emissaotxt.setText("");
         predatadotxt.setText("");

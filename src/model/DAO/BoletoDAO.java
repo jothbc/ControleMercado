@@ -118,7 +118,7 @@ public class BoletoDAO {
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, seq);
-            stmt.executeUpdate();
+            stmt.execute();
             return true;
         } catch (SQLException ex) {
             System.err.println("Erro ao deletar :" + ex);
@@ -156,7 +156,8 @@ public class BoletoDAO {
         }
         return boletos;
     }
-    public double findAllAberto() {
+
+    public double getValorEmAberto() {
         String sql = "SELECT valor FROM boletos WHERE pago is null ORDER BY vencimento";
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -165,7 +166,7 @@ public class BoletoDAO {
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                valor+=(rs.getDouble("valor"));
+                valor += (rs.getDouble("valor"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BoletoDAO.class.getName()).log(Level.SEVERE, null, ex);

@@ -33,9 +33,8 @@ public class ChequeDAO {
     public boolean save(Cheque cheque){
         String sql = "INSERT INTO cheques (seq,emissao,vencimento,fornecedor_id,valor) VALUES (?,?,?,?,?)";
         PreparedStatement stmt = null;
-        CDate convert = new CDate();
-        String emissao_ = convert.DataPTBRtoDataMySQL(cheque.getEmissao());
-        String predatado_ = convert.DataPTBRtoDataMySQL(cheque.getPredatado());
+        String emissao_ = CDate.PTBRtoMYSQL(cheque.getEmissao());
+        String predatado_ = CDate.PTBRtoMYSQL(cheque.getPredatado());
         try{
             stmt = con.prepareStatement(sql);
             stmt.setInt(1,cheque.getSeq());
@@ -45,7 +44,7 @@ public class ChequeDAO {
             stmt.setDouble(5, cheque.getValor());
             stmt.executeUpdate();
             return true;
-        }catch (Exception ex){
+        }catch (SQLException ex){
             System.err.println("Erro ao salvar o cheque!");
             return false;
         }finally{
@@ -61,7 +60,7 @@ public class ChequeDAO {
             stmt.setInt(2, cheque.getFornecedor().getId());
             stmt.executeUpdate();
             return true;
-        }catch (Exception ex){
+        }catch (SQLException ex){
             System.err.println("Erro ao salvar o cheque!");
             return false;
         }finally{
@@ -71,15 +70,14 @@ public class ChequeDAO {
     public boolean pagar(Cheque cheque){
         String sql = "UPDATE cheques SET saque = ?  WHERE seq = ?";
         PreparedStatement stmt = null;
-        CDate convert = new CDate();
-        String saque_ = convert.DataPTBRtoDataMySQL(cheque.getSaque());
+        String saque_ = CDate.PTBRtoMYSQL(cheque.getSaque());
         try{
             stmt = con.prepareStatement(sql);
             stmt.setString(1,saque_);
             stmt.setInt(2, cheque.getSeq());
             stmt.executeUpdate();
             return true;
-        }catch (Exception ex){
+        }catch (SQLException ex){
             System.err.println("Erro ao tentar salvar como 'pago' no banco de dados!");
             return false;
         }finally{
@@ -107,7 +105,7 @@ public class ChequeDAO {
                 ch.setSaque(rs.getString("saque"));
                 cheques.add(ch);
             }
-        }catch (Exception ex){
+        }catch (SQLException ex){
             System.err.println("Erro ao tentar fazer a busca no banco de dados!");
         }finally{
             ConnectionFactory.closeConnection(con, stmt, rs);
@@ -117,9 +115,8 @@ public class ChequeDAO {
     public boolean update(Cheque cheque){
         String sql = "UPDATE cheques SET emissao = ?,vencimento = ?,fornecedor_id = ?, valor = ? WHERE seq = ?";
         PreparedStatement stmt = null;
-        CDate convert = new CDate();
-        String emissao_ = convert.DataPTBRtoDataMySQL(cheque.getEmissao());
-        String predatado_ = convert.DataPTBRtoDataMySQL(cheque.getPredatado());
+        String emissao_ = CDate.PTBRtoMYSQL(cheque.getEmissao());
+        String predatado_ = CDate.PTBRtoMYSQL(cheque.getPredatado());
         try{
             stmt = con.prepareStatement(sql);
             stmt.setString(1,emissao_);
@@ -129,7 +126,7 @@ public class ChequeDAO {
             stmt.setInt(5, cheque.getSeq());
             stmt.executeUpdate();
             return true;
-        }catch (Exception ex){
+        }catch (SQLException ex){
             System.err.println("Erro ao salvar o cheque!");
             return false;
         }finally{
@@ -137,7 +134,7 @@ public class ChequeDAO {
         }
     }
     
-    public double findAllAberto(){
+    public double getValorEmAberto(){
         String sql = "SELECT valor FROM cheques where saque is null and valor != 0";
         PreparedStatement stmt = null;
         ResultSet rs = null;

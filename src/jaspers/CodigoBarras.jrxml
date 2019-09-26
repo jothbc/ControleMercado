@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CodigoBarras" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="448706dc-979a-4597-919b-3af4ec5cbae9">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CodigoBarras" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="448706dc-979a-4597-919b-3af4ec5cbae9">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -17,6 +17,7 @@
 		<defaultValueExpression><![CDATA[60]]></defaultValueExpression>
 	</parameter>
 	<parameter name="fornecedor" class="java.lang.String"/>
+	<parameter name="linha_digitavel" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT * FROM boletos where seq = $P{seq}]]>
 	</queryString>
@@ -54,19 +55,23 @@
 					<reportElement x="307" y="7" width="100" height="20" uuid="f0452f32-2833-4b08-8db1-13425c1396d7"/>
 					<textFieldExpression><![CDATA[$F{vencimento}]]></textFieldExpression>
 				</textField>
-				<textField pattern="dd/MM/yyyy">
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement x="433" y="7" width="100" height="20" uuid="e14f6a7b-0cda-4070-a347-efd4e20d9503"/>
 					<textFieldExpression><![CDATA[$F{pago}]]></textFieldExpression>
 				</textField>
 				<componentElement>
-					<reportElement x="12" y="42" width="526" height="50" uuid="2aa25ab5-7ce4-4fcf-86fa-c3b514716c50"/>
-					<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Int2of5" drawText="false" checksumRequired="false">
+					<reportElement x="12" y="49" width="337" height="50" uuid="2aa25ab5-7ce4-4fcf-86fa-c3b514716c50"/>
+					<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Int2of5" drawText="false" checksumRequired="false" barHeight="0">
 						<jr:codeExpression><![CDATA[$F{cd_barras}]]></jr:codeExpression>
 					</jr:barbecue>
 				</componentElement>
 				<textField>
 					<reportElement x="27" y="7" width="146" height="20" uuid="55cfc195-eda7-4ddd-a09e-5a89b7d92788"/>
 					<textFieldExpression><![CDATA[$P{fornecedor}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="12" y="29" width="526" height="20" uuid="4f58727e-7117-4c75-a8ef-217698e0beeb"/>
+					<textFieldExpression><![CDATA[$P{linha_digitavel}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -123,45 +128,4 @@
 	<detail>
 		<band height="7" splitType="Stretch"/>
 	</detail>
-	<columnFooter>
-		<band height="7" splitType="Stretch">
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="e3da8d46-e972-4bdf-beaf-2e724e9ffb40"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
-		</band>
-	</columnFooter>
-	<pageFooter>
-		<band height="25" splitType="Stretch">
-			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#000000" uuid="77d4f6e6-95b4-4ec9-8c54-cc8dc2a9c3e9"/>
-				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="edc88d3b-483a-4684-be01-3b33e4e4e940"/>
-					<textElement verticalAlignment="Middle">
-						<font size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="05b69a9a-0119-4af9-9aa9-2b7b820ae180"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-				</textField>
-				<textField pattern="EEEEE dd MMMMM yyyy">
-					<reportElement style="Column header" x="2" y="1" width="197" height="20" forecolor="#FFFFFF" uuid="964f1577-fe99-45f6-92b4-2aa3fe5c38fd"/>
-					<textElement verticalAlignment="Middle">
-						<font size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
-			</frame>
-		</band>
-	</pageFooter>
-	<summary>
-		<band splitType="Stretch"/>
-	</summary>
 </jasperReport>

@@ -25,7 +25,6 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
     /**
      * Creates new form frmValorAberto
      */
-
     public TotalEmAbertoFrm() {
         initComponents();
         start();
@@ -193,13 +192,13 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
     }
 
     public void atualizar() {
-        double boleto = new BoletoDAO().findAllAberto(),
-                cheque = new ChequeDAO().findAllAberto(),
-                imposto = new ImpostoDAO().findAllAberto();
+        double boleto = new BoletoDAO().getValorEmAberto(),
+                cheque = new ChequeDAO().getValorEmAberto(),
+                imposto = new ImpostoDAO().getValorEmAberto();
         boleto = CDbl.CDblDuasCasas(boleto);
         cheque = CDbl.CDblDuasCasas(cheque);
         imposto = CDbl.CDblDuasCasas(imposto);
-        Double total = boleto + cheque + imposto;
+        double total = boleto + cheque + imposto;
         total = CDbl.CDblDuasCasas(total);
 
         String b, c, i, t;
@@ -218,7 +217,7 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
         impostotxt.setText("R$ " + i);
         totaltxt.setText("R$ " + t);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextField boletotxt;
     public javax.swing.JTextField chequetxt;
@@ -235,18 +234,13 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
 
     @Override
     public void run() {
-        long lastTime = System.nanoTime();
-        double amoutOfTicks = 0.1;
-        double ns = 1000000000 / amoutOfTicks;
-        double delta = 0;
         tick();
         while (isRunning) {
-            long now = System.nanoTime();
-            delta += (now - lastTime) / ns;
-            lastTime = now;
-            if (delta >= 1) {
+            try {
+                Thread.sleep(60000);
                 tick();
-                delta--;
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TotalEmAbertoFrm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         stop();

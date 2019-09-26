@@ -33,10 +33,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
+          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -52,74 +49,68 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="jSpinnerDia" min="-2" pref="47" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="entradatxt" min="-2" pref="73" max="-2" attributes="0"/>
+                                  <Component id="txt_entrada" min="-2" pref="73" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="sintervalo" min="-2" pref="73" max="-2" attributes="0"/>
+                                  <Component id="txt_saida_intervalo" min="-2" pref="73" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="eintervalo" min="-2" pref="73" max="-2" attributes="0"/>
+                                  <Component id="txt_entrada_intervalo" min="-2" pref="73" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                                  <Component id="saidatxt" min="-2" pref="73" max="-2" attributes="0"/>
+                                  <Component id="txt_saida" min="-2" pref="73" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="entrada2" min="-2" pref="76" max="-2" attributes="0"/>
+                                  <Component id="txt_entrada_aux" min="-2" pref="76" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="saida2" min="-2" pref="76" max="-2" attributes="0"/>
+                                  <Component id="txt_saida_aux" min="-2" pref="76" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane1" alignment="0" min="-2" pref="761" max="-2" attributes="0"/>
+                              <Component id="jScrollPane1" max="32767" attributes="0"/>
                           </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                              <Component id="limpaDiaBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                              <Component id="domingoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                              <Component id="imprimirBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                              <Component id="editbtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                              <Component id="sabadoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                              <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jPanel3" alignment="1" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="limpaDiaBtn" alignment="1" max="32767" attributes="0"/>
-                                              <Component id="sabadoBtn" max="32767" attributes="0"/>
-                                              <Component id="faltaBtn" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="atestadoBtn" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="feriadoBtn" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="folgaBtn" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="domingoBtn" alignment="1" max="32767" attributes="0"/>
-                                              <Component id="imprimirBtn" alignment="1" max="32767" attributes="0"/>
-                                          </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="fakebtn" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="importBtn" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="editbtn" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="importBtn1" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="folgaBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="feriadoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="atestadoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="faltaBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                                      <Component id="concluirBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
                                   </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="concluirBtn" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="fakebtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="importBtn" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <Component id="jPanel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jPanel2" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jPanel4" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -129,17 +120,17 @@
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jSpinnerDia" alignment="1" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="entradatxt" alignment="3" max="32767" attributes="0"/>
-                                          <Component id="sintervalo" alignment="3" max="32767" attributes="0"/>
-                                          <Component id="eintervalo" alignment="3" max="32767" attributes="0"/>
-                                          <Component id="saidatxt" alignment="3" max="32767" attributes="0"/>
-                                          <Component id="entrada2" alignment="3" max="32767" attributes="0"/>
-                                          <Component id="saida2" alignment="3" max="32767" attributes="0"/>
+                                          <Component id="txt_entrada" alignment="3" max="32767" attributes="0"/>
+                                          <Component id="txt_saida_intervalo" alignment="3" max="32767" attributes="0"/>
+                                          <Component id="txt_entrada_intervalo" alignment="3" max="32767" attributes="0"/>
+                                          <Component id="txt_saida" alignment="3" max="32767" attributes="0"/>
+                                          <Component id="txt_entrada_aux" alignment="3" max="32767" attributes="0"/>
+                                          <Component id="txt_saida_aux" alignment="3" max="32767" attributes="0"/>
                                           <Component id="jPanel6" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane1" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" pref="468" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
@@ -148,33 +139,33 @@
                                       <Component id="importBtn" min="-2" max="-2" attributes="0"/>
                                       <Component id="fakebtn" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                                  <Component id="importBtn1" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="editbtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="sabadoBtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="domingoBtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="folgaBtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="feriadoBtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="atestadoBtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="faltaBtn" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="limpaDiaBtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="imprimirBtn" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="concluirBtn" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jPanel4" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -197,7 +188,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                      <Component id="jSlider1" min="-2" pref="733" max="-2" attributes="0"/>
+                      <Component id="sliderMes" min="-2" pref="733" max="-2" attributes="0"/>
                       <EmptySpace pref="39" max="32767" attributes="0"/>
                       <Component id="anoSpinner" min="-2" pref="103" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -221,7 +212,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="0" pref="1" max="32767" attributes="0"/>
-                              <Component id="jSlider1" min="-2" max="-2" attributes="0"/>
+                              <Component id="sliderMes" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -245,7 +236,7 @@
                 <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="anoSpinnerStateChanged"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JSlider" name="jSlider1">
+            <Component class="javax.swing.JSlider" name="sliderMes">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="99" green="99" red="99" type="rgb"/>
@@ -264,8 +255,8 @@
                 <Property name="paintTicks" type="boolean" value="true"/>
               </Properties>
               <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSlider1StateChanged"/>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jSlider1MouseClicked"/>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="sliderMesStateChanged"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="sliderMesMouseClicked"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="mestxt">
@@ -355,7 +346,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JFormattedTextField" name="entradatxt">
+        <Component class="javax.swing.JFormattedTextField" name="txt_entrada">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="##:##" subtype="-1" type="5"/>
@@ -363,10 +354,10 @@
             <Property name="focusLostBehavior" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="entradatxtKeyPressed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_entradaKeyPressed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="sintervalo">
+        <Component class="javax.swing.JFormattedTextField" name="txt_saida_intervalo">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="##:##" subtype="-1" type="5"/>
@@ -374,10 +365,10 @@
             <Property name="focusLostBehavior" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="sintervaloKeyPressed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_saida_intervaloKeyPressed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="eintervalo">
+        <Component class="javax.swing.JFormattedTextField" name="txt_entrada_intervalo">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="##:##" subtype="-1" type="5"/>
@@ -385,10 +376,10 @@
             <Property name="focusLostBehavior" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="eintervaloKeyPressed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_entrada_intervaloKeyPressed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="saidatxt">
+        <Component class="javax.swing.JFormattedTextField" name="txt_saida">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="##:##" subtype="-1" type="5"/>
@@ -396,11 +387,11 @@
             <Property name="focusLostBehavior" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saidatxtActionPerformed"/>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="saidatxtKeyPressed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_saidaActionPerformed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_saidaKeyPressed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="entrada2">
+        <Component class="javax.swing.JFormattedTextField" name="txt_entrada_aux">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="##:##" subtype="-1" type="5"/>
@@ -408,10 +399,10 @@
             <Property name="focusLostBehavior" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="entrada2KeyPressed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_entrada_auxKeyPressed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="saida2">
+        <Component class="javax.swing.JFormattedTextField" name="txt_saida_aux">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
               <Format format="##:##" subtype="-1" type="5"/>
@@ -419,7 +410,7 @@
             <Property name="focusLostBehavior" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="saida2KeyPressed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_saida_auxKeyPressed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JSpinner" name="jSpinnerDia">
@@ -584,8 +575,8 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="nomeLbl" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanel5" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -595,7 +586,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel7" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -721,295 +713,301 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel7">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Calculo Aproximado">
-                      <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                        <LineBorder roundedCorners="true" thickness="2"/>
-                      </Border>
-                    </TitledBorder>
-                  </Border>
-                </Property>
-              </Properties>
+            <Container class="javax.swing.JScrollPane" name="jScrollPane2">
 
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="valorTotalSalario" alignment="0" max="32767" attributes="0"/>
-                      <Component id="valorTotalExtra" alignment="0" max="32767" attributes="0"/>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                          <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="salarioBase" alignment="0" max="32767" attributes="0"/>
-                              <Component id="feriadosSpin" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="descontoSpin" pref="81" max="32767" attributes="0"/>
-                              <Component id="indenizacaoSpin" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="inssSpin" min="-2" pref="41" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="INSS" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="horaDSR" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                                  <Component id="jLabel17" min="-2" pref="53" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jLabel12" min="-2" pref="53" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="valorDSR" alignment="1" min="-2" pref="109" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Group type="102" attributes="0">
-                                          <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                                          <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
-                                  <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="13" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="valorHora" min="-2" pref="94" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="valorHoraExtra" max="32767" attributes="0"/>
-                      </Group>
-                      <Component id="jButton10" alignment="0" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
-                                  <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
-                                  <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="salarioBase" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="descontoSpin" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="feriadosSpin" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="indenizacaoSpin" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                          <Component id="jButton10" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="valorHoraExtra" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="valorHora" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="INSS" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                                  <Component id="inssSpin" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="valorDSR" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="horaDSR" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="valorTotalExtra" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="valorTotalSalario" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel7">
+                <Container class="javax.swing.JPanel" name="jPanel7">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Sal&#xe1;rio Base"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel8">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Valor Hora"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel9">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Valor H. Extra"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel10">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Valor Total"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="valorHora">
-                </Component>
-                <Component class="javax.swing.JTextField" name="valorHoraExtra">
-                </Component>
-                <Component class="javax.swing.JTextField" name="valorTotalSalario">
-                </Component>
-                <Component class="javax.swing.JTextField" name="valorTotalExtra">
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel11">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Total Extra"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="valorDSR">
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel12">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Total DSR"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel14">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="INSS"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="INSS">
-                </Component>
-                <Component class="javax.swing.JTextField" name="horaDSR">
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel13">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="N&#xba; Feriados"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JSpinner" name="feriadosSpin">
-                  <Properties>
-                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                      <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="Calculo Aproximado">
+                          <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                            <LineBorder roundedCorners="true" thickness="2"/>
+                          </Border>
+                        </TitledBorder>
+                      </Border>
                     </Property>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="jButton10">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Calcular"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton10ActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JSpinner" name="inssSpin">
-                  <Properties>
-                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                      <SpinnerModel initial="9" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel15">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="%"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JSpinner" name="salarioBase">
-                  <Properties>
-                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                      <SpinnerModel initial="1323.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel16">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Descontos"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JSpinner" name="descontoSpin">
-                  <Properties>
-                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                      <SpinnerModel initial="0.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel17">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Hora DSR"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JSpinner" name="indenizacaoSpin">
-                  <Properties>
-                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                      <SpinnerModel initial="0.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel18">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Indeniza&#xe7;&#xe3;o"/>
-                  </Properties>
-                </Component>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="valorTotalSalario" alignment="0" max="32767" attributes="0"/>
+                          <Component id="valorTotalExtra" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="salarioBase" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="feriadosSpin" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="descontoSpin" pref="81" max="32767" attributes="0"/>
+                                  <Component id="indenizacaoSpin" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="inssSpin" min="-2" pref="41" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="INSS" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="horaDSR" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                      <Component id="jLabel17" min="-2" pref="53" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="jLabel12" min="-2" pref="53" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="valorDSR" alignment="1" min="-2" pref="109" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                                              <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                                      <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="13" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="valorHora" min="-2" pref="94" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="valorHoraExtra" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="jButton10" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
+                                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                                      <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="salarioBase" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="descontoSpin" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="feriadosSpin" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="indenizacaoSpin" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                              <Component id="jButton10" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="valorHoraExtra" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="valorHora" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="INSS" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                                      <Component id="inssSpin" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="valorDSR" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="horaDSR" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <Component id="valorTotalExtra" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <Component id="valorTotalSalario" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="jLabel7">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Sal&#xe1;rio Base"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel8">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Valor Hora"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel9">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Valor H. Extra"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel10">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Valor Total"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="valorHora">
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="valorHoraExtra">
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="valorTotalSalario">
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="valorTotalExtra">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel11">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Total Extra"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="valorDSR">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel12">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Total DSR"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel14">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="INSS"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="INSS">
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="horaDSR">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel13">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="N&#xba; Feriados"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JSpinner" name="feriadosSpin">
+                      <Properties>
+                        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                          <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="jButton10">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Calcular"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton10ActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JSpinner" name="inssSpin">
+                      <Properties>
+                        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                          <SpinnerModel initial="9" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel15">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="%"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JSpinner" name="salarioBase">
+                      <Properties>
+                        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                          <SpinnerModel initial="1323.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel16">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Descontos"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JSpinner" name="descontoSpin">
+                      <Properties>
+                        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                          <SpinnerModel initial="0.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel17">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Hora DSR"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JSpinner" name="indenizacaoSpin">
+                      <Properties>
+                        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                          <SpinnerModel initial="0.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel18">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Indeniza&#xe7;&#xe3;o"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -1082,6 +1080,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/Imagens/page_white_picture.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Importar CVS"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importBtnActionPerformed"/>
@@ -1092,9 +1091,21 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/Imagens/page_white_code.png"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Cart&#xe3;o Fict&#xed;cio"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fakebtnActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="importBtn1">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/Imagens/page_white_code_red.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Diminuir Diferen&#xe7;a de Horas"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importBtn1ActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
