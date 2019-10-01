@@ -42,6 +42,7 @@ public class Boleto_JF extends javax.swing.JFrame {
     private int banco;
     private int[] index_busca;
     private int index_atual_busca = 0;
+    private DefaultTableModel tb;
 
     /**
      * Creates new form TestBoleto
@@ -49,8 +50,8 @@ public class Boleto_JF extends javax.swing.JFrame {
     public Boleto_JF() {
         initComponents();
         this.setExtendedState(Boleto_JF.MAXIMIZED_BOTH);
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        jTable1.setRowSorter(new TableRowSorter(modelo));
+        tb = (DefaultTableModel) jTable1.getModel();
+        jTable1.setRowSorter(new TableRowSorter(tb));
         //jTable1.setDefaultRenderer(Object.class, new cellRenderBoleto());
         atualizarValorTotalAberto();
         AutoCompletion.enable(jComboBoxFornecedor);
@@ -626,6 +627,11 @@ public class Boleto_JF extends javax.swing.JFrame {
         });
 
         jButton8.setText("Buscar Fornecedor");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -722,7 +728,7 @@ public class Boleto_JF extends javax.swing.JFrame {
     }//GEN-LAST:event_data2txtActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        atualizarBtn();
+        atualizar_tabela();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cd_barras_leitorKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cd_barras_leitorKeyPressed
@@ -800,7 +806,7 @@ public class Boleto_JF extends javax.swing.JFrame {
             if (a != null && !a.equals("")) {
                 try {
                     double valor = Double.parseDouble(a.replaceAll(",", "\\."));
-                    CheckBoxPagos.setSelected(false);
+                    CheckBoxPagos.setSelected(true);
                     datatxt.setText("  /  /    ");
                     data2txt.setText("  /  /    ");
                     jButton1ActionPerformed(null);
@@ -834,6 +840,23 @@ public class Boleto_JF extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_busca_valor_btnActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        SelecionarFornecedorJD jd = new SelecionarFornecedorJD(null, true);
+        jd.setVisible(true);
+        if (jd.getFornecedor() != null) {
+            CheckBoxPagos.setSelected(true);
+            datatxt.setText("  /  /    ");
+            data2txt.setText("  /  /    ");
+            atualizar_tabela();
+            for (int x = jTable1.getRowCount() - 1; x >= 0; x--) {
+                String t1 = (String) jTable1.getValueAt(x, 2);
+                if (!t1.equals(jd.getFornecedor().getNome())) {
+                    tb.removeRow(x);
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1051,6 +1074,7 @@ public class Boleto_JF extends javax.swing.JFrame {
 
     }
 
+    @Deprecated
     public long diasRestantes(String data) throws Exception {
         CDate conv = new CDate();
         return conv.diasRestantes(data);
@@ -1084,8 +1108,7 @@ public class Boleto_JF extends javax.swing.JFrame {
         }
     }
 
-    private void atualizarBtn() {
-        DefaultTableModel tb = (DefaultTableModel) jTable1.getModel();
+    private void atualizar_tabela() {
         tb.setRowCount(0);
         List<Boleto> boletos = new BoletoDAO().findAll();
         String nome, cd_barras;
@@ -1147,13 +1170,13 @@ public class Boleto_JF extends javax.swing.JFrame {
             }
         }
         valorEmAbertoTabela();
+        atualizarValorTotalAberto();
         totalLinhas();
     }
 
     private void excluir() {
         int colunaSeq = 0;
         if (jTable1.getSelectedRow() >= 0) {
-            DefaultTableModel tb = (DefaultTableModel) jTable1.getModel();
             int seq = (int) tb.getValueAt(jTable1.getSelectedRow(), colunaSeq);
             int op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir o boleto selecionado?", "Excluir Boleto", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
             if (op != JOptionPane.YES_OPTION) {
@@ -1164,7 +1187,7 @@ public class Boleto_JF extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao tentar remover o boleto do Banco de Dados!");
             }
-            atualizarBtn();
+            atualizar_tabela();
         }
     }
 
@@ -1317,7 +1340,8 @@ public class Boleto_JF extends javax.swing.JFrame {
         String fornecedor = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
         String linha_digitavel = BoletoFuncoes.codigoDeBarrasEmLinhaDigitavel((String) jTable1.getValueAt(jTable1.getSelectedRow(), 6), false);
         Connection conn = ConnectionFactory.getConnection();
-        String scr = "C:\\JCR\\RELATORIOS DESPESA\\CodigoBarras.jasper";
+        //String scr = "C:\\JCR\\RELATORIOS DESPESA\\CodigoBarras.jasper";
+        String scr = "src/jaspers/CodigoBarras.jasper";
         JasperPrint js = null;
         try {
             HashMap<String, Object> map = new HashMap<>();

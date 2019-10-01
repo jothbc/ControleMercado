@@ -82,7 +82,7 @@ public class Menu extends javax.swing.JFrame{
         jLabel1.setToolTipText("");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("V2.3");
+        jLabel2.setText("V1.3");
 
         jDesktopPane1.setLayer(BGImg, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);

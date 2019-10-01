@@ -8,13 +8,13 @@ package br.Boleto.Form.CartaoPonto;
 import JDBC.ConnectionFactory;
 import funcoes.CDate;
 import funcoes.CDbl;
+import funcoes.ScroollJTable;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * @author Jonathan CR
  */
 public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
-
+    
     Funcionario fun;
     int ano, mes, dia, maior;
     Calendar calendario;
@@ -61,7 +61,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         initComponents();
         init(funcionario);
     }
-
+    
     public void init(Funcionario funcionario) {
         //defini o funcionario
         fun = funcionario;
@@ -74,6 +74,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         tb = (DefaultTableModel) jTable1.getModel();
         //seta data atual
         calendario = Calendar.getInstance();
+        calendario.set(Calendar.MONTH, calendario.get(Calendar.MONTH) - 1);
         mes = calendario.get(Calendar.MONTH) + 1;
         ano = calendario.get(Calendar.YEAR);
         calendario.setFirstDayOfWeek(Calendar.SUNDAY);
@@ -365,42 +366,42 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         });
 
-        sabadoBtn.setText("Sábado");
+        sabadoBtn.setText("S: Sábado");
         sabadoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sabadoBtnActionPerformed(evt);
             }
         });
 
-        domingoBtn.setText("Domingo");
+        domingoBtn.setText("D: Domingo");
         domingoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 domingoBtnActionPerformed(evt);
             }
         });
 
-        folgaBtn.setText("Folga");
+        folgaBtn.setText("R: Folga");
         folgaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 folgaBtnActionPerformed(evt);
             }
         });
 
-        feriadoBtn.setText("Feriado");
+        feriadoBtn.setText("H: Feriado");
         feriadoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 feriadoBtnActionPerformed(evt);
             }
         });
 
-        atestadoBtn.setText("Atestado");
+        atestadoBtn.setText("A: Atestado");
         atestadoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 atestadoBtnActionPerformed(evt);
             }
         });
 
-        faltaBtn.setText("Falta");
+        faltaBtn.setText("F: Falta");
         faltaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 faltaBtnActionPerformed(evt);
@@ -927,28 +928,68 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }//GEN-LAST:event_anoSpinnerStateChanged
 
     private void txt_entradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_entradaKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            txt_saida_intervalo.requestFocus();
-            verificacaoMeiaNoite(txt_entrada.getText());
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_D:
+                //domingo
+                txt_entrada.setText("");
+                domingoBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_S:
+                //sabado
+                txt_entrada.setText("");
+                sabadoBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_R:
+                //folga
+                txt_entrada.setText("");
+                folgaBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_H:
+                //feriado
+                txt_entrada.setText("");
+                feriadoBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_A:
+                //atestado
+                txt_entrada.setText("");
+                atestadoBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_F:
+                //falta
+                txt_entrada.setText("");
+                faltaBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_ENTER:
+                txt_saida_intervalo.requestFocus();
+                verificacaoMeiaNoite(txt_entrada.getText());
+                break;
+            default:
+                break;
         }
     }//GEN-LAST:event_txt_entradaKeyPressed
 
     private void txt_saida_intervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_saida_intervaloKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txt_entrada.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             txt_entrada_intervalo.requestFocus();
             verificacaoMeiaNoite(txt_saida_intervalo.getText());
         }
     }//GEN-LAST:event_txt_saida_intervaloKeyPressed
 
     private void txt_entrada_intervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_entrada_intervaloKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txt_saida_intervalo.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             txt_saida.requestFocus();
             verificacaoMeiaNoite(txt_entrada_intervalo.getText());
         }
     }//GEN-LAST:event_txt_entrada_intervaloKeyPressed
 
     private void txt_saidaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_saidaKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txt_entrada_intervalo.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             verificacaoMeiaNoite(txt_saida.getText());
             lancarHorarios();
             diaSpinner.setValue((int) diaSpinner.getValue() + 1);
@@ -1302,7 +1343,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         //verifica se o cartao desse mes já foi lançado no banco de dados
         verificarExistente();
     }
-
+    
     private void Horas() {
         //inicia variáveis zeradas
         double entrada = 0,
@@ -1344,8 +1385,19 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             if (tb.getValueAt(x, 6) != null) {
                 saida_ex = CDate.horaPDecimal((String) tb.getValueAt(x, 6));
             }
+            try {
+                String temp_ = (String) jTable1.getValueAt(x, 0);
+                if (temp_.equals("A")) { //verifica se o dia em questão é Atestado. O atestado cobre as horas faltas daquele dia.
+                    horasTrabalhadas = CDate.horaPDecimal((String) tb.getValueAt(x, 7));
+                } else {
+                    horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
+                }
+            } catch (ClassCastException ex) {
+                horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
+            }
+
             //horas trabalhadas do dia:
-            horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
+            //horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
             System.out.println("HORAS TRABALHADAS DIA: " + (x + 1) + " HORAS: " + CDbl.CDblDuasCasas(horasTrabalhadas) + " BASE: " + CDbl.CDblDuasCasas(base));
             //verifica se o funcionário fez horas extras
             if (CDbl.CDblDuasCasas(horasTrabalhadas) > CDbl.CDblDuasCasas(base)) {
@@ -1388,7 +1440,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         horasExtrasNoturnastxt.setText(CDate.decimalPHora(noturna, false));
         reducaoNoturnotxt.setText(Double.toString(CDbl.CDblDuasCasas(7.5 / 60 * noturna)));
     }
-
+    
     private void lancarHorarios() {
         String entradaS, s_intervaloS, e_intervaloS, saidaS, entrada_2S, saida_2S;
         entradaS = txt_entrada.getText();
@@ -1433,14 +1485,15 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
         //System.out.println("DIA " + diaAtual + ": " + horasTrabalhadas2 + " Horas Extras do dia: " + (horasTrabalhadas2 - 7.33));
         tb.setValueAt(CDate.decimalPHora(horasTrabalhadas, false), diaAtual - 1, 7);
+        ScroollJTable.selectAndScroll(jTable1, diaAtual - 1);
         limpaCampos();
         Horas();
     }
-
+    
     private Object jornada() {
         return jornadaString;
     }
-
+    
     private void limpaCampos() {
         txt_entrada.setText("");
         txt_saida_intervalo.setText("");
@@ -1449,7 +1502,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         txt_entrada_aux.setText("");
         txt_saida_aux.setText("");
     }
-
+    
     private void salvar() {
         CartaoPonto cartao = new CartaoPonto();
         cartao.setFuncionario(fun);
@@ -1472,7 +1525,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void verificarExistente() {
         boolean lancado = new CartaoPontoDAO().lancado(fun, mes, ano);
         if (lancado) {
@@ -1531,7 +1584,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             StatusBtn(true);
         }
     }
-
+    
     private void atualizar() {
         CartaoPonto cartao = new CartaoPonto();
         cartao.setFuncionario(fun);
@@ -1553,7 +1606,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Algo deu errado!...");
         }
     }
-
+    
     private void StatusBtn(boolean habilitado) {
         sabadoBtn.setVisible(habilitado);
         domingoBtn.setVisible(habilitado);
@@ -1575,7 +1628,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         imprimirBtn.setVisible(!habilitado); //contrário
         editbtn.setVisible(!habilitado); //contrário
     }
-
+    
     private void calcularAproximacao() {
         int domingos = (int) feriadosSpin.getValue();
         int totalDias = tb.getRowCount();
@@ -1624,7 +1677,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             System.out.println(ex);
         }
     }
-
+    
     public void importCVS() {
         JFileChooser fl = new JFileChooser();
         fl.setDialogTitle("Importar arquivo CSV");
@@ -1674,7 +1727,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void lancarImport(String[][] tabela) {
         diaSpinner.setValue(1);
         for (int x = 0; x < tb.getRowCount(); x++) {
@@ -1726,14 +1779,14 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void lancarDiaImport() {
         lancarHorarios();
         diaSpinner.setValue((int) diaSpinner.getValue() + 1);
         txt_entrada.requestFocus();
         Horas();
     }
-
+    
     private String verificaStringHorario(String temp) {
         temp = temp.trim();
         //System.out.println("e>>>" + temp);
@@ -1747,7 +1800,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         //System.out.println("s>>" + s[0] + ":" + s[1]);
         return s[0] + ":" + s[1];
     }
-
+    
     private double[] calculoNoturno(double[] horarios) {
         double entrada, saida_intervalo, entrada_intervalo, saida, entrada_ex, saida_ex;
         entrada = horarios[0];
@@ -1818,7 +1871,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         horarios[5] = saida_ex;
         return horarios;
     }
-
+    
     private void carregarDiaClickado(int i) {
         txt_entrada.setText((String) jTable1.getValueAt(i, 1));
         txt_saida_intervalo.setText((String) jTable1.getValueAt(i, 2));
@@ -1827,7 +1880,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         txt_entrada_aux.setText((String) jTable1.getValueAt(i, 5));
         txt_saida_aux.setText((String) jTable1.getValueAt(i, 6));
     }
-
+    
     private void verificacaoMeiaNoite(String text) {
         if (!"  :  ".equals(text)) {
             double temp = CDate.horaPDecimal(text);
@@ -1836,7 +1889,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void exibirMensagemHorario() {
         if (infoMensagem) {
             JOptionPane.showMessageDialog(this, "Se o horário informado for respectivo a outro dia deve-se somar 24Horas"
@@ -1845,7 +1898,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             infoMensagem = false;
         }
     }
-
+    
     private void cartaoFicticio() {
         CartaoFicticio_JD jd = new CartaoFicticio_JD(this, true);
         jd.setVisible(true);
@@ -1890,13 +1943,13 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void SemHorasExtrasEFaltas() {
         new Thread(() -> {
             double jornada = CDate.horaPDecimal(jornadaString);
             double hrs_trab = 0;
             double dif_hrs_trab_e_jornada;
-
+            
             int max_rep = 50;
             int controle_rep = 0;
             for (int x = 0; x < jTable1.getRowCount(); x++) {
@@ -1908,13 +1961,13 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                             while (count < 10 && (hrs_trab != jornada)) {
                                 hrs_trab = CDate.horaPDecimal((String) jTable1.getValueAt(x, 7));
                                 dif_hrs_trab_e_jornada = hrs_trab - jornada;
-
+                                
                                 if (dif_hrs_trab_e_jornada != 0) {
-
+                                    
                                     jTable1.setRowSelectionInterval(x, x);
                                     jSpinnerDia.setValue(x + 1);
                                     carregarDiaClickado(x);
-
+                                    
                                     if (dif_hrs_trab_e_jornada > 0.01) {
                                         txt_saida.setText(CDate.decimalPHora(CDate.horaPDecimal(txt_saida.getText()) - 0.01, false));
                                         lancarDiaImport();
@@ -1927,7 +1980,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                                 try {
                                     Thread.sleep(0);
                                 } catch (Exception e) {
-
+                                    
                                 }
                             }
                             if (count == 10) {
@@ -1945,10 +1998,11 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             }
         }).start();
     }
-
+    
     private void imprimir() {
         Connection conn = ConnectionFactory.getConnection();
-        String src = "C:\\JCR\\RELATORIOS DESPESA\\CartaoPontojs.jasper";
+        //String src = "C:\\JCR\\RELATORIOS DESPESA\\CartaoPontojs.jasper";
+        String src = "src/jaspers/CartaoPontojs.jasper";
         JasperPrint js = null;
         try {
             HashMap<String, Object> map = new HashMap<>();

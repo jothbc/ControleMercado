@@ -420,7 +420,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="sabadoBtn">
           <Properties>
-            <Property name="text" type="java.lang.String" value="S&#xe1;bado"/>
+            <Property name="text" type="java.lang.String" value="S: S&#xe1;bado"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sabadoBtnActionPerformed"/>
@@ -428,7 +428,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="domingoBtn">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Domingo"/>
+            <Property name="text" type="java.lang.String" value="D: Domingo"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="domingoBtnActionPerformed"/>
@@ -436,7 +436,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="folgaBtn">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Folga"/>
+            <Property name="text" type="java.lang.String" value="R: Folga"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="folgaBtnActionPerformed"/>
@@ -444,7 +444,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="feriadoBtn">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Feriado"/>
+            <Property name="text" type="java.lang.String" value="H: Feriado"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="feriadoBtnActionPerformed"/>
@@ -452,7 +452,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="atestadoBtn">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Atestado"/>
+            <Property name="text" type="java.lang.String" value="A: Atestado"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="atestadoBtnActionPerformed"/>
@@ -460,7 +460,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="faltaBtn">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Falta"/>
+            <Property name="text" type="java.lang.String" value="F: Falta"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="faltaBtnActionPerformed"/>

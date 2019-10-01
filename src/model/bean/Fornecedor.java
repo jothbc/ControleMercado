@@ -9,7 +9,7 @@ package model.bean;
  *
  * @author User
  */
-public class Fornecedor implements Comparable{
+public class Fornecedor implements Comparable {
 
     private int id;
     private String nome;
@@ -17,7 +17,7 @@ public class Fornecedor implements Comparable{
     private String numero;
 
     public Fornecedor() {
-        this.banco=-1;
+        this.banco = -1;
     }
 
     public Fornecedor(String nome) {
@@ -31,7 +31,6 @@ public class Fornecedor implements Comparable{
         this.banco = banco;
         this.numero = null;
     }
-    
 
     /**
      * @return the id
@@ -78,22 +77,28 @@ public class Fornecedor implements Comparable{
     }
 
     public int compareTo(Fornecedor t) {
-        if (this.numero.length()<t.numero.length()){
+        if (this.numero.length() < t.numero.length()) {
             return -1;
         }
-        if (this.numero.length()>t.numero.length()){
+        if (this.numero.length() > t.numero.length()) {
             return 1;
         }
         return 0;
     }
 
-    @Override
-    public int compareTo(Object t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String toString() {
+        return this.nome + "  Banco: " + this.banco;
     }
 
-    
-    
-    
-    
+    @Override
+    public int compareTo(Object o) {
+        Fornecedor t = (Fornecedor) o;
+        if (this.numero.length() < t.numero.length()) {
+            return -1;
+        }
+        if (this.numero.length() > t.numero.length()) {
+            return 1;
+        }
+        return 0;
+    }
 }

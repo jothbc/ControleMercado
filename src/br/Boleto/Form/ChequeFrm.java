@@ -9,8 +9,11 @@ import funcoes.AutoCompletion;
 import funcoes.CDate;
 import funcoes.CDbl;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyVetoException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -34,6 +37,12 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
      */
     public ChequeFrm() {
         initComponents();
+        //pc do samoel dando erro nesse metodo
+//        try {
+//            this.setMaximum(true);
+//        } catch (PropertyVetoException ex) {
+//            Logger.getLogger(ChequeFrm.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         tb = (DefaultTableModel) jTable1.getModel();
         AutoCompletion.enable(jComboBox1);
         jTable1.setRowSorter(new TableRowSorter<>(tb));
@@ -144,6 +153,8 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
         valorEmAbertotxt = new javax.swing.JTextField();
 
         setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Gerenciador de Cheques");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -591,7 +602,7 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(valorEmAbertotxt))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, 0)))
                 .addContainerGap())
         );
 
