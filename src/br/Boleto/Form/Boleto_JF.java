@@ -20,8 +20,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JViewport;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.DAO.BoletoDAO;
@@ -52,7 +54,11 @@ public class Boleto_JF extends javax.swing.JFrame {
         this.setExtendedState(Boleto_JF.MAXIMIZED_BOTH);
         tb = (DefaultTableModel) jTable1.getModel();
         jTable1.setRowSorter(new TableRowSorter(tb));
-        //jTable1.setDefaultRenderer(Object.class, new cellRenderBoleto());
+        //seta como left o horizontalAlignment a primeira coluna
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
+
         atualizarValorTotalAberto();
         AutoCompletion.enable(jComboBoxFornecedor);
         jButton1ActionPerformed(null);
@@ -156,14 +162,14 @@ public class Boleto_JF extends javax.swing.JFrame {
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setMaxWidth(60);
             jTable1.getColumnModel().getColumn(1).setMinWidth(80);
-            jTable1.getColumnModel().getColumn(1).setMaxWidth(100);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(180);
             jTable1.getColumnModel().getColumn(2).setMinWidth(200);
             //jTable1.getColumnModel().getColumn(2).setMaxWidth(300);
             jTable1.getColumnModel().getColumn(3).setMinWidth(50);
             jTable1.getColumnModel().getColumn(3).setMaxWidth(100);
             jTable1.getColumnModel().getColumn(4).setMinWidth(40);
             jTable1.getColumnModel().getColumn(4).setMaxWidth(40);
-            jTable1.getColumnModel().getColumn(5).setMaxWidth(100);
+            jTable1.getColumnModel().getColumn(5).setMaxWidth(180);
             jTable1.getColumnModel().getColumn(6).setMinWidth(80);
 
         }
@@ -1146,7 +1152,6 @@ public class Boleto_JF extends javax.swing.JFrame {
                 pago_ = null;
             }
             cd_barras = boleto.getCd_barras();
-
             Object[] dados = {id, vencimento_, nome, valor, null, pago_, cd_barras};
 
             Date dboleto = null;
@@ -1253,8 +1258,7 @@ public class Boleto_JF extends javax.swing.JFrame {
             jLabel10.setIcon(new ImageIcon(getClass().getResource("/Imagens/flag_green.png")));
             Boleto boleto = new Boleto();
             Fornecedor fornecedor = new Fornecedor();
-            FornecedorDAO dao = new FornecedorDAO();
-            for (Fornecedor f : dao.findAll()) {
+            for (Fornecedor f : new FornecedorDAO().findAll()) {
                 if (f.getBanco() == getbanco() && f.getNome().equals(jComboBoxFornecedor.getItemAt(jComboBoxFornecedor.getSelectedIndex()))) {
                     fornecedor.setNome(f.getNome());
                     fornecedor.setBanco(f.getBanco());
@@ -1267,8 +1271,7 @@ public class Boleto_JF extends javax.swing.JFrame {
             value = valor_boleto_txt.getText().replaceAll(",", ".");
             boleto.setValor(Double.parseDouble(value));
             boleto.setVencimento(vencimento_boleto_txt.getText());
-            BoletoDAO bdao = new BoletoDAO();
-            for (Boleto b : bdao.findAll()) {
+            for (Boleto b : new BoletoDAO().findAll()) {
                 if (b.getCd_barras().equals(boleto.getCd_barras())) {
                     int op = -1;
                     op = JOptionPane.showOptionDialog(null, "Um boleto com o mesmo código de barras já se encontra lançado,\ndeseja continuar?", "Cógido já existente!", 1, op, null, null, null);
@@ -1277,8 +1280,7 @@ public class Boleto_JF extends javax.swing.JFrame {
                     }
                 }
             }
-            bdao.reconect();
-            if (bdao.save(boleto)) {
+            if (new BoletoDAO().save(boleto)) {
                 b_temp = boleto;
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao salvar!");

@@ -101,6 +101,9 @@
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable1MouseClicked"/>
               </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="if (jTable1.getColumnModel().getColumnCount() &gt; 0) {&#xa;    jTable1.getColumnModel().getColumn(0).setMaxWidth(60);&#xa;&#xa;    jTable1.getColumnModel().getColumn(1).setMinWidth(80);&#xa;    jTable1.getColumnModel().getColumn(1).setMaxWidth(180);&#xa;&#xa;    jTable1.getColumnModel().getColumn(2).setMinWidth(80);&#xa;    jTable1.getColumnModel().getColumn(2).setMaxWidth(180);&#xa;&#xa;    jTable1.getColumnModel().getColumn(3).setMinWidth(50);&#xa;&#xa;    jTable1.getColumnModel().getColumn(4).setMinWidth(40);&#xa;    jTable1.getColumnModel().getColumn(4).setMaxWidth(70);&#xa;&#xa;    jTable1.getColumnModel().getColumn(5).setMinWidth(80);&#xa;    jTable1.getColumnModel().getColumn(5).setMaxWidth(180);&#xa;    &#xa;}"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

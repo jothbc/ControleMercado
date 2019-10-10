@@ -16,8 +16,10 @@ import java.net.URL;
  *
  * @author User
  */
-public class Menu extends javax.swing.JFrame{
+public class Menu extends javax.swing.JFrame {
+
     TotalEmAbertoFrm frm = new TotalEmAbertoFrm();
+
     /**
      * Creates new form Menu
      */
@@ -263,7 +265,7 @@ public class Menu extends javax.swing.JFrame{
         jDesktopPane1.add(tl);
         tl.show();
     }//GEN-LAST:event_jMenuItem9ActionPerformed
-    
+
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         new FornecedorRefinarNumeroFrm().setVisible(true);
     }//GEN-LAST:event_jMenuItem10ActionPerformed

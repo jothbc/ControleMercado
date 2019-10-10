@@ -14,7 +14,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.DAO.ChequeDAO;
@@ -46,6 +48,12 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
         tb = (DefaultTableModel) jTable1.getModel();
         AutoCompletion.enable(jComboBox1);
         jTable1.setRowSorter(new TableRowSorter<>(tb));
+
+        //defini primeira coluna com alinhamento a esquerda
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
+
         cheques = new ChequeDAO().findAll();
         fornecedores = new FornecedorDAO().findAll();
         buscarTodosBtnActionPerformed(null);
@@ -56,7 +64,7 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
     private void atualizartable(int op) {
         tb.setRowCount(0);
         long seq;
-        String fornecedor;
+        String fornecedor = null;
         Date vencimento = null, emissao = null, pago = null;
         double valor;
         cheques = new ChequeDAO().findAll();
@@ -95,7 +103,7 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                     }
                     break;
                 case 4:
-                    if (pago == null & valor == 0) {
+                    if (fornecedor.equals("NULO")) {
                         tb.addRow(dados);
                     }
                     break;
@@ -186,6 +194,24 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(60);
+
+            jTable1.getColumnModel().getColumn(1).setMinWidth(80);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(180);
+
+            jTable1.getColumnModel().getColumn(2).setMinWidth(80);
+            jTable1.getColumnModel().getColumn(2).setMaxWidth(180);
+
+            jTable1.getColumnModel().getColumn(3).setMinWidth(50);
+
+            jTable1.getColumnModel().getColumn(4).setMinWidth(40);
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(70);
+
+            jTable1.getColumnModel().getColumn(5).setMinWidth(80);
+            jTable1.getColumnModel().getColumn(5).setMaxWidth(180);
+
+        }
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "Filtro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
@@ -601,8 +627,7 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
                         .addGap(84, 84, 84)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(valorEmAbertotxt))
-                        .addGap(0, 0, 0)))
+                            .addComponent(valorEmAbertotxt))))
                 .addContainerGap())
         );
 
@@ -652,11 +677,7 @@ public class ChequeFrm extends javax.swing.JInternalFrame {
 
     private void nulobtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nulobtnActionPerformed
         if (!seqtxt1.getText().equals("")) {
-            Fornecedor fornecedor = new Fornecedor();
-            fornecedor.setId(1);
-            Cheque cheque = new Cheque(Integer.parseInt(seqtxt1.getText()), fornecedor, "00/00/0000", "00/00/0000", 0);
-            ChequeDAO dao = new ChequeDAO();
-            if (dao.anular(cheque)) {
+            if (new ChequeDAO().anular(Integer.parseInt(seqtxt1.getText()))) {
                 seqtxt1.setText(String.valueOf(Integer.parseInt(seqtxt1.getText()) + 1));
                 atualizartable(4);
             } else {
