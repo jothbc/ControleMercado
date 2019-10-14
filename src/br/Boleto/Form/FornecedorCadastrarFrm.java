@@ -15,11 +15,17 @@ import model.bean.Fornecedor;
  */
 public class FornecedorCadastrarFrm extends javax.swing.JFrame {
 
+    private String codigo_barras;
+
     /**
      * Creates new form frmFornecedorCadastrar2
      */
-    public FornecedorCadastrarFrm() {
+    public FornecedorCadastrarFrm(String cd) {
         initComponents();
+        codigo_barras = cd;
+        if(!"".equals(codigo_barras)){
+            testar_numero();
+        }
     }
 
     /**
@@ -156,7 +162,7 @@ public class FornecedorCadastrarFrm extends javax.swing.JFrame {
         try {
             fornecedortxt.setText(fornecedortxt.getText().toUpperCase());
             Fornecedor fornecedor = new Fornecedor();
-            if (check.isSelected()){
+            if (check.isSelected()) {
                 fornecedor.setBanco(-1);
             }
             if (fornecedortxt.getText().equals("")) {
@@ -169,12 +175,11 @@ public class FornecedorCadastrarFrm extends javax.swing.JFrame {
             if (!bancotxt.getText().equals("")) {
                 if (bancotxt.getText().length() > 3) {
                     throw new Exception("O campo 'Banco' suporta somente 3 digitos.");
-                }
-                else {
+                } else {
                     fornecedor.setBanco(Integer.parseInt(bancotxt.getText()));
                 }
             }
-            if (!numerotxt.getText().equals("")){
+            if (!numerotxt.getText().equals("")) {
                 fornecedor.setNumero(numerotxt.getText());
             }
             FornecedorDAO dao = new FornecedorDAO();
@@ -189,10 +194,9 @@ public class FornecedorCadastrarFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         Fornecedor_ProcurarMelhorNumeroJD jd = new Fornecedor_ProcurarMelhorNumeroJD(null, true);
         jd.setVisible(true);
-        if (jd.provavel!=null){
+        if (jd.provavel != null) {
             numerotxt.setText(jd.provavel);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -228,7 +232,7 @@ public class FornecedorCadastrarFrm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FornecedorCadastrarFrm().setVisible(true);
+                new FornecedorCadastrarFrm("").setVisible(true);
             }
         });
     }
@@ -245,4 +249,20 @@ public class FornecedorCadastrarFrm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField numerotxt;
     // End of variables declaration//GEN-END:variables
+
+    private void testar_numero() {
+        if (codigo_barras.length() != 44 && codigo_barras.length() != 47) {
+            JOptionPane.showMessageDialog(null, "Faltam digitos!");
+        } else if (codigo_barras.length() == 47) {
+            String temp = "";
+            temp = temp + codigo_barras.substring(0, 4);
+            temp = temp + codigo_barras.substring(32);
+            temp = temp + codigo_barras.substring(4, 9);
+            temp = temp + codigo_barras.substring(10, 20);
+            temp = temp + codigo_barras.substring(21, 31);
+            codigo_barras = temp;
+        }
+        numerotxt.setText(codigo_barras.substring(25, 29));
+        bancotxt.setText(codigo_barras.substring(0,3));
+    }
 }

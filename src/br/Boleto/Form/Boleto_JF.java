@@ -1240,7 +1240,7 @@ public class Boleto_JF extends javax.swing.JFrame {
     }
 
     private void buscarFornecedorBtn() {
-        Fornecedor_ListaBancoJD dj = new Fornecedor_ListaBancoJD(null, true, getbanco());
+        Fornecedor_ListaBancoJD dj = new Fornecedor_ListaBancoJD(null, true, getbanco(),cd_barras_leitor.getText());
         dj.setVisible(true);
         if (dj.getDescricao() != null) {
             jComboBoxFornecedor.removeAllItems();
@@ -1313,7 +1313,7 @@ public class Boleto_JF extends javax.swing.JFrame {
         setbanco(BoletoFuncoes.getBanco(cd_barras_leitor.getText()));
         atualizarFornecedor(getbanco(), cd_barras_leitor.getText());
         if (jComboBoxFornecedor.getItemCount() == 0) {
-            Fornecedor_ListaBancoJD jd = new Fornecedor_ListaBancoJD(null, true, getbanco());
+            Fornecedor_ListaBancoJD jd = new Fornecedor_ListaBancoJD(null, true, getbanco(),cd_barras_leitor.getText());
             jd.setVisible(true);
             if (jd.getDescricao() != null) {
                 jComboBoxFornecedor.removeAllItems();

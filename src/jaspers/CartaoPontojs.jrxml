@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CartaoPontojs" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="706fe2a2-2048-4eb1-b38a-ccc6e6eef59b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CartaoPontojs" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="706fe2a2-2048-4eb1-b38a-ccc6e6eef59b">
 	<property name="ireport.zoom" value="1.6105100000000139"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="71"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
@@ -22,11 +22,10 @@
 	<parameter name="anofun" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
-	<parameter name="jornadafun" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select cartao_ponto.nome, cartao_ponto.dia,cartao_ponto.mes,cartao_ponto.ano,cartao_ponto.situacao,cartao_ponto.entrada,cartao_ponto.saida_intervalo,
 cartao_ponto.entrada_intervalo,cartao_ponto.saida,cartao_ponto.entrada2,cartao_ponto.saida2,cartao_ponto.horas_trabalhadas,cartao_ponto_sub.hora_extra,
-cartao_ponto_sub.hora_falta,cartao_ponto_sub.hora_noturna,cartao_ponto_sub.reducao_noturna from cartao_ponto join cartao_ponto_sub on cartao_ponto.codigo = cartao_ponto_sub.codigo where cartao_ponto.codigo = $P{cdfun} and cartao_ponto.ano =$P{anofun} and cartao_ponto.mes = $P{mesfun};]]>
+cartao_ponto_sub.hora_falta,cartao_ponto_sub.hora_noturna,cartao_ponto_sub.reducao_noturna,cartao_ponto_sub.jornada from cartao_ponto join cartao_ponto_sub on cartao_ponto.codigo = cartao_ponto_sub.codigo where cartao_ponto.codigo = $P{cdfun} and cartao_ponto.ano =$P{anofun} and cartao_ponto.mes = $P{mesfun};]]>
 	</queryString>
 	<field name="nome" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -74,6 +73,9 @@ cartao_ponto_sub.hora_falta,cartao_ponto_sub.hora_noturna,cartao_ponto_sub.reduc
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="reducao_noturna" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="jornada" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<group name="dia">
@@ -335,7 +337,7 @@ $F{horas_trabalhadas}.toString().substring(0,5)
 					<textElement>
 						<font fontName="Times New Roman" size="14"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{jornadafun}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{jornada}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="4" y="22" width="19" height="18" uuid="056d8a9f-4510-4c4f-8f16-1bd1e99f0c80"/>

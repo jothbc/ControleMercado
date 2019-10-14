@@ -19,40 +19,19 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
     private List<Fornecedor> fornecedores;
     private DefaultTableModel tb;
     private String desc;
-    private int banco_bkp;
+    private int banco;
+    private String codigo_barras;
 
-    /**
-     * Creates new form Fornecedor_ListaBancoJD
-     */
-    public void preencherTB(String s) {
-        tb.setRowCount(0);
-        for (Fornecedor f : fornecedores) {
-            if (f.getNome().contains(s) && f.getBanco() == banco_bkp) {
-                Object[] dado = {f.getId(), f.getNome(), f.getNumero()};
-                tb.addRow(dado);
-            }
-        }
-    }
-
-    public void preencherTB(int banco) {
-        tb.setRowCount(0);
-        for (Fornecedor f : fornecedores) {
-            if (f.getBanco() == banco) {
-                Object[] dado = {f.getId(), f.getNome(), f.getNumero()};
-                tb.addRow(dado);
-            }
-        }
-    }
-
-    public Fornecedor_ListaBancoJD(java.awt.Frame parent, boolean modal, int banco) {
+    public Fornecedor_ListaBancoJD(java.awt.Frame parent, boolean modal, int banco_, String cd_barras) {
         super(parent, modal);
         initComponents();
+        codigo_barras = cd_barras;
         fornecedores = new FornecedorDAO().findAll();
         tb = (DefaultTableModel) jTable1.getModel();
-        preencherTB(banco);
-        banco_bkp = banco;
+        banco = banco_;
         desc = null;
-        jTextField1.requestFocus();
+        txt_fornecedor.requestFocus();
+        preencherTB();
     }
 
     /**
@@ -70,7 +49,7 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        txt_fornecedor = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -134,14 +113,14 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
             }
         });
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txt_fornecedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txt_fornecedorActionPerformed(evt);
             }
         });
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_fornecedor.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextField1KeyPressed(evt);
+                txt_fornecedorKeyPressed(evt);
             }
         });
 
@@ -150,22 +129,23 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(151, 151, 151)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(151, 151, 151)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(txt_fornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -175,7 +155,7 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
                     .addComponent(jButton1)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_fornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -199,9 +179,8 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         this.dispose();
-        new FornecedorCadastrarFrm().setVisible(true);
+        new FornecedorCadastrarFrm(codigo_barras).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -210,14 +189,13 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
         new FornecedorAtualizarFrm().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
-        // TODO add your handling code here:
-        preencherTB(jTextField1.getText().toUpperCase());
-    }//GEN-LAST:event_jTextField1KeyPressed
+    private void txt_fornecedorKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_fornecedorKeyPressed
+        preencherTB();
+    }//GEN-LAST:event_txt_fornecedorKeyPressed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txt_fornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_fornecedorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txt_fornecedorActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         if (evt.getClickCount() == 2) {
@@ -261,7 +239,7 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Fornecedor_ListaBancoJD dialog = new Fornecedor_ListaBancoJD(new javax.swing.JFrame(), true, 0);
+                Fornecedor_ListaBancoJD dialog = new Fornecedor_ListaBancoJD(new javax.swing.JFrame(), true, 237, "");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -280,9 +258,27 @@ public class Fornecedor_ListaBancoJD extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txt_fornecedor;
     // End of variables declaration//GEN-END:variables
     public String getDescricao() {
         return this.desc;
     }
+
+    /**
+     * Creates new form Fornecedor_ListaBancoJD
+     */
+    public void preencherTB() {
+        tb.setRowCount(0);
+        for (Fornecedor f : fornecedores) {
+            if (txt_fornecedor.equals("") && f.getBanco() == banco) {
+                Object[] dado = {f.getId(), f.getNome(), f.getNumero()};
+                tb.addRow(dado);
+            }
+            else if (f.getNome().contains(txt_fornecedor.getText().toUpperCase()) && f.getBanco() == banco) {
+                Object[] dado = {f.getId(), f.getNome(), f.getNumero()};
+                tb.addRow(dado);
+            }
+        }
+    }
+
 }

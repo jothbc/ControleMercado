@@ -13,7 +13,9 @@ import javax.swing.JOptionPane;
  * @author User
  */
 public class Fornecedor_ProcurarMelhorNumeroJD extends javax.swing.JDialog {
+
     String provavel;
+
     /**
      * Creates new form jdBuscarProvavelNumero
      */
@@ -132,26 +134,12 @@ public class Fornecedor_ProcurarMelhorNumeroJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cdtxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cdtxtKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (cdtxt.getText().length() != 44 && cdtxt.getText().length() != 47) {
-                JOptionPane.showMessageDialog(null, "Faltam digitos!");
-                return;
-            } else if (cdtxt.getText().length() == 47) {
-                String temp = "";
-                temp = temp + cdtxt.getText().substring(0, 4);
-                temp = temp + cdtxt.getText().substring(32);
-                temp = temp + cdtxt.getText().substring(4, 9);
-                temp = temp + cdtxt.getText().substring(10, 20);
-                temp = temp + cdtxt.getText().substring(21, 31);
-                cdtxt.setText(temp);
-            }
-            resultadotxt.setText(cdtxt.getText().substring(25, 29));
+            testar_resultado();
         }
     }//GEN-LAST:event_cdtxtKeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         provavel = resultadotxt.getText();
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -209,4 +197,21 @@ public class Fornecedor_ProcurarMelhorNumeroJD extends javax.swing.JDialog {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField resultadotxt;
     // End of variables declaration//GEN-END:variables
+
+    private boolean testar_resultado() {
+        if (cdtxt.getText().length() != 44 && cdtxt.getText().length() != 47) {
+            JOptionPane.showMessageDialog(null, "Faltam digitos!");
+            return false;
+        } else if (cdtxt.getText().length() == 47) {
+            String temp = "";
+            temp = temp + cdtxt.getText().substring(0, 4);
+            temp = temp + cdtxt.getText().substring(32);
+            temp = temp + cdtxt.getText().substring(4, 9);
+            temp = temp + cdtxt.getText().substring(10, 20);
+            temp = temp + cdtxt.getText().substring(21, 31);
+            cdtxt.setText(temp);
+        }
+        resultadotxt.setText(cdtxt.getText().substring(25, 29));
+        return true;
+    }
 }

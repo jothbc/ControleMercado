@@ -2026,7 +2026,6 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             map.put("cdfun", fun.getCodigo());
             map.put("anofun", ano);
             map.put("mesfun", mes);
-            map.put("jornadafun", jornadaString);
             js = JasperFillManager.fillReport(src, map, conn);
         } catch (JRException e) {
             JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
