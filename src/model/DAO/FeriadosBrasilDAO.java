@@ -74,7 +74,7 @@ public class FeriadosBrasilDAO{
     
     public List<FeriadosBrasil> findAll(){
         List<FeriadosBrasil> feriados = new ArrayList<>();
-        sql = "SELECT * FROM log_feriados";
+        sql = "SELECT * FROM log_feriados ORDER BY ano,mes,dia";
         try {
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();

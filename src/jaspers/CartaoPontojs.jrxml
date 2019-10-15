@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CartaoPontojs" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="706fe2a2-2048-4eb1-b38a-ccc6e6eef59b">
-	<property name="ireport.zoom" value="1.6105100000000139"/>
-	<property name="ireport.x" value="71"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="2.593742460100027"/>
+	<property name="ireport.x" value="546"/>
+	<property name="ireport.y" value="308"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
 	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
@@ -22,6 +22,7 @@
 	<parameter name="anofun" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
+	<parameter name="feriados" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select cartao_ponto.nome, cartao_ponto.dia,cartao_ponto.mes,cartao_ponto.ano,cartao_ponto.situacao,cartao_ponto.entrada,cartao_ponto.saida_intervalo,
 cartao_ponto.entrada_intervalo,cartao_ponto.saida,cartao_ponto.entrada2,cartao_ponto.saida2,cartao_ponto.horas_trabalhadas,cartao_ponto_sub.hora_extra,
@@ -104,7 +105,7 @@ cartao_ponto_sub.hora_falta,cartao_ponto_sub.hora_noturna,cartao_ponto_sub.reduc
 					<textElement>
 						<font size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{situacao} != "P" ? $F{situacao} : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{situacao}.equals( "P" ) ? "" :  $F{situacao}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" positionType="Float" x="51" y="0" width="38" height="12" uuid="cc467333-657c-4abc-b697-5bf4d8dbe1d1"/>
@@ -174,7 +175,7 @@ $F{horas_trabalhadas}.toString().substring(0,5)
 				</staticText>
 			</frame>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="43" width="555" height="84" forecolor="#000000" backcolor="#FFFFFF" uuid="dc46778a-f03e-4948-adba-037672bdfc05"/>
+				<reportElement mode="Opaque" x="-2" y="43" width="555" height="84" forecolor="#000000" backcolor="#FFFFFF" uuid="dc46778a-f03e-4948-adba-037672bdfc05"/>
 				<staticText>
 					<reportElement style="Column header" x="4" y="3" width="48" height="18" forecolor="#000000" uuid="113a8695-0180-4070-a70a-959d3d1ff4de"/>
 					<textElement>
@@ -190,28 +191,28 @@ $F{horas_trabalhadas}.toString().substring(0,5)
 					<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="423" y="3" width="37" height="18" uuid="0ab9e642-a60b-4ad2-b1e4-f14c64c9b8f0"/>
+					<reportElement style="Detail" positionType="Float" x="396" y="3" width="37" height="18" uuid="0ab9e642-a60b-4ad2-b1e4-f14c64c9b8f0"/>
 					<textElement>
 						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="345" y="3" width="37" height="18" uuid="1ec40cce-0475-4740-a7dc-4439b5ae5c54"/>
+					<reportElement style="Detail" positionType="Float" x="335" y="3" width="23" height="18" uuid="1ec40cce-0475-4740-a7dc-4439b5ae5c54"/>
 					<textElement>
 						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{mes}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="309" y="3" width="37" height="18" forecolor="#000000" uuid="3747dcdb-06cd-49a1-815c-68ad8f56d4d6"/>
+					<reportElement style="Column header" x="309" y="3" width="26" height="18" forecolor="#000000" uuid="3747dcdb-06cd-49a1-815c-68ad8f56d4d6"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Mês]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="386" y="3" width="37" height="18" forecolor="#000000" uuid="50ec0121-d175-4cc3-b017-b1e06ce51dfc"/>
+					<reportElement style="Column header" x="370" y="3" width="26" height="18" forecolor="#000000" uuid="50ec0121-d175-4cc3-b017-b1e06ce51dfc"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
@@ -326,14 +327,14 @@ $F{horas_trabalhadas}.toString().substring(0,5)
 					<text><![CDATA[F: Falta]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="460" y="3" width="47" height="18" forecolor="#000000" uuid="97f7c433-5bd6-4d3e-b335-4a9bd76ce1bf"/>
+					<reportElement style="Column header" x="440" y="3" width="47" height="18" forecolor="#000000" uuid="97f7c433-5bd6-4d3e-b335-4a9bd76ce1bf"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Jornada]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="507" y="3" width="46" height="18" uuid="247fbda3-f824-4586-831f-07c2394f8318"/>
+					<reportElement x="487" y="3" width="46" height="18" uuid="247fbda3-f824-4586-831f-07c2394f8318"/>
 					<textElement>
 						<font fontName="Times New Roman" size="14"/>
 					</textElement>
@@ -462,19 +463,17 @@ $F{horas_trabalhadas}.toString().substring(0,5)
 		</band>
 	</columnHeader>
 	<columnFooter>
-		<band height="4" splitType="Stretch"/>
+		<band height="58" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="553" height="58" uuid="6de96fb5-1649-40a7-9eb7-79be6fb7bf4f"/>
+				<textFieldExpression><![CDATA[$P{feriados}]]></textFieldExpression>
+			</textField>
+		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="47" splitType="Stretch">
+		<band height="51" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="28" width="555" height="19" forecolor="#D0B48E" backcolor="#FFFFFF" uuid="5d70d5bb-aeff-4adc-ac83-3e1c1afb5bda"/>
-				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="513" y="0" width="40" height="19" forecolor="#000000" uuid="472e7d17-2953-4a3f-b1c5-5a1dad863d04"/>
-					<textElement verticalAlignment="Middle">
-						<font size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-				</textField>
+				<reportElement mode="Opaque" x="0" y="30" width="555" height="19" forecolor="#D0B48E" backcolor="#FFFFFF" uuid="5d70d5bb-aeff-4adc-ac83-3e1c1afb5bda"/>
 				<textField>
 					<reportElement style="Column header" x="433" y="1" width="80" height="18" forecolor="#000000" uuid="389b988c-836a-4d9a-996a-aa26a1565082"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -491,26 +490,33 @@ $F{horas_trabalhadas}.toString().substring(0,5)
 				</textField>
 			</frame>
 			<staticText>
-				<reportElement x="4" y="9" width="207" height="20" uuid="ce8c2088-ede4-4996-8557-fff422de423b"/>
+				<reportElement x="4" y="11" width="207" height="20" uuid="ce8c2088-ede4-4996-8557-fff422de423b"/>
 				<text><![CDATA[Balneário Camboriú, ____ de __________ de ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement style="Detail" positionType="Float" x="216" y="9" width="37" height="19" uuid="18f646e9-8f5b-473b-b456-84657d6d281a"/>
+				<reportElement style="Detail" positionType="Float" x="216" y="11" width="37" height="19" uuid="18f646e9-8f5b-473b-b456-84657d6d281a"/>
 				<textElement>
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="294" y="24" width="259" height="1" uuid="069a12df-5cb0-459e-a637-9ed9b180b08e"/>
+				<reportElement x="294" y="26" width="259" height="1" uuid="069a12df-5cb0-459e-a637-9ed9b180b08e"/>
 			</line>
 			<staticText>
-				<reportElement x="269" y="9" width="25" height="20" uuid="84f57eeb-8323-4d94-8914-25cb6042403b"/>
+				<reportElement x="269" y="11" width="25" height="20" uuid="84f57eeb-8323-4d94-8914-25cb6042403b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14"/>
 				</textElement>
 				<text><![CDATA[Ass:]]></text>
 			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="513" y="31" width="40" height="19" forecolor="#000000" uuid="472e7d17-2953-4a3f-b1c5-5a1dad863d04"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<summary>

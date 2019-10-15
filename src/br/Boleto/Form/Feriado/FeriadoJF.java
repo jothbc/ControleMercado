@@ -72,6 +72,7 @@ public class FeriadoJF extends javax.swing.JFrame {
         jLabel2.setText("Descrição");
 
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.setToolTipText("Para remover selecione e pressione DELETE");
         jList1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jList1KeyPressed(evt);
