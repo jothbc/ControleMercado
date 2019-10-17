@@ -29,18 +29,35 @@ public class CartaoPontoDAO {
         con = ConnectionFactory.getConnection();
     }
 
-    public boolean salvar(CartaoPonto cartao) {
+    public int nextReg() {
+        String sql = "select max(reg) as reg from cartao_ponto";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            rs.first();
+            return rs.getInt("reg") + 1;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt, rs);
+        }
+        return -1;
+    }
+
+    public boolean salvar(CartaoPonto cartao, int registro) {
         int dias, mes, ano;
         dias = cartao.getDias();
         mes = cartao.getMes();
         ano = cartao.getAno();
 
         String sql = "INSERT INTO cartao_ponto"
-                + "(codigo,nome,dia,mes,ano,situacao,entrada,saida_intervalo,entrada_intervalo,saida,entrada2,saida2,horas_trabalhadas)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "(codigo,nome,dia,mes,ano,situacao,entrada,saida_intervalo,entrada_intervalo,saida,entrada2,saida2,horas_trabalhadas,reg)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         String sql2 = "INSERT INTO cartao_ponto_sub"
-                + "(codigo,nome,mes,ano,hora_extra,hora_falta,hora_noturna,reducao_noturna,jornada)"
-                + "VALUES (?,?,?,?,?,?,?,?,?)";
+                + "(codigo,nome,mes,ano,hora_extra,hora_falta,hora_noturna,reducao_noturna,jornada,reg)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             for (int x = 0; x < dias; x++) {
@@ -75,6 +92,7 @@ public class CartaoPontoDAO {
                 stmt.setString(11, e1);
                 stmt.setString(12, s1);
                 stmt.setString(13, horas);
+                stmt.setInt(14, registro);
                 stmt.executeUpdate();
             }
             stmt = null;
@@ -88,6 +106,7 @@ public class CartaoPontoDAO {
             stmt.setString(7, cartao.getNoturna());
             stmt.setDouble(8, cartao.getReducao());
             stmt.setString(9, cartao.getJornada());
+            stmt.setInt(10, registro);
             stmt.executeUpdate();
             return true;
         } catch (SQLException ex) {
@@ -126,85 +145,73 @@ public class CartaoPontoDAO {
         cartao.setFuncionario(fun);
         cartao.setAno(ano);
         cartao.setMes(mes);
-        String sql = "SELECT * FROM cartao_ponto_sub";
+        String sql = "SELECT * FROM cartao_ponto_sub WHERE codigo = ? and mes = ? and ano = ?";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             stmt = con.prepareStatement(sql);
+            stmt.setInt(1, fun.getCodigo());
+            stmt.setInt(2, mes);
+            stmt.setInt(3, ano);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("codigo") == fun.getCodigo() && rs.getInt("ano") == ano && rs.getInt("mes") == mes) {
-                    cartao.setExtra(rs.getString("hora_extra"));
-                    cartao.setFalta(rs.getString("hora_falta"));
-                    cartao.setNoturna(rs.getString("hora_noturna"));
-                    cartao.setReducao(rs.getDouble("reducao_noturna"));
-                    cartao.setJornada(rs.getString("jornada"));
-                    cartao.setReg_sub(rs.getInt("reg"));
-                    break;
-                }
+                cartao.setExtra(rs.getString("hora_extra"));
+                cartao.setFalta(rs.getString("hora_falta"));
+                cartao.setNoturna(rs.getString("hora_noturna"));
+                cartao.setReducao(rs.getDouble("reducao_noturna"));
+                cartao.setJornada(rs.getString("jornada"));
+                cartao.setReg_sub(rs.getInt("reg")); //as duas tabelas tem o mesmo numero de registro
+                cartao.setReg(rs.getInt("reg"));
+                break;
             }
             stmt = null;
             rs = null;
-            sql = "SELECT * FROM cartao_ponto";
+            sql = "SELECT * FROM cartao_ponto WHERE reg = ?";
             stmt = con.prepareStatement(sql);
+            stmt.setInt(1, cartao.getReg());
             rs = stmt.executeQuery();
-            boolean test = false, setreg = true;
+
             DefaultTableModel t = new DefaultTableModel();
             t.setColumnCount(8);
+
             while (rs.next()) {
-                int diatemp = rs.getInt("dia");
-                int mestemp = rs.getInt("mes");
-                int anotemp = rs.getInt("ano");
-                int codigofun = rs.getInt("codigo");
-                if ((codigofun == fun.getCodigo() && diatemp == 1 && mestemp == mes && anotemp == ano) || test) {
-                    if (mes != mestemp || ano != anotemp || codigofun != fun.getCodigo()) {
-                        //System.out.println("mudou");
-                        break;
-                    } else {
-                        test = true;
-                        if (setreg) {
-                            cartao.setReg(rs.getInt("reg"));
-                            setreg = false;
-                        }
-                        String situacao = null, entrada = null, sintervalo = null, eintervalo = null, saida = null, e2 = null, s2 = null, ht = null;
-                        if (rs.getString("situacao").equals("P")) {
-                            situacao = Integer.toString(rs.getInt("dia"));
-                        } else {
-                            situacao = rs.getString("situacao");
-                        }
-                        if (rs.getString("entrada") != null) {
-                            entrada = rs.getString("entrada");
-                            entrada = entrada.substring(0, 5);
-                        }
-                        if (rs.getString("saida_intervalo") != null) {
-                            sintervalo = rs.getString("saida_intervalo");
-                            sintervalo = sintervalo.substring(0, 5);
-                        }
-                        if (rs.getString("entrada_intervalo") != null) {
-                            eintervalo = rs.getString("entrada_intervalo");
-                            eintervalo = eintervalo.substring(0, 5);
-                        }
-                        if (rs.getString("saida") != null) {
-                            saida = rs.getString("saida");
-                            saida = saida.substring(0, 5);
-                        }
-                        if (rs.getString("entrada2") != null) {
-                            e2 = rs.getString("entrada2");
-                            e2 = e2.substring(0, 5);
-                        }
-                        if (rs.getString("saida2") != null) {
-                            s2 = rs.getString("saida2");
-                            s2 = s2.substring(0, 5);
-                        }
-                        if (rs.getString("horas_trabalhadas") != null) {
-                            ht = rs.getString("horas_trabalhadas");
-                            ht = ht.substring(0, 5);
-                        }
-                        Object[] dado = {situacao, entrada, sintervalo, eintervalo, saida, e2, s2, ht};
-                        //System.out.println(situacao+"\t"+entrada+"\t"+sintervalo+"\t"+eintervalo+"\t"+saida+"\t"+e2+"\t"+s2+"\t"+ht);
-                        t.addRow(dado);
-                    }
+                String situacao = null, entrada = null, sintervalo = null, eintervalo = null, saida = null, e2 = null, s2 = null, ht = null;
+                if (rs.getString("situacao").equals("P")) {
+                    situacao = Integer.toString(rs.getInt("dia"));
+                } else {
+                    situacao = rs.getString("situacao");
                 }
+                if (rs.getString("entrada") != null) {
+                    entrada = rs.getString("entrada");
+                    entrada = entrada.substring(0, 5);
+                }
+                if (rs.getString("saida_intervalo") != null) {
+                    sintervalo = rs.getString("saida_intervalo");
+                    sintervalo = sintervalo.substring(0, 5);
+                }
+                if (rs.getString("entrada_intervalo") != null) {
+                    eintervalo = rs.getString("entrada_intervalo");
+                    eintervalo = eintervalo.substring(0, 5);
+                }
+                if (rs.getString("saida") != null) {
+                    saida = rs.getString("saida");
+                    saida = saida.substring(0, 5);
+                }
+                if (rs.getString("entrada2") != null) {
+                    e2 = rs.getString("entrada2");
+                    e2 = e2.substring(0, 5);
+                }
+                if (rs.getString("saida2") != null) {
+                    s2 = rs.getString("saida2");
+                    s2 = s2.substring(0, 5);
+                }
+                if (rs.getString("horas_trabalhadas") != null) {
+                    ht = rs.getString("horas_trabalhadas");
+                    ht = ht.substring(0, 5);
+                }
+                Object[] dado = {situacao, entrada, sintervalo, eintervalo, saida, e2, s2, ht};
+                //System.out.println(situacao+"\t"+entrada+"\t"+sintervalo+"\t"+eintervalo+"\t"+saida+"\t"+e2+"\t"+s2+"\t"+ht);
+                t.addRow(dado);
             }
             cartao.setTabela(t);
             return cartao;
@@ -251,15 +258,12 @@ public class CartaoPontoDAO {
                 //defini situação (p = presença, d = domingo, f=falta... etc)
                 //System.out.println(cartao.getTabela().getValueAt(x, 0));
                 try {
-                    if (
-                            "S".equals((String) cartao.getTabela().getValueAt(x, 0))
+                    if ("S".equals((String) cartao.getTabela().getValueAt(x, 0))
                             || "D".equals((String) cartao.getTabela().getValueAt(x, 0))
                             || "R".equals((String) cartao.getTabela().getValueAt(x, 0))
                             || "H".equals((String) cartao.getTabela().getValueAt(x, 0))
                             || "A".equals((String) cartao.getTabela().getValueAt(x, 0))
-                            || "F".equals((String) cartao.getTabela().getValueAt(x, 0))
-                        ) 
-                    {
+                            || "F".equals((String) cartao.getTabela().getValueAt(x, 0))) {
                         stmt.setString(6, (String) cartao.getTabela().getValueAt(x, 0));
                     } else {
                         stmt.setString(6, "P");
@@ -333,4 +337,43 @@ public class CartaoPontoDAO {
         }
     }
 
+    public boolean folhaPago(int mes, int ano) {
+        String sql = "SELECT * FROM controle_folha WHERE mes = ? and ano = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, mes);
+            stmt.setInt(2, ano);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                if (rs.getBoolean("pago")) {
+                    return true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt, rs);
+        }
+        return false;
+    }
+
+    public boolean alterarStatusFolhaPago(boolean status, int mes, int ano) {
+        String sql = "UPDATE controle_folha SET pago = ? WHERE mes = ? and ano = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setBoolean(1, status);
+            stmt.setInt(2, mes);
+            stmt.setInt(3, ano);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt);
+        }
+        return false;
+    }
 }

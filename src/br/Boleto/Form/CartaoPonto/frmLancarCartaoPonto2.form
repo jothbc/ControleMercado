@@ -133,7 +133,7 @@
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane1" pref="521" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
@@ -591,7 +591,7 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" pref="257" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane4" min="-2" pref="85" max="-2" attributes="0"/>
                   </Group>
@@ -739,23 +739,23 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="valorTotalSalario" alignment="0" max="32767" attributes="0"/>
-                          <Component id="valorTotalExtra" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txt_valor_total_Salario" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txt_valor_total_Extra" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="inssSpin" min="-2" pref="41" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="INSS" max="32767" attributes="0"/>
+                              <Component id="txt_INSS" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="horaDSR" max="32767" attributes="0"/>
+                                  <Component id="txt_hora_DSR" max="32767" attributes="0"/>
                                   <Component id="jLabel17" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="valorDSR" pref="109" max="32767" attributes="0"/>
+                                  <Component id="txt_valor_DSR" pref="109" max="32767" attributes="0"/>
                                   <Component id="jLabel12" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -765,9 +765,9 @@
                               <Component id="jLabel9" min="-2" pref="121" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="valorHora" min="-2" pref="94" max="-2" attributes="0"/>
+                              <Component id="txt_valor_hora" min="-2" pref="94" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="valorHoraExtra" max="32767" attributes="0"/>
+                              <Component id="txt_valor_hora_extra" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jButton10" alignment="0" max="32767" attributes="0"/>
                           <Component id="jLabel11" alignment="0" max="32767" attributes="0"/>
@@ -776,22 +776,22 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel7" max="32767" attributes="0"/>
-                                  <Component id="salarioBase" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txt_salario_base" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="descontoSpin" alignment="1" min="-2" pref="81" max="-2" attributes="0"/>
+                                  <Component id="txt_descontos" alignment="1" min="-2" pref="81" max="-2" attributes="0"/>
                                   <Component id="jLabel16" alignment="1" min="-2" pref="81" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jLabel13" pref="111" max="32767" attributes="0"/>
-                                  <Component id="feriadosSpin" max="32767" attributes="0"/>
+                                  <Component id="txt_numero_feriados" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="indenizacaoSpin" max="32767" attributes="0"/>
+                                  <Component id="txt_indenizacao" max="32767" attributes="0"/>
                                   <Component id="jLabel18" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -806,8 +806,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="salarioBase" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="descontoSpin" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_salario_base" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_descontos" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -816,8 +816,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="feriadosSpin" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="indenizacaoSpin" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_numero_feriados" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_indenizacao" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                               <Component id="jButton10" min="-2" max="-2" attributes="0"/>
@@ -828,14 +828,14 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="valorHoraExtra" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="valorHora" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_valor_hora_extra" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_valor_hora" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="INSS" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_INSS" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                                       <Component id="inssSpin" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -848,17 +848,17 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="valorDSR" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="horaDSR" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_valor_DSR" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_hora_DSR" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="valorTotalExtra" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_valor_total_Extra" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="valorTotalSalario" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_valor_total_Salario" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -884,20 +884,20 @@
                         <Property name="text" type="java.lang.String" value="Valor Total"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="valorHora">
+                    <Component class="javax.swing.JTextField" name="txt_valor_hora">
                     </Component>
-                    <Component class="javax.swing.JTextField" name="valorHoraExtra">
+                    <Component class="javax.swing.JTextField" name="txt_valor_hora_extra">
                     </Component>
-                    <Component class="javax.swing.JTextField" name="valorTotalSalario">
+                    <Component class="javax.swing.JTextField" name="txt_valor_total_Salario">
                     </Component>
-                    <Component class="javax.swing.JTextField" name="valorTotalExtra">
+                    <Component class="javax.swing.JTextField" name="txt_valor_total_Extra">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel11">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Total Extra"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="valorDSR">
+                    <Component class="javax.swing.JTextField" name="txt_valor_DSR">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel12">
                       <Properties>
@@ -910,16 +910,16 @@
                         <Property name="text" type="java.lang.String" value="INSS"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="INSS">
+                    <Component class="javax.swing.JTextField" name="txt_INSS">
                     </Component>
-                    <Component class="javax.swing.JTextField" name="horaDSR">
+                    <Component class="javax.swing.JTextField" name="txt_hora_DSR">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel13">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="N&#xba; Feriados"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JSpinner" name="feriadosSpin">
+                    <Component class="javax.swing.JSpinner" name="txt_numero_feriados">
                       <Properties>
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
@@ -946,7 +946,7 @@
                         <Property name="text" type="java.lang.String" value="%"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JSpinner" name="salarioBase">
+                    <Component class="javax.swing.JSpinner" name="txt_salario_base">
                       <Properties>
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="1323.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
@@ -958,7 +958,7 @@
                         <Property name="text" type="java.lang.String" value="Descontos"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JSpinner" name="descontoSpin">
+                    <Component class="javax.swing.JSpinner" name="txt_descontos">
                       <Properties>
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="0.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
@@ -970,7 +970,7 @@
                         <Property name="text" type="java.lang.String" value="Hora DSR"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JSpinner" name="indenizacaoSpin">
+                    <Component class="javax.swing.JSpinner" name="txt_indenizacao">
                       <Properties>
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                           <SpinnerModel initial="0.0" minimum="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>

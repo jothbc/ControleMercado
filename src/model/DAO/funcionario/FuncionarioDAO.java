@@ -30,7 +30,7 @@ public class FuncionarioDAO {
     }
 
     public boolean save(Funcionario funcionario) {
-        String sql = "INSERT INTO funcionarios(codigo,nome,cpf,pis,cargo,admissao,ativo) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO funcionarios(codigo,nome,cpf,pis,cargo,admissao,ativo, salario) VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement stmt = null;
         try {
             stmt = con.prepareStatement(sql);
@@ -40,6 +40,7 @@ public class FuncionarioDAO {
             stmt.setString(4, funcionario.getPis());
             stmt.setString(5, funcionario.getCargo());
             stmt.setInt(7, 1);
+            stmt.setDouble(8, funcionario.getSalario());
             if (funcionario.getAdmissao() != null) {
                 stmt.setString(6, funcionario.getAdmissao("SQL"));
             } else {
@@ -132,6 +133,7 @@ public class FuncionarioDAO {
                     funcionario.setAdmissao(rs.getString("admissao"), "SQL");
                 }
                 funcionario.setAtivo(rs.getInt("ativo"));
+                funcionario.setSalario(rs.getDouble("salario"));
                 array_retorno.add(funcionario);
             }
         } catch (SQLException ex) {
@@ -145,28 +147,9 @@ public class FuncionarioDAO {
     }
 
     public boolean atualizar(Funcionario funcionario) {
-        String sql = "UPDATE funcionarios SET nome=?, cpf=?, pis=?, cargo=?, admissao=? WHERE codigo = ?";
-        PreparedStatement stmt = null;
-        try {
-            stmt = con.prepareStatement(sql);
-            stmt.setString(1, funcionario.getNome());
-            stmt.setString(2, funcionario.getCpf());
-            stmt.setString(3, funcionario.getPis());
-            stmt.setString(4, funcionario.getCargo());
-            if (funcionario.getAdmissao() != null) {
-                stmt.setString(5, funcionario.getAdmissao("SQL"));
-            } else {
-                stmt.setString(5, null);
-            }
-            stmt.setInt(6, funcionario.getCodigo());
-            stmt.executeUpdate();
-            return true;
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "ERRO: " + ex.getMessage());
-            return false;
-        } finally {
-            ConnectionFactory.closeConnection(con, stmt);
-        }
+        return atualizarFuncionario_tabelaFuncionarios(funcionario)
+                && atualizarFuncionario_tabelaCartao(funcionario)
+                && atualizarFuncionario_tabelaCartaoSub(funcionario);
     }
 
     public Funcionario getFuncionario(int i) {
@@ -198,6 +181,7 @@ public class FuncionarioDAO {
                 }
             }
             funcionario.setAtivo(rs.getInt("ativo"));
+            funcionario.setSalario(rs.getDouble("salario"));
             return funcionario;
         } catch (SQLException ex) {
             Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,7 +189,67 @@ public class FuncionarioDAO {
         } finally {
             ConnectionFactory.closeConnection(con, stmt, rs);
         }
-
     }
 
+    private boolean atualizarFuncionario_tabelaFuncionarios(Funcionario funcionario) {
+        String sql = "UPDATE funcionarios SET nome=?, cpf=?, pis=?, cargo=?, admissao=?, salario = ? WHERE codigo = ?";
+        PreparedStatement stmt = null;
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, funcionario.getNome());
+            stmt.setString(2, funcionario.getCpf());
+            stmt.setString(3, funcionario.getPis());
+            stmt.setString(4, funcionario.getCargo());
+            if (funcionario.getAdmissao() != null) {
+                stmt.setString(5, funcionario.getAdmissao("SQL"));
+            } else {
+                stmt.setString(5, null);
+            }
+            stmt.setDouble(6, funcionario.getSalario());
+            stmt.setInt(7, funcionario.getCodigo());
+            stmt.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "ERRO: " + ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt);
+        }
+    }
+
+    private boolean atualizarFuncionario_tabelaCartao(Funcionario funcionario) {
+        String sql = "UPDATE cartao_ponto SET nome = ? WHERE codigo = ?";
+        PreparedStatement stmt = null;
+        con = ConnectionFactory.getConnection();
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, funcionario.getNome());
+            stmt.setInt(2, funcionario.getCodigo());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt);
+        }
+    }
+
+    private boolean atualizarFuncionario_tabelaCartaoSub(Funcionario funcionario) {
+        String sql = "UPDATE cartao_ponto_sub SET nome = ? WHERE codigo = ?";
+        PreparedStatement stmt = null;
+        con = ConnectionFactory.getConnection();
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, funcionario.getNome());
+            stmt.setInt(2, funcionario.getCodigo());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(FuncionarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }finally{
+            ConnectionFactory.closeConnection(con, stmt);
+        }
+    }
 }

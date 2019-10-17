@@ -22,6 +22,7 @@ public class Funcionario {
     private String pis;
     private String cargo;
     private Date admissao;
+    private double salario;
     private int ativo;
 
     public static final String SQL = "SQL";
@@ -47,7 +48,7 @@ public class Funcionario {
         this.pis = pis;
         this.cargo = cargo.toUpperCase();
         this.admissao = admissao;
-        this.ativo =1;
+        this.ativo = 1;
     }
 
     /**
@@ -192,5 +193,19 @@ public class Funcionario {
     public void setAtivo(int ativo) {
         this.ativo = ativo;
     }
-    
+
+    /**
+     * @return the salario
+     */
+    public double getSalario() {
+        return salario;
+    }
+
+    /**
+     * @param salario the salario to set
+     */
+    public void setSalario(double salario) {
+        this.salario = salario;
+    }
+
 }

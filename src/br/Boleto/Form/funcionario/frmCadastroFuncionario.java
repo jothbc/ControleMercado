@@ -53,6 +53,8 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
         pistxt = new javax.swing.JFormattedTextField();
         cargotxt = new javax.swing.JTextField();
         admtxt = new javax.swing.JFormattedTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txt_salario = new javax.swing.JTextField();
         concluirbtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -162,6 +164,13 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
         admtxt.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
         admtxt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("Salário");
+
+        txt_salario.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -172,18 +181,24 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel5))
                 .addGap(24, 24, 24)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(cpftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(34, 34, 34)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(pistxt, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(admtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+                        .addComponent(pistxt, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(cargotxt))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(admtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(txt_salario, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -197,10 +212,12 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
                     .addComponent(pistxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(admtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(cargotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cargotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(txt_salario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -243,9 +260,7 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -258,17 +273,24 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
 
     private void concluirbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_concluirbtnActionPerformed
         try {
-            // TODO add your handling code here:
-            if (nometxt.getText().equals("") || cdtxt.getText().equals("")){
+            if (nometxt.getText().equals("") || cdtxt.getText().equals("")) {
                 throw new Exception("Nome e código são obrigatórios para conclusão!");
             }
             Funcionario fun = new Funcionario(nometxt.getText(), Integer.parseInt(cdtxt.getText()));
             if (!admtxt.getText().equals("  /  /    ")) {
-                fun.setAdmissao(admtxt.getText(), "BR");
+                fun.setAdmissao(admtxt.getText(), Funcionario.BR);
             }
             fun.setCargo(cargotxt.getText());
             fun.setPis(pistxt.getText());
             fun.setCpf(cpftxt.getText());
+            if (!"".equals(txt_salario.getText())) {
+                try {
+                    fun.setSalario(Double.parseDouble(txt_salario.getText().replaceAll(",", "\\.")));
+                } catch (NumberFormatException e) {
+                    System.out.println(e);
+                }
+            }
+
             if (op == 1) {
                 if (new FuncionarioDAO().save(fun)) {
                     limpartxt();
@@ -281,7 +303,7 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
             this.dispose();
         } catch (ParseException | NumberFormatException ex) {
             Logger.getLogger(frmCadastroFuncionario.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o funcionário no Banco de Dados.\n"+ex);
+            JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o funcionário no Banco de Dados.\n" + ex);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -334,11 +356,13 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField nometxt;
     private javax.swing.JFormattedTextField pistxt;
+    private javax.swing.JTextField txt_salario;
     // End of variables declaration//GEN-END:variables
 
     private void limpartxt() {
@@ -352,7 +376,7 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
 
     /*
     * Função se ativa quando se é clicado no botão "alterar" do form de visualização de funcionários.
-    */
+     */
     public void setartxt(Funcionario f) {
         nometxt.setText(f.getNome());
         cdtxt.setText(Integer.toString(f.getCodigo()));
@@ -369,7 +393,7 @@ public class frmCadastroFuncionario extends javax.swing.JFrame {
         } catch (Exception ex) {
             admtxt.setText("");
         }
-
+        txt_salario.setText(Double.toString(f.getSalario()));
     }
 
     private void verificarop() {

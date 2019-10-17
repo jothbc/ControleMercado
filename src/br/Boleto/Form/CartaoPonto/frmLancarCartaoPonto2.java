@@ -72,6 +72,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         //defini o funcionario
         funcionario = funcionario_;
         nomeLbl.setText(funcionario.getNome());
+        txt_salario_base.setValue(funcionario.getSalario());
         //defini parametros iniciais de controle
         feriados = new ArrayList<>();
         jList1.setModel(lista_feriados);
@@ -82,7 +83,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         tb = (DefaultTableModel) jTable1.getModel();
         //seta data atual
         calendario = Calendar.getInstance();
-        calendario.set(Calendar.MONTH, calendario.get(Calendar.MONTH) - 1);
+        calendario.add(Calendar.MONTH, - 1);
         mes = calendario.get(Calendar.MONTH) + 1;
         ano = calendario.get(Calendar.YEAR);
         calendario.setFirstDayOfWeek(Calendar.SUNDAY);
@@ -155,26 +156,26 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        valorHora = new javax.swing.JTextField();
-        valorHoraExtra = new javax.swing.JTextField();
-        valorTotalSalario = new javax.swing.JTextField();
-        valorTotalExtra = new javax.swing.JTextField();
+        txt_valor_hora = new javax.swing.JTextField();
+        txt_valor_hora_extra = new javax.swing.JTextField();
+        txt_valor_total_Salario = new javax.swing.JTextField();
+        txt_valor_total_Extra = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        valorDSR = new javax.swing.JTextField();
+        txt_valor_DSR = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        INSS = new javax.swing.JTextField();
-        horaDSR = new javax.swing.JTextField();
+        txt_INSS = new javax.swing.JTextField();
+        txt_hora_DSR = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        feriadosSpin = new javax.swing.JSpinner();
+        txt_numero_feriados = new javax.swing.JSpinner();
         jButton10 = new javax.swing.JButton();
         inssSpin = new javax.swing.JSpinner();
         jLabel15 = new javax.swing.JLabel();
-        salarioBase = new javax.swing.JSpinner();
+        txt_salario_base = new javax.swing.JSpinner();
         jLabel16 = new javax.swing.JLabel();
-        descontoSpin = new javax.swing.JSpinner();
+        txt_descontos = new javax.swing.JSpinner();
         jLabel17 = new javax.swing.JLabel();
-        indenizacaoSpin = new javax.swing.JSpinner();
+        txt_indenizacao = new javax.swing.JSpinner();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
@@ -567,7 +568,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
 
         jLabel13.setText("Nº Feriados");
 
-        feriadosSpin.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        txt_numero_feriados.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
 
         jButton10.setText("Calcular");
         jButton10.addActionListener(new java.awt.event.ActionListener() {
@@ -580,15 +581,15 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
 
         jLabel15.setText("%");
 
-        salarioBase.setModel(new javax.swing.SpinnerNumberModel(1323.0d, 0.0d, null, 1.0d));
+        txt_salario_base.setModel(new javax.swing.SpinnerNumberModel(1323.0d, 0.0d, null, 1.0d));
 
         jLabel16.setText("Descontos");
 
-        descontoSpin.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
+        txt_descontos.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
 
         jLabel17.setText("Hora DSR");
 
-        indenizacaoSpin.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
+        txt_indenizacao.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
 
         jLabel18.setText("Indenização");
 
@@ -596,30 +597,30 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(valorTotalSalario)
-            .addComponent(valorTotalExtra)
+            .addComponent(txt_valor_total_Salario)
+            .addComponent(txt_valor_total_Extra)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addComponent(inssSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(INSS))
+                .addComponent(txt_INSS))
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(horaDSR)
+                    .addComponent(txt_hora_DSR)
                     .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(valorDSR, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(txt_valor_DSR, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                     .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addComponent(valorHora, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_valor_hora, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(valorHoraExtra))
+                .addComponent(txt_valor_hora_extra))
             .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -627,18 +628,18 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(salarioBase, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(txt_salario_base, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(descontoSpin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_descontos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                    .addComponent(feriadosSpin))
+                    .addComponent(txt_numero_feriados))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(indenizacaoSpin)
+                    .addComponent(txt_indenizacao)
                     .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel7Layout.setVerticalGroup(
@@ -649,16 +650,16 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(salarioBase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(descontoSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_salario_base, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_descontos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jLabel18))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(feriadosSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(indenizacaoSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_numero_feriados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_indenizacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19)
                 .addComponent(jButton10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -667,13 +668,13 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(valorHoraExtra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(valorHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_valor_hora_extra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_valor_hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14)
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(INSS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_INSS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(inssSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel15)))
@@ -683,16 +684,16 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                     .addComponent(jLabel17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(valorDSR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(horaDSR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_valor_DSR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_hora_DSR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
                 .addGap(0, 0, 0)
-                .addComponent(valorTotalExtra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_valor_total_Extra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10)
                 .addGap(0, 0, 0)
-                .addComponent(valorTotalSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txt_valor_total_Salario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jScrollPane2.setViewportView(jPanel7);
@@ -717,7 +718,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -861,7 +862,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                                         .addComponent(txt_saida_aux)
                                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE))
+                                .addComponent(jScrollPane1))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1198,27 +1199,22 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField INSS;
     private javax.swing.JSpinner anoSpinner;
     private javax.swing.JButton atestadoBtn;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton concluirBtn;
-    private javax.swing.JSpinner descontoSpin;
     private javax.swing.JButton domingoBtn;
     private javax.swing.JButton editbtn;
     private javax.swing.JButton fakebtn;
     private javax.swing.JButton faltaBtn;
     private javax.swing.JButton feriadoBtn;
-    private javax.swing.JSpinner feriadosSpin;
     private javax.swing.JButton folgaBtn;
-    private javax.swing.JTextField horaDSR;
     private javax.swing.JTextField horasExtrasNoturnastxt;
     private javax.swing.JTextField horasExtrastxt;
     private javax.swing.JTextField horasFaltastxt;
     private javax.swing.JButton importBtn;
     private javax.swing.JButton importBtn1;
     private javax.swing.JButton imprimirBtn;
-    private javax.swing.JSpinner indenizacaoSpin;
     private javax.swing.JSpinner inssSpin;
     private javax.swing.JButton jButton10;
     private javax.swing.JLabel jLabel1;
@@ -1260,19 +1256,24 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     private javax.swing.JTextField nomeLbl;
     private javax.swing.JTextField reducaoNoturnotxt;
     private javax.swing.JButton sabadoBtn;
-    private javax.swing.JSpinner salarioBase;
     private javax.swing.JSlider sliderMes;
+    private javax.swing.JTextField txt_INSS;
+    private javax.swing.JSpinner txt_descontos;
     private javax.swing.JFormattedTextField txt_entrada;
     private javax.swing.JFormattedTextField txt_entrada_aux;
     private javax.swing.JFormattedTextField txt_entrada_intervalo;
+    private javax.swing.JTextField txt_hora_DSR;
+    private javax.swing.JSpinner txt_indenizacao;
+    private javax.swing.JSpinner txt_numero_feriados;
     private javax.swing.JFormattedTextField txt_saida;
     private javax.swing.JFormattedTextField txt_saida_aux;
     private javax.swing.JFormattedTextField txt_saida_intervalo;
-    private javax.swing.JTextField valorDSR;
-    private javax.swing.JTextField valorHora;
-    private javax.swing.JTextField valorHoraExtra;
-    private javax.swing.JTextField valorTotalExtra;
-    private javax.swing.JTextField valorTotalSalario;
+    private javax.swing.JSpinner txt_salario_base;
+    private javax.swing.JTextField txt_valor_DSR;
+    private javax.swing.JTextField txt_valor_hora;
+    private javax.swing.JTextField txt_valor_hora_extra;
+    private javax.swing.JTextField txt_valor_total_Extra;
+    private javax.swing.JTextField txt_valor_total_Salario;
     // End of variables declaration//GEN-END:variables
 
     /*
@@ -1525,7 +1526,8 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         cartao.setNoturna(horasExtrasNoturnastxt.getText());
         cartao.setReducao(Double.parseDouble(reducaoNoturnotxt.getText()));
         cartao.setJornada(jornadaString);
-        if (new CartaoPontoDAO().salvar(cartao)) {
+        int registro = new CartaoPontoDAO().nextReg();
+        if (new CartaoPontoDAO().salvar(cartao,registro)) {
             JOptionPane.showMessageDialog(this, "Salvo com sucesso!");
             StatusBtn(false);
         } else {
@@ -1640,7 +1642,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     }
 
     private void calcularAproximacao() {
-        int domingos = (int) feriadosSpin.getValue();
+        int domingos = (int) txt_numero_feriados.getValue();
         int totalDias = tb.getRowCount();
         for (int i = 0; i < tb.getRowCount() - 1; i++) {
             try {
@@ -1653,14 +1655,14 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         double jornada = CDate.horaPDecimal(jornadaString);
         double horas_mes = jornada * 30;
         try {
-            double valor_hora = ((double) salarioBase.getValue()) / horas_mes;
-            valorHora.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora)));
-            valorHoraExtra.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora) * 1.55));
+            double valor_hora = ((double) txt_salario_base.getValue()) / horas_mes;
+            txt_valor_hora.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora)));
+            txt_valor_hora_extra.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora) * 1.55));
             double total = valor_hora * horas_mes;
             double extra = 0;
             try {
                 extra = CDate.horaPDecimal(horasExtrastxt.getText()) + CDate.horaPDecimal(horasExtrasNoturnastxt.getText());
-                extra *= Double.parseDouble(valorHoraExtra.getText());
+                extra *= Double.parseDouble(txt_valor_hora_extra.getText());
             } catch (Exception e) {
             }
             double dsr = 0;
@@ -1673,16 +1675,16 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 double dsrdecimal = dsr / valor_hora;
                 horadsr = CDate.decimalPHora(dsrdecimal, false);
             }
-            valorTotalExtra.setText(Double.toString(CDbl.CDblDuasCasas(extra)));
-            valorDSR.setText(Double.toString(CDbl.CDblDuasCasas(dsr)));
-            horaDSR.setText(horadsr);
-            total += extra + dsr + (double) indenizacaoSpin.getValue();
-            total -= (double) descontoSpin.getValue();
+            txt_valor_total_Extra.setText(Double.toString(CDbl.CDblDuasCasas(extra)));
+            txt_valor_DSR.setText(Double.toString(CDbl.CDblDuasCasas(dsr)));
+            txt_hora_DSR.setText(horadsr);
+            total += extra + dsr + (double) txt_indenizacao.getValue();
+            total -= (double) txt_descontos.getValue();
             double inss = total * (((int) inssSpin.getValue() / (double) 100));
             inss = CDbl.CDblDuasCasas(inss);
             total -= inss;
-            valorTotalSalario.setText(Double.toString(CDbl.CDblDuasCasas(total)));
-            INSS.setText(Double.toString(inss));
+            txt_valor_total_Salario.setText(Double.toString(CDbl.CDblDuasCasas(total)));
+            txt_INSS.setText(Double.toString(inss));
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -2038,7 +2040,8 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             if (!feriados.isEmpty()) {
                 for (FeriadosBrasil f : feriados) {
                     String temp = (String) jTable1.getValueAt(f.getDia() - 1, 7);
-                    if (temp != null && !"00:00".equals(temp)) {
+                    //não pode ser nulo, nen horas trabalhadas = 00:00 nem Atestado
+                    if (temp != null && !"00:00".equals(temp) && !"A".equals(temp)) {
                         fer += "✔ " + f.toString() + "\n";
                     } else {
                         fer += "✖ " + f.toString() + "\n";
