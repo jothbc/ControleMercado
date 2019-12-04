@@ -5,66 +5,61 @@
  */
 package br.Boleto.Form.CartaoPonto;
 
-import JDBC.ConnectionFactory;
-import funcoes.CDate;
-import funcoes.CDbl;
-import funcoes.ScroollJTable;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.Connection;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import model.DAO.FeriadosBrasilDAO;
-import model.DAO.funcionario.CartaoPontoDAO;
 import model.DAO.funcionario.FuncionarioDAO;
-import model.bean.CartaoPonto;
 import model.bean.FeriadosBrasil;
 import model.bean.Funcionario;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
  * @author Jonathan CR
  */
-public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
+public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
 
     private Funcionario funcionario;
-    private int ano, mes, maior;
-    private SpinnerNumberModel dia;
-    private Calendar calendario;
+    private SpinnerNumberModel dia_spinner;
     private DefaultTableModel tb;
     private String jornadaString;
-    private boolean jaLancado;
     private int reg = 0, reg_sub = 0;
-    private boolean infoMensagem = true;
     private List<FeriadosBrasil> feriados;
-    private DefaultListModel lista_feriados = new DefaultListModel();
+    private final DefaultListModel lista_feriados = new DefaultListModel();
+    private JFormattedTextField[] horarios;
+
+    private long horas_extra_50, horas_extra_100, horas_faltas, horas_noturnas;
+    private final int COLUNA_HORAS_TRABALHADAS = 7;
+    private final String CONST_FERIADO = "H";
+    private final String CONST_FALTA = "F";
+    private final int COLUNA_SAIDA_3 = 6;
+    private final int COLUNA_SAIDA_2 = 4;
+    private final int COLUNA_SAIDA_1 = 2;
 
     /**
      * Creates new form frmLancarCartao2
      *
      * @param funcionario
      */
-    public frmLancarCartaoPonto2(Funcionario funcionario) {
+    public frmLancarCartaoPonto21(Funcionario funcionario) {
         initComponents();
+        horarios = new JFormattedTextField[6];
+        horarios[0] = txt_entrada;
+        horarios[1] = txt_saida_intervalo;
+        horarios[2] = txt_entrada_intervalo;
+        horarios[3] = txt_saida;
+        horarios[4] = txt_entrada_aux;
+        horarios[5] = txt_saida_aux;
         init(funcionario);
     }
 
@@ -76,32 +71,28 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         //defini parametros iniciais de controle
         feriados = new ArrayList<>();
         jList1.setModel(lista_feriados);
-        jaLancado = false;
         reg = -1;
         reg_sub = -1;
         //seta tabela
         tb = (DefaultTableModel) jTable1.getModel();
         //seta data atual
-        calendario = Calendar.getInstance();
+        Calendar calendario = Calendar.getInstance();
         calendario.add(Calendar.MONTH, - 1);
-        mes = calendario.get(Calendar.MONTH) + 1;
-        ano = calendario.get(Calendar.YEAR);
-        calendario.setFirstDayOfWeek(Calendar.SUNDAY);
+        mes_slider.setValue(calendario.get(Calendar.MONTH) + 1);
+        ano_spinner.setValue(calendario.get(Calendar.YEAR));
         //seta variaveis slider e spinner
-        sliderMes.setValue(mes);
-        anoSpinner.setValue(ano);
-        dia = (SpinnerNumberModel) jSpinnerDia.getModel();
-        dia.setValue(1);
-        //seta jornada
-        jornada7.setSelected(true);
-        jornadaString = "07:20";
+        dia_spinner = (SpinnerNumberModel) jSpinnerDia.getModel();
+        dia_spinner.setValue(1);
         //defini foco
         txt_entrada.requestFocus();
         //grupo de botoes de jornada
         buttonGroup1.add(jornada6);
         buttonGroup1.add(jornada7);
         buttonGroup1.add(jornada5);
-        definirMes();
+        //seta jornada
+        jornada7.setSelected(true);
+        jornadaString = "07:20";
+        alterar_mes();
     }
 
     /**
@@ -116,8 +107,8 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        anoSpinner = new javax.swing.JSpinner();
-        sliderMes = new javax.swing.JSlider();
+        ano_spinner = new javax.swing.JSpinner();
+        mes_slider = new javax.swing.JSlider();
         mestxt = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -199,30 +190,30 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
 
-        anoSpinner.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        anoSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+        ano_spinner.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        ano_spinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                anoSpinnerStateChanged(evt);
+                ano_spinnerStateChanged(evt);
             }
         });
 
-        sliderMes.setBackground(new java.awt.Color(153, 153, 153));
-        sliderMes.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        sliderMes.setForeground(new java.awt.Color(0, 0, 0));
-        sliderMes.setMajorTickSpacing(1);
-        sliderMes.setMaximum(12);
-        sliderMes.setMinimum(1);
-        sliderMes.setMinorTickSpacing(1);
-        sliderMes.setPaintLabels(true);
-        sliderMes.setPaintTicks(true);
-        sliderMes.addMouseListener(new java.awt.event.MouseAdapter() {
+        mes_slider.setBackground(new java.awt.Color(153, 153, 153));
+        mes_slider.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        mes_slider.setForeground(new java.awt.Color(0, 0, 0));
+        mes_slider.setMajorTickSpacing(1);
+        mes_slider.setMaximum(12);
+        mes_slider.setMinimum(1);
+        mes_slider.setMinorTickSpacing(1);
+        mes_slider.setPaintLabels(true);
+        mes_slider.setPaintTicks(true);
+        mes_slider.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                sliderMesMouseClicked(evt);
+                mes_sliderMouseClicked(evt);
             }
         });
-        sliderMes.addKeyListener(new java.awt.event.KeyAdapter() {
+        mes_slider.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                sliderMesKeyPressed(evt);
+                mes_sliderKeyPressed(evt);
             }
         });
 
@@ -236,9 +227,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(sliderMes, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE)
+                .addComponent(mes_slider, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE)
                 .addGap(39, 39, 39)
-                .addComponent(anoSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ano_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(288, 288, 288)
@@ -256,11 +247,11 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(0, 1, Short.MAX_VALUE)
-                        .addComponent(sliderMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mes_slider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(anoSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ano_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -272,16 +263,9 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 "Dia", "Entrada", "S. Intervalo", "E. Intervalo", "Saida", "Entrada", "Saida", "Horas Trabalhadas"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -934,254 +918,129 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void anoSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_anoSpinnerStateChanged
-        ano = (int) anoSpinner.getValue();
-        calendario.set(Calendar.YEAR, ano);
-        atualizardias();
-    }//GEN-LAST:event_anoSpinnerStateChanged
+    private void ano_spinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ano_spinnerStateChanged
+        alterar_dias();
+    }//GEN-LAST:event_ano_spinnerStateChanged
 
     private void txt_entradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_entradaKeyPressed
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_D:
-                //domingo
-                txt_entrada.setText("");
-                domingoBtnActionPerformed(null);
-                break;
-            case KeyEvent.VK_S:
-                //sabado
-                txt_entrada.setText("");
-                sabadoBtnActionPerformed(null);
-                break;
-            case KeyEvent.VK_R:
-                //folga
-                txt_entrada.setText("");
-                folgaBtnActionPerformed(null);
-                break;
-            case KeyEvent.VK_H:
-                //feriado
-                txt_entrada.setText("");
-                feriadoBtnActionPerformed(null);
-                break;
-            case KeyEvent.VK_A:
-                //atestado
-                txt_entrada.setText("");
-                atestadoBtnActionPerformed(null);
-                break;
-            case KeyEvent.VK_F:
-                //falta
-                txt_entrada.setText("");
-                faltaBtnActionPerformed(null);
-                break;
-            case KeyEvent.VK_ENTER:
-                txt_saida_intervalo.requestFocus();
-                verificacaoMeiaNoite(txt_entrada.getText());
-                break;
-            default:
-                break;
-        }
-        calcularHoras();
+
     }//GEN-LAST:event_txt_entradaKeyPressed
 
     private void txt_saida_intervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_saida_intervaloKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_UP) {
-            txt_entrada.requestFocus();
-        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            txt_entrada_intervalo.requestFocus();
-            verificacaoMeiaNoite(txt_saida_intervalo.getText());
-        }
+
     }//GEN-LAST:event_txt_saida_intervaloKeyPressed
 
     private void txt_entrada_intervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_entrada_intervaloKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_UP) {
-            txt_saida_intervalo.requestFocus();
-        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            txt_saida.requestFocus();
-            verificacaoMeiaNoite(txt_entrada_intervalo.getText());
-        }
+
     }//GEN-LAST:event_txt_entrada_intervaloKeyPressed
 
     private void txt_saidaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_saidaKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_UP) {
-            txt_entrada_intervalo.requestFocus();
-        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            verificacaoMeiaNoite(txt_saida.getText());
-            lancarHorarios();
-            calcularHoras();
-            dia.setValue((int) dia.getValue() + 1);
-            txt_entrada.requestFocus();
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (lancar_dia()) {
+                calcular_horas();
+            }
         }
     }//GEN-LAST:event_txt_saidaKeyPressed
 
     private void txt_entrada_auxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_entrada_auxKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            txt_saida_aux.requestFocus();
-            verificacaoMeiaNoite(txt_entrada_aux.getText());
-        }
+
     }//GEN-LAST:event_txt_entrada_auxKeyPressed
 
     private void txt_saida_auxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_saida_auxKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            verificacaoMeiaNoite(txt_saida_aux.getText());
-            lancarHorarios();
-            dia.setValue((int) dia.getValue() + 1);
-            txt_entrada.requestFocus();
-            calcularHoras();
-        }
+
     }//GEN-LAST:event_txt_saida_auxKeyPressed
 
     private void jSpinnerDiaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerDiaStateChanged
-        if ((int) dia.getValue() >= maior) {
-            dia.setValue(maior);
-        } else if ((int) dia.getValue() < 1) {
-            dia.setValue(1);
-        }
+
     }//GEN-LAST:event_jSpinnerDiaStateChanged
 
     private void sabadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabadoBtnActionPerformed
-        lancarHorarios();
-        tb.setValueAt("S", (int) dia.getValue() - 1, 0);
-        dia.setValue((int) dia.getValue() + 1);
-        txt_entrada.requestFocus();
+
     }//GEN-LAST:event_sabadoBtnActionPerformed
 
     private void domingoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domingoBtnActionPerformed
-        lancarHorarios();
-        tb.setValueAt("D", (int) dia.getValue() - 1, 0);
-        dia.setValue((int) dia.getValue() + 1);
-        calcularHoras();
-        txt_entrada.requestFocus();
+
     }//GEN-LAST:event_domingoBtnActionPerformed
 
     private void folgaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_folgaBtnActionPerformed
-        lancarHorarios();
-        tb.setValueAt("R", (int) dia.getValue() - 1, 0);
-        tb.setValueAt("00:00", (int) dia.getValue() - 1, 7);
-        dia.setValue((int) dia.getValue() + 1);
-        calcularHoras();
-        txt_entrada.requestFocus();
+
     }//GEN-LAST:event_folgaBtnActionPerformed
 
     private void feriadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feriadoBtnActionPerformed
-        lancarHorarios();
-        tb.setValueAt("H", (int) dia.getValue() - 1, 0);
-        dia.setValue((int) dia.getValue() + 1);
-        txt_entrada.requestFocus();
+        jTable1.setValueAt("H", 0, 0);
     }//GEN-LAST:event_feriadoBtnActionPerformed
 
     private void atestadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atestadoBtnActionPerformed
-        lancarHorarios();
-        tb.setValueAt("A", (int) dia.getValue() - 1, 0);
-        tb.setValueAt(jornada(), (int) dia.getValue() - 1, 7);
-        dia.setValue((int) dia.getValue() + 1);
-        calcularHoras();
-        txt_entrada.requestFocus();
+
     }//GEN-LAST:event_atestadoBtnActionPerformed
 
     private void faltaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_faltaBtnActionPerformed
-        lancarHorarios();
-        tb.setValueAt("F", (int) dia.getValue() - 1, 0);
-        tb.setValueAt("00:00", (int) dia.getValue() - 1, 7);
-        dia.setValue((int) dia.getValue() + 1);
-        calcularHoras();
-        txt_entrada.requestFocus();
+
     }//GEN-LAST:event_faltaBtnActionPerformed
 
     private void limpaDiaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpaDiaBtnActionPerformed
-        int linha = (int) dia.getValue() - 1;
-        tb.setValueAt(linha + 1, linha, 0);
-        tb.setValueAt(null, linha, 1);
-        tb.setValueAt(null, linha, 2);
-        tb.setValueAt(null, linha, 3);
-        tb.setValueAt(null, linha, 4);
-        tb.setValueAt(null, linha, 5);
-        tb.setValueAt(null, linha, 6);
-        tb.setValueAt(null, linha, 7);
-        calcularHoras();
-        txt_entrada.requestFocus();
+
     }//GEN-LAST:event_limpaDiaBtnActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        if (jTable1.getSelectedRow() < 0) {
-            return;
-        }
-        dia.setValue((int) jTable1.getSelectedRow() + 1);
-        carregarDiaClickado((int) jTable1.getSelectedRow());
+
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jornada6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jornada6MouseClicked
     }//GEN-LAST:event_jornada6MouseClicked
 
     private void jornada7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jornada7ActionPerformed
-        if (jornada7.isSelected()) {
-            jornadaString = "07:20";
-            System.out.println("Mudou para jornada: 07:20");
-            calcularHoras();
-        }
+
     }//GEN-LAST:event_jornada7ActionPerformed
 
     private void jornada6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jornada6ActionPerformed
-        if (jornada6.isSelected()) {
-            jornadaString = "06:00";
-            System.out.println("Mudou para jornada: 06:00");
-            calcularHoras();
-        }
+
     }//GEN-LAST:event_jornada6ActionPerformed
 
     private void txt_saidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_saidaActionPerformed
     }//GEN-LAST:event_txt_saidaActionPerformed
 
     private void concluirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_concluirBtnActionPerformed
-        if (!jaLancado) {
-            salvar();
-        } else {
-            int op = JOptionPane.showOptionDialog(null, "Deseja realmente atualizar o cartão Ponto?\nAs alterações serão irreversivéis!", "Atualizar Cartão Ponto", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-            if (op == JOptionPane.YES_OPTION) {
-                atualizar();
-            }
-        }
+
     }//GEN-LAST:event_concluirBtnActionPerformed
 
     private void imprimirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirBtnActionPerformed
-        imprimir();
+
     }//GEN-LAST:event_imprimirBtnActionPerformed
 
     private void editbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editbtnActionPerformed
-        StatusBtn(true);
+
     }//GEN-LAST:event_editbtnActionPerformed
 
     private void jornada5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jornada5ActionPerformed
-        if (jornada5.isSelected()) {
-            jornadaString = "05:20";
-            System.out.println("Mudou para jornada: 05:20");
-            calcularHoras();
-        }
+
     }//GEN-LAST:event_jornada5ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        calcularAproximacao();
+
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void importBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importBtnActionPerformed
-        importCVS();
+
     }//GEN-LAST:event_importBtnActionPerformed
 
     private void fakebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fakebtnActionPerformed
-        cartaoFicticio();
+
     }//GEN-LAST:event_fakebtnActionPerformed
 
     private void importBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importBtn1ActionPerformed
-        SemHorasExtrasEFaltas();
+
     }//GEN-LAST:event_importBtn1ActionPerformed
 
-    private void sliderMesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sliderMesMouseClicked
-        definirMes();
-    }//GEN-LAST:event_sliderMesMouseClicked
+    private void mes_sliderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mes_sliderMouseClicked
+        alterar_mes();
+        alterar_dias();
+    }//GEN-LAST:event_mes_sliderMouseClicked
 
-    private void sliderMesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sliderMesKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_LEFT || evt.getKeyCode() == KeyEvent.VK_RIGHT) {
-            definirMes();
-        }
-    }//GEN-LAST:event_sliderMesKeyPressed
+    private void mes_sliderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mes_sliderKeyPressed
+        alterar_mes();
+        alterar_dias();
+    }//GEN-LAST:event_mes_sliderKeyPressed
 
     /**
      * @param args the command line arguments
@@ -1200,28 +1059,30 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmLancarCartaoPonto21.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmLancarCartaoPonto21.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmLancarCartaoPonto21.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmLancarCartaoPonto21.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmLancarCartaoPonto2(new FuncionarioDAO().getFuncionario(2)).setVisible(true);
+                new frmLancarCartaoPonto21(new FuncionarioDAO().getFuncionario(2)).setVisible(true);
             }
         });
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner anoSpinner;
+    private javax.swing.JSpinner ano_spinner;
     private javax.swing.JButton atestadoBtn;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton concluirBtn;
@@ -1272,10 +1133,10 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     private javax.swing.JRadioButton jornada6;
     private javax.swing.JRadioButton jornada7;
     private javax.swing.JButton limpaDiaBtn;
+    private javax.swing.JSlider mes_slider;
     private javax.swing.JLabel mestxt;
     private javax.swing.JTextField nomeLbl;
     private javax.swing.JButton sabadoBtn;
-    private javax.swing.JSlider sliderMes;
     private javax.swing.JTextField txt_INSS;
     private javax.swing.JSpinner txt_descontos;
     private javax.swing.JFormattedTextField txt_entrada;
@@ -1300,16 +1161,11 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
     private javax.swing.JTextField txt_valor_total_Salario;
     // End of variables declaration//GEN-END:variables
 
-    /*
-    * Procedimento para escrever o mes no jLabel e atuzalizar a variavel mes, também chama o procedimento atualizardias()
-     */
-    private void definirMes() {
-        mes = sliderMes.getValue();
-        calendario.set(Calendar.MONTH, mes - 1);
+    private void alterar_mes() {
         lista_feriados.removeAllElements();
-        feriados = new FeriadosBrasilDAO().getFeriadosDoMes(mes, ano);
+        feriados = new FeriadosBrasilDAO().getFeriadosDoMes(mes_slider.getValue(), (int) ano_spinner.getValue());
         lista_feriados.addAll(feriados);
-        switch (sliderMes.getValue()) {
+        switch (mes_slider.getValue()) {
             case 1:
                 mestxt.setText("Janeiro");
                 break;
@@ -1347,772 +1203,203 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
                 mestxt.setText("Dezembro");
                 break;
         }
-        atualizardias();
-        //verifica se o cartao desse mes já foi lançado no banco de dados
-        verificarExistente();
     }
 
-    /*
-    * Procedimento para atualizar os dias na JTable conforme muda mes/ano
-     */
-    private void atualizardias() {
-        //quantidade de dias do mes selecionado
-        int maxDias = calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
-        //seta a quantidade de dias na tabela
-        tb.setRowCount(maxDias);
-        //variavel que verifica se já é o ultimo dia
-        maior = maxDias;
-        //for pra preenchimento dos dias na tabela e informa também os dias que são domingo como "D"
-        for (int x = 1; x < maxDias + 1; x++) {
-            calendario.set(Calendar.DAY_OF_MONTH, x);
+    private void alterar_dias() {
+        Calendar calendario = Calendar.getInstance();
+        calendario.set(Calendar.YEAR, (int) ano_spinner.getValue());
+        calendario.set(Calendar.MONTH, mes_slider.getValue() - 1);
+        int ultimo_dia_mes = calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
+        tb.setRowCount(ultimo_dia_mes);
+        for (int dia = 1; dia < ultimo_dia_mes + 1; dia++) {
+            calendario.set(Calendar.DAY_OF_MONTH, dia);
             if (calendario.get(Calendar.DAY_OF_WEEK) == 1) { //se for domingo
-                tb.setValueAt("D", x - 1, 0);
+                tb.setValueAt("D", dia - 1, 0);
             } else {
-                tb.setValueAt(x, x - 1, 0);
+                tb.setValueAt(dia, dia - 1, 0);
             }
         }
-        //seta a variavel calendario para o primeiro dia do mes selecionado
-        calendario.set(Calendar.DAY_OF_MONTH, 1);
     }
 
-    private void calcularHoras() {
-        //inicia variáveis zeradas
-        double entrada = 0,
-                saida_intervalo = 0,
-                entrada_intervalo = 0,
-                saida = 0,
-                entrada_ex = 0,
-                saida_ex = 0,
-                horasTrabalhadas = 0,
-                extra = 0,
-                falta = 0,
-                noturna = 0;
-        //define base com valor da jornada em decimal
-        double base = CDate.horaPDecimal(jornadaString);
-        base = CDbl.CDblDuasCasas(base);
-        //executa o procedimento em todas as linhas da tabela, sendo "x" a linha
-        for (int x = 0; x < jTable1.getRowCount(); x++) {
-            entrada = 0;
-            saida_intervalo = 0;
-            entrada_intervalo = 0;
-            saida = 0;
-            entrada_ex = 0;
-            saida_ex = 0;
-            horasTrabalhadas = 0;
-            if (tb.getValueAt(x, 1) != null) {
-                entrada = CDate.horaPDecimal((String) tb.getValueAt(x, 1));
-            }
-            if (tb.getValueAt(x, 2) != null) {
-                saida_intervalo = CDate.horaPDecimal((String) tb.getValueAt(x, 2));
-            }
-            if (tb.getValueAt(x, 3) != null) {
-                entrada_intervalo = CDate.horaPDecimal((String) tb.getValueAt(x, 3));
-            }
-            if (tb.getValueAt(x, 4) != null) {
-                saida = CDate.horaPDecimal((String) tb.getValueAt(x, 4));
-            }
-            if (tb.getValueAt(x, 5) != null) {
-                entrada_ex = CDate.horaPDecimal((String) tb.getValueAt(x, 5));
-            }
-            if (tb.getValueAt(x, 6) != null) {
-                saida_ex = CDate.horaPDecimal((String) tb.getValueAt(x, 6));
-            }
-            try {
-                String temp_ = (String) jTable1.getValueAt(x, 0);
-                if (temp_.equals("F")) {
-                    System.out.println("DIA COM FALTA: " + (x + 1));
-                }
-                if (temp_.equals("A")) { //verifica se o dia em questão é Atestado. O atestado cobre as horas faltas daquele dia.
-                    if (horasTrabalhadas < base) {
-                        horasTrabalhadas = base;
-                    }
+    private boolean lancar_dia() {
+        for (int x = 0; x < horarios.length; x++) {
+            boolean test = hora_valida(horarios[x].getText());
+            if (test) {
+                if (horarios[x].getText().equals("  :  ")) {
+                    jTable1.setValueAt(null, ((int) dia_spinner.getValue() - 1), x + 1);
                 } else {
-                    horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
+                    jTable1.setValueAt(horarios[x].getText(), ((int) dia_spinner.getValue() - 1), x + 1);
                 }
-            } catch (ClassCastException ex) {
-                horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
+            } else {
+                JOptionPane.showMessageDialog(null, "Algum valor esta errado.");
+                return false;
             }
+        }
+        dia_spinner.setValue((int) dia_spinner.getValue() + 1);
+        return true;
+    }
 
-            //horas trabalhadas do dia:
-            //horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
-            System.out.println("HORAS TRABALHADAS DIA: " + (x + 1) + " HORAS: " + CDbl.CDblDuasCasas(horasTrabalhadas) + " BASE: " + CDbl.CDblDuasCasas(base));
-            //verifica se o funcionário fez horas extras
+    private boolean hora_valida(String test) {
+        if (test.equals("  :  ")) {
+            return true;
+        }
+        String[] time = test.split(":");
+        try {
+            Calendar calendario = Calendar.getInstance();
+            calendario.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
+            calendario.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+            return true;
+        } catch (NumberFormatException e) {
+            System.err.println(e);
+            return false;
+        }
+    }
 
-            horasTrabalhadas = CDbl.CDblDuasCasas(horasTrabalhadas);
+    private void calcular_horas() {
+        horas_extra_50 = 0;
+        horas_extra_100 = 0;
+        horas_faltas = 0;
+        horas_noturnas = 0;
+        Calendar[] time;
 
-            if (horasTrabalhadas > base) { // HORAS EXTRAS
-                // extra recebe as horas trabalhadas - jornada:
-                //System.out.println("EXTRA DIA "+(x+1)+": "+(horasTrabalhadas - base));
-                extra += horasTrabalhadas - base;
+        for (int index = 0; index < jTable1.getRowCount(); index++) {
+            //obtem todos os tempos
+            time = obterTimeLinhaJTable(index);
+            //obtem as horas trabalhadas em miles
+            Long horas_trab_miles = horas_trabalhadas_miles(time);
+            //seta jtable
+            jTable1.setValueAt(milesToHoraString(horas_trab_miles), index, COLUNA_HORAS_TRABALHADAS);
 
-                //##############calculo noturno#####################//
-                double[] horarios = {entrada, saida_intervalo, entrada_intervalo, saida, entrada_ex, saida_ex};
-                horarios = calculoNoturno(horarios);
-                entrada = horarios[0];
-                saida_intervalo = horarios[1];
-                entrada_intervalo = horarios[2];
-                saida = horarios[3];
-                entrada_ex = horarios[4];
-                saida_ex = horarios[5];
-                horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
-                if (horasTrabalhadas > 6.99) {
-                    horasTrabalhadas = 7;
-                } else if (horasTrabalhadas < 0) {
-                    horasTrabalhadas += 29;
-                }
-                noturna += horasTrabalhadas;
-                extra -= horasTrabalhadas;
-                //###############fim calculo noturno##############//
+            Calendar horas_trabalhadas = milesToCalendar(horas_trab_miles);
 
-            } //verifica se houve horas faltas no dia:
-            else if (horasTrabalhadas < base) {
-                if (horasTrabalhadas != 0) {
-                    falta += base - horasTrabalhadas;
-                }
-                try {
-                    String temp_ = (String) tb.getValueAt(x, 0);
-                    if (temp_.equals("F")) {
-                        falta += base - horasTrabalhadas;
+            //Horas extras
+            if (horas_trabalhadas.after(getJornadaCalendar())) {
+
+                //Horas Extras noturnas
+                Calendar ultimo_time_22 = Calendar.getInstance();
+                Calendar primeiro_time_5 = Calendar.getInstance();
+                ultimo_time_22.set(Calendar.HOUR_OF_DAY, 22);
+                primeiro_time_5.set(Calendar.HOUR_OF_DAY, 5);
+                ultimo_time_22.set(Calendar.MINUTE, 0);
+                primeiro_time_5.set(Calendar.MINUTE, 0);
+                ultimo_time_22.set(Calendar.SECOND, 0);
+                primeiro_time_5.set(Calendar.SECOND, 0);
+                primeiro_time_5.add(Calendar.DAY_OF_YEAR, 1);
+                long hor_noturno_miles = 0;
+                if (jTable1.getValueAt(index, COLUNA_SAIDA_3) != null) {
+                    if (time[5].after(ultimo_time_22) && time[5].before(primeiro_time_5)) {
+                        hor_noturno_miles = time[5].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
                     }
-                } catch (ClassCastException e) {
-                    System.out.println("HORAS<BASE linha 1456");
-                }
-            }
-        }
-        //System.out.println(extra);
-        txt_horas_extras_50.setText(CDate.decimalPHora(extra, false));
-        txt_horas_faltas.setText(CDate.decimalPHora(falta, false));
-        txt_horas_noturnas.setText(CDate.decimalPHora(noturna, false));
-        txt_reducao_noturno.setText(Double.toString(CDbl.CDblDuasCasas(7.5 / 60 * noturna)));
-    }
-
-    private void lancarHorarios() {
-        String entradaS, s_intervaloS, e_intervaloS, saidaS, entrada_2S, saida_2S;
-        entradaS = txt_entrada.getText();
-        s_intervaloS = txt_saida_intervalo.getText();
-        e_intervaloS = txt_entrada_intervalo.getText();
-        saidaS = txt_saida.getText();
-        entrada_2S = txt_entrada_aux.getText();
-        saida_2S = txt_saida_aux.getText();
-        int diaAtual = (int) dia.getValue();
-        double entrada = 0,
-                saida_intervalo = 0,
-                entrada_intervalo = 0,
-                saida = 0,
-                entrada_ex = 0,
-                saida_ex = 0;
-        double horasTrabalhadas = 0;
-        //lancar na tabela e setar valores double
-        if (!entradaS.equals("  :  ")) {
-            tb.setValueAt(entradaS, diaAtual - 1, 1);
-            entrada = CDate.horaPDecimal(entradaS);
-        }
-        if (!s_intervaloS.equals("  :  ")) {
-            tb.setValueAt(s_intervaloS, diaAtual - 1, 2);
-            saida_intervalo = CDate.horaPDecimal(s_intervaloS);
-        }
-        if (!e_intervaloS.equals("  :  ")) {
-            tb.setValueAt(e_intervaloS, diaAtual - 1, 3);
-            entrada_intervalo = CDate.horaPDecimal(e_intervaloS);
-        }
-        if (!saidaS.equals("  :  ")) {
-            tb.setValueAt(saidaS, diaAtual - 1, 4);
-            saida = CDate.horaPDecimal(saidaS);
-        }
-        if (!entrada_2S.equals("  :  ")) {
-            tb.setValueAt(entrada_2S, diaAtual - 1, 5);
-            entrada_ex = CDate.horaPDecimal(entrada_2S);
-        }
-        if (!saida_2S.equals("  :  ")) {
-            tb.setValueAt(saida_2S, diaAtual - 1, 6);
-            saida_ex = CDate.horaPDecimal(saida_2S);
-        }
-        horasTrabalhadas = (saida_intervalo + saida + saida_ex) - (entrada + entrada_intervalo + entrada_ex);
-        //System.out.println("DIA " + diaAtual + ": " + horasTrabalhadas2 + " Horas Extras do dia: " + (horasTrabalhadas2 - 7.33));
-        tb.setValueAt(CDate.decimalPHora(horasTrabalhadas, false), diaAtual - 1, 7);
-        if (jTable1.getRowCount() > diaAtual) {
-            ScroollJTable.selectAndScroll(jTable1, diaAtual);
-        }
-        limpaCampos();
-    }
-
-    private Object jornada() {
-        return jornadaString;
-    }
-
-    private void limpaCampos() {
-        txt_entrada.setText("");
-        txt_saida_intervalo.setText("");
-        txt_entrada_intervalo.setText("");
-        txt_saida.setText("");
-        txt_entrada_aux.setText("");
-        txt_saida_aux.setText("");
-    }
-
-    private void salvar() {
-        CartaoPonto cartao = new CartaoPonto();
-        cartao.setFuncionario(funcionario);
-        cartao.setTabela(tb);
-        cartao.setAno(ano);
-        cartao.setMes(mes);
-        cartao.setDias(tb.getRowCount());
-        cartao.setExtra(txt_horas_extras_50.getText());
-        cartao.setFalta(txt_horas_faltas.getText());
-        cartao.setNoturna(txt_horas_noturnas.getText());
-        cartao.setReducao(Double.parseDouble(txt_reducao_noturno.getText()));
-        cartao.setJornada(jornadaString);
-        List<String[]> list = new ArrayList<>();
-        for (int x = 0; x < jTable1.getRowCount(); x++) {
-            String[] linha = new String[8];
-            for (int i = 0; i < 8; i++) {
-                linha[i] = String.valueOf(jTable1.getValueAt(x, i));
-                //System.out.print(linha[i]+"\t");
-            }
-            //System.out.println("");
-            list.add(linha);
-        }
-        try {
-            int registro = new CartaoPontoDAO().nextReg();
-            if (new CartaoPontoDAO().salvar(cartao, registro, list)) {
-                definirMes();
-                JOptionPane.showMessageDialog(this, "Salvo com sucesso!");
-                StatusBtn(false);
-            } else {
-                JOptionPane.showMessageDialog(this, "Algo deu errado! Desfazendo alterações no banco de dados...", "Erro", JOptionPane.WARNING_MESSAGE);
-                if (!new CartaoPontoDAO().removerAlteracoes(cartao)) {
-                    JOptionPane.showMessageDialog(null, "Erro ao tentar remover alterações no banco de dados, por favor informe o programador passando as informações do Funcionário, mês e ano, para serem removidas manualmente", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }
-
-    private void verificarExistente() {
-        try {
-            this.reg_sub = this.reg = new CartaoPontoDAO().lancado(funcionario, mes, ano);
-
-            CartaoPonto ponto = new CartaoPontoDAO().getLancado(reg, jTable1);
-            txt_horas_extras_50.setText(ponto.getExtra());
-            txt_horas_faltas.setText(ponto.getFalta());
-            txt_horas_noturnas.setText(ponto.getNoturna());
-            txt_reducao_noturno.setText(Double.toString(ponto.getReducao()));
-            jaLancado = true;
-            jornadaString = ponto.getJornada();
-            if (ponto.getJornada().equals("07:20")) {
-                jornada5.setSelected(false);
-                jornada6.setSelected(false);
-                jornada7.setSelected(true);
-            } else if (ponto.getJornada().equals("06:00")) {
-                jornada5.setSelected(false);
-                jornada6.setSelected(true);
-                jornada7.setSelected(false);
-            } else {
-                jornada5.setSelected(true);
-                jornada6.setSelected(false);
-                jornada7.setSelected(false);
-            }
-            StatusBtn(false);
-        } catch (Exception ex) {
-            System.out.println(ex);
-            this.reg_sub = this.reg = 0;
-            jaLancado = false;
-
-            txt_horas_extras_50.setText("");
-            txt_horas_faltas.setText("");
-            txt_horas_noturnas.setText("");
-            txt_reducao_noturno.setText("");
-            for (int x = 0; x < jTable1.getRowCount(); x++) { //todas as linhas e colunas ==null (menos a coluna 0)
-                for (int i = 1; i < 8; i++) {
-                    jTable1.setValueAt(null, x, i);
-                }
-            }
-            StatusBtn(true);
-        }
-    }
-
-    private void atualizar() {
-        CartaoPonto cartao = new CartaoPonto();
-        cartao.setFuncionario(funcionario);
-        cartao.setTabela(tb);
-        cartao.setAno(ano);
-        cartao.setMes(mes);
-        cartao.setDias(tb.getRowCount());
-        cartao.setExtra(txt_horas_extras_50.getText());
-        cartao.setFalta(txt_horas_faltas.getText());
-        cartao.setNoturna(txt_horas_noturnas.getText());
-        cartao.setReducao(Double.parseDouble(txt_reducao_noturno.getText()));
-        cartao.setJornada(jornadaString);
-
-        cartao.setReg(reg);
-        cartao.setReg_sub(reg_sub);
-
-        List<String[]> list = new ArrayList<>();
-        for (int x = 0; x < jTable1.getRowCount(); x++) {
-            String[] linha = new String[8];
-            for (int i = 0; i < 8; i++) {
-                linha[i] = String.valueOf(jTable1.getValueAt(x, i));
-                //System.out.print(linha[i]+"\t");
-            }
-            //System.out.println("");
-            list.add(linha);
-        }
-
-        if (new CartaoPontoDAO().atualizar(cartao, list)) {
-            JOptionPane.showMessageDialog(this, "Atualizado com sucesso!");
-            StatusBtn(false);
-        } else {
-            JOptionPane.showMessageDialog(this, "Algo deu errado!...");
-        }
-    }
-
-    private void StatusBtn(boolean habilitado) {
-        sabadoBtn.setVisible(habilitado);
-        domingoBtn.setVisible(habilitado);
-        folgaBtn.setVisible(habilitado);
-        feriadoBtn.setVisible(habilitado);
-        atestadoBtn.setVisible(habilitado);
-        faltaBtn.setVisible(habilitado);
-        limpaDiaBtn.setVisible(habilitado);
-        concluirBtn.setVisible(habilitado);
-        txt_entrada.setEnabled(habilitado);
-        txt_saida_intervalo.setEnabled(habilitado);
-        txt_entrada_intervalo.setEnabled(habilitado);
-        txt_saida.setEnabled(habilitado);
-        txt_entrada_aux.setEnabled(habilitado);
-        txt_saida_aux.setEnabled(habilitado);
-        jornada6.setEnabled(habilitado);
-        jornada7.setEnabled(habilitado);
-        jornada5.setEnabled(habilitado);
-        imprimirBtn.setVisible(!habilitado); //contrário
-        editbtn.setVisible(!habilitado); //contrário
-    }
-
-    private void calcularAproximacao() {
-        int domingos = (int) txt_numero_feriados.getValue();
-        int totalDias = tb.getRowCount();
-        for (int i = 0; i < tb.getRowCount() - 1; i++) {
-            try {
-                if ("D".equals((String) tb.getValueAt(i, 0))) {
-                    domingos++;
-                }
-            } catch (Exception e) {
-            }
-        }
-        double jornada = CDate.horaPDecimal(jornadaString);
-        double horas_mes = jornada * 30;
-        try {
-            double valor_hora = ((double) txt_salario_base.getValue()) / horas_mes;
-            txt_valor_hora.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora)));
-            txt_valor_hora_extra.setText(Double.toString(CDbl.CDblDuasCasas(valor_hora) * 1.55));
-            double total = valor_hora * horas_mes;
-            double extra = 0;
-            try {
-                extra = CDate.horaPDecimal(txt_horas_extras_50.getText()) + CDate.horaPDecimal(txt_horas_noturnas.getText());
-                extra *= Double.parseDouble(txt_valor_hora_extra.getText());
-            } catch (Exception e) {
-            }
-            double dsr = 0;
-            try {
-                dsr = CDbl.CDblDuasCasas((extra / (totalDias - domingos)) * domingos);
-            } catch (Exception i) {
-            }
-            String horadsr = "00:00";
-            if (dsr != 0) {
-                double dsrdecimal = dsr / valor_hora;
-                horadsr = CDate.decimalPHora(dsrdecimal, false);
-            }
-            txt_valor_total_Extra.setText(Double.toString(CDbl.CDblDuasCasas(extra)));
-            txt_valor_DSR.setText(Double.toString(CDbl.CDblDuasCasas(dsr)));
-            txt_hora_DSR.setText(horadsr);
-            total += extra + dsr + (double) txt_indenizacao.getValue();
-            total -= (double) txt_descontos.getValue();
-            double inss = total * (((int) inssSpin.getValue() / (double) 100));
-            inss = CDbl.CDblDuasCasas(inss);
-            total -= inss;
-            txt_valor_total_Salario.setText(Double.toString(CDbl.CDblDuasCasas(total)));
-            txt_INSS.setText(Double.toString(inss));
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-    }
-
-    public void importCVS() {
-        JFileChooser fl = new JFileChooser();
-        fl.setDialogTitle("Importar arquivo CSV");
-        fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo CSV", "csv");
-        fl.setFileFilter(filter);
-        int op = fl.showOpenDialog(null);
-        if (op != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        File file = fl.getSelectedFile();
-        String arquivoCSV = file.getPath();
-        //String arquivoCSV = "C:\\Users\\User\\Desktop\\MAIO-2019.csv";
-        BufferedReader br = null;
-        String linha = "";
-        String csvDivisor = ";";
-        int countLinha = 0;
-        String[][] tabela = new String[31][7];
-        for (int x = 0; x < 31; x++) {
-            for (int i = 0; i < 7; i++) {
-                tabela[x][i] = "";
-            }
-        }
-        try {
-            br = new BufferedReader(new FileReader(arquivoCSV));
-            while ((linha = br.readLine()) != null) {
-                String[] produto = linha.split(csvDivisor);
-                for (int x = 0; x < produto.length; x++) {
-                    if (countLinha >= 6 && countLinha <= 36 && x < 7) {
-                        tabela[countLinha - 6][x] = produto[x];
+                } else if (jTable1.getValueAt(index, COLUNA_SAIDA_2) != null) {
+                    if (time[3].after(ultimo_time_22) && time[3].before(primeiro_time_5)) {
+                        hor_noturno_miles = time[3].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
+                    }
+                } else if (jTable1.getValueAt(index, COLUNA_SAIDA_1) != null) {
+                    if (time[1].after(ultimo_time_22) && time[1].before(primeiro_time_5)) {
+                        hor_noturno_miles = time[1].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
                     }
                 }
-                countLinha++;
-            }
-            lancarImport(tabela);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(frmLancarCartaoPonto2.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
 
-    private void lancarImport(String[][] tabela) {
-        dia.setValue(1);
-        for (int x = 0; x < tb.getRowCount(); x++) {
-            char situacao = tabela[x][0].toCharArray()[0];
-            //System.out.println(situacao);
-            boolean verificacao = true;
-            switch (situacao) {
-                case 'R':
-                    folgaBtnActionPerformed(null);
-                    verificacao = false;
-                    break;
-                case 'S':
-                    sabadoBtnActionPerformed(null);
-                    verificacao = false;
-                    break;
-                case 'D':
-                    if (tabela[x][1].equals("")) {
-                        domingoBtnActionPerformed(null);
-                        verificacao = false;
-                    } else {
-                        verificacao = true;
-                    }
-                    break;
-                case 'H':
-                    feriadoBtnActionPerformed(null);
-                    verificacao = false;
-                    break;
-                case 'A':
-                    if (tabela[x][1].equals("")) {
-                        atestadoBtnActionPerformed(null);
-                        verificacao = false;
-                    } else {
-                        verificacao = true;
-                    }
-                    break;
-                case 'F':
-                    faltaBtnActionPerformed(null);
-                    verificacao = false;
-                    break;
-            }
-            if (verificacao) {
-                txt_entrada.setText(verificaStringHorario(tabela[x][1].replaceAll(",", ":")));
-                txt_saida_intervalo.setText(verificaStringHorario(tabela[x][2].replaceAll(",", ":")));
-                txt_entrada_intervalo.setText(verificaStringHorario(tabela[x][3].replaceAll(",", ":")));
-                txt_saida.setText(verificaStringHorario(tabela[x][4].replaceAll(",", ":")));
-                txt_entrada_aux.setText(verificaStringHorario(tabela[x][5].replaceAll(",", ":")));
-                txt_saida_aux.setText(verificaStringHorario(tabela[x][6].replaceAll(",", ":")));
-                lancarDiaImport();
-            }
-        }
-    }
-
-    private void lancarDiaImport() {
-        lancarHorarios();
-        dia.setValue((int) dia.getValue() + 1);
-        txt_entrada.requestFocus();
-        calcularHoras();
-    }
-
-    private String verificaStringHorario(String temp) {
-        temp = temp.trim();
-        //System.out.println("e>>>" + temp);
-        if ("".equals(temp) || temp == null || "-".equals(temp)) {
-            return "  :  ";
-        }
-        String[] s = temp.split(":");
-        if (Integer.parseInt(s[0]) < 10) {     //s[0] = 12 : s[1] = 21
-            s[0] = "0" + s[0];
-        }
-        //System.out.println("s>>" + s[0] + ":" + s[1]);
-        return s[0] + ":" + s[1];
-    }
-
-    private double[] calculoNoturno(double[] horarios) {
-        double entrada, saida_intervalo, entrada_intervalo, saida, entrada_ex, saida_ex;
-        entrada = horarios[0];
-        saida_intervalo = horarios[1];
-        entrada_intervalo = horarios[2];
-        saida = horarios[3];
-        entrada_ex = horarios[4];
-        saida_ex = horarios[5];
-        if (saida_ex <= 21.99) {
-            if (saida_ex < 5.01) {
-                saida_ex += 24;
-            } else {
-                saida_ex = 0;
-            }
-        }
-        if (entrada_ex <= 21.99) {
-            if (entrada_ex < 5.01) {
-                entrada_ex += 24;
-            } else {
-                if (saida_ex > 0) {
-                    entrada_ex = 22;
+                //se linha atual for marcado como Feriado entao hora extra de 100%
+                if (String.valueOf(jTable1.getValueAt(index, 0)).equals(CONST_FERIADO)) {
+                    horas_extra_100 += (horas_trabalhadas.getTimeInMillis() - getJornadaCalendar().getTimeInMillis()) - hor_noturno_miles;
+                    txt_horas_extras_100.setText(milesToHoraString(horas_extra_100));
                 } else {
-                    entrada_ex = 0;
+                    horas_extra_50 += (horas_trabalhadas.getTimeInMillis() - getJornadaCalendar().getTimeInMillis()) - hor_noturno_miles;
+                    txt_horas_extras_50.setText(milesToHoraString(horas_extra_50));
+                }
+                if (hor_noturno_miles > 0) {
+                    horas_noturnas += hor_noturno_miles;
+                    txt_horas_noturnas.setText(milesToHoraString(horas_noturnas));
+                }
+
+            } //Horas Faltas
+            else if (horas_trabalhadas.before(getJornadaCalendar())) {
+                //HORAS Faltas só contabiliza se no cartão o dia for FALTA ou tiver mais de 1 minuto trabalhado no dia
+                if (String.valueOf(jTable1.getValueAt(index, 0)).equals(CONST_FALTA)
+                        || horas_trab_miles > 60000) {
+                    System.out.println(horas_trab_miles);
+                    horas_faltas += getJornadaCalendar().getTimeInMillis() - horas_trabalhadas.getTimeInMillis();
+                    txt_horas_faltas.setText(milesToHoraString(horas_faltas));
                 }
             }
+            
         }
-        if (saida <= 21.99) {
-            if (saida < 5.01) {
-                saida += 24;
+    }
+
+    private Calendar[] obterTimeLinhaJTable(int index) {
+        Calendar[] time = new Calendar[horarios.length];
+        for (int x = 0; x < time.length; x++) {
+            time[x] = Calendar.getInstance();
+            String time_string;
+            String[] split_time;
+            if (jTable1.getValueAt(index, x + 1) != null) {
+                time_string = (String) jTable1.getValueAt(index, x + 1);
+                split_time = time_string.split(":");
             } else {
-                saida = 0;
+                split_time = "00:00".split(":");
             }
+            time[x].set(Calendar.HOUR_OF_DAY, 0);
+            time[x].set(Calendar.MINUTE, 0);
+            time[x].set(Calendar.SECOND, 0);
+            //se a pessoa colocar 25 HORAS o calendar passa para o proximo dia
+            time[x].add(Calendar.HOUR_OF_DAY, Integer.parseInt(split_time[0]));
+            time[x].add(Calendar.MINUTE, Integer.parseInt(split_time[1]));
+            /*
+            time[x].set(Calendar.HOUR_OF_DAY, Integer.parseInt(split_time[0]));
+            time[x].set(Calendar.MINUTE, Integer.parseInt(split_time[1]));
+            time[x].set(Calendar.SECOND, 0);
+             */
         }
-        if (entrada_intervalo <= 21.99) {
-            if (entrada_intervalo < 5.01) {
-                entrada_intervalo += 24;
-            } else {
-                if (saida > 0) {
-                    entrada_intervalo = 22;
-                } else {
-                    entrada_intervalo = 0;
-                }
-            }
-        }
-        if (saida_intervalo <= 21.99) {
-            if (saida_intervalo < 5.01) {
-                saida_intervalo += 24;
-            } else {
-                saida_intervalo = 0;
-            }
-        }
-        if (entrada <= 21.99) {
-            if (entrada < 5.01) {
-                entrada += 24;
-            } else {
-                if (saida_intervalo > 0) {
-                    entrada = 22;
-                } else {
-                    entrada = 0;
-                }
-            }
-        }
-        horarios[0] = entrada;
-        horarios[1] = saida_intervalo;
-        horarios[2] = entrada_intervalo;
-        horarios[3] = saida;
-        horarios[4] = entrada_ex;
-        horarios[5] = saida_ex;
-        return horarios;
+        return time;
     }
 
-    private void carregarDiaClickado(int i) {
-        txt_entrada.setText((String) jTable1.getValueAt(i, 1));
-        txt_saida_intervalo.setText((String) jTable1.getValueAt(i, 2));
-        txt_entrada_intervalo.setText((String) jTable1.getValueAt(i, 3));
-        txt_saida.setText((String) jTable1.getValueAt(i, 4));
-        txt_entrada_aux.setText((String) jTable1.getValueAt(i, 5));
-        txt_saida_aux.setText((String) jTable1.getValueAt(i, 6));
+    private long horas_trabalhadas_miles(Calendar[] time) {
+        Long entradas_miles = time[0].getTimeInMillis() + time[2].getTimeInMillis() + time[4].getTimeInMillis();
+        Long saidas_miles = time[1].getTimeInMillis() + time[3].getTimeInMillis() + time[5].getTimeInMillis();
+        return saidas_miles - entradas_miles;
     }
 
-    private void verificacaoMeiaNoite(String text) {
-        if (!"  :  ".equals(text)) {
-            double temp = CDate.horaPDecimal(text);
-            if (temp > 0 && temp < 3) {
-                exibirMensagemHorario();
-            }
-        }
+    private String calendarToHorasString(Calendar horas_calendar) {
+        String hour = horas_calendar.get(Calendar.HOUR_OF_DAY) >= 10 ? Integer.toString(horas_calendar.get(Calendar.HOUR_OF_DAY)) : "0" + Integer.toString(horas_calendar.get(Calendar.HOUR_OF_DAY));
+        String min = horas_calendar.get(Calendar.MINUTE) >= 10 ? Integer.toString(horas_calendar.get(Calendar.MINUTE)) : "0" + Integer.toString(horas_calendar.get(Calendar.MINUTE));
+        return hour + ":" + min;
     }
 
-    private void exibirMensagemHorario() {
-        if (infoMensagem) {
-            JOptionPane.showMessageDialog(this, "Se o horário informado for respectivo a outro dia deve-se somar 24Horas"
-                    + "\nEx: Entrada: 20:00\nSaida: 02:00 (do outro dia)"
-                    + "\nEntão:\nEntrada: 20:00\nSaida: 26:00", "Verificação de Horário", JOptionPane.WARNING_MESSAGE);
-            infoMensagem = false;
-        }
+    private Calendar getJornadaCalendar() {
+        String[] jornada_split = jornadaString.split(":");
+        Calendar jornada_calendar = Calendar.getInstance();
+        jornada_calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(jornada_split[0]));
+        jornada_calendar.set(Calendar.MINUTE, Integer.parseInt(jornada_split[1]));
+        jornada_calendar.set(Calendar.SECOND, 0);
+        return jornada_calendar;
     }
 
-    private void cartaoFicticio() {
-        CartaoFicticio_JD jd = new CartaoFicticio_JD(this, true);
-        jd.setVisible(true);
-        if (jd.getValores() != null) {
-            dia.setValue(1);
-            List<String> valores = jd.getValores();
-            Random gerador;
-            int variacao = Integer.parseInt(valores.get(4));
-            boolean positivo = true;
-            double valor = 0;
-            for (int x = 0; x < jTable1.getRowCount(); x++) {
-                if (jTable1.getValueAt(x, 0) != "D") {
-                    for (int i = 0; i < 4; i++) {
-                        gerador = new Random();
-                        double horaDecimal = CDate.horaPDecimal(valores.get(i));
-                        valor = ((double) (gerador.nextInt() % variacao + 1) / 100);
-                        positivo = gerador.nextBoolean();
-                        if (positivo) {
-                            horaDecimal += valor;
-                        } else {
-                            horaDecimal -= valor;
-                        }
-                        switch (i) {
-                            case 0:
-                                txt_entrada.setText(CDate.decimalPHora(horaDecimal, false));
-                                break;
-                            case 1:
-                                txt_saida_intervalo.setText(CDate.decimalPHora(horaDecimal, false));
-                                break;
-                            case 2:
-                                txt_entrada_intervalo.setText(CDate.decimalPHora(horaDecimal, false));
-                                break;
-                            default:
-                                txt_saida.setText(CDate.decimalPHora(horaDecimal, false));
-                                break;
-                        }
-                    }
-                    lancarDiaImport();
-                } else {
-                    dia.setValue((int) dia.getValue() + 1);
-                }
-            }
+    private String milesToHoraString(Long miles) {
+        Calendar calendario = Calendar.getInstance();
+        /*
+            Caso a quantidade de tempo ultrapasse 1 Dia, então deve retornar com o valor total somado:
+            Ex: 25:00, 72:00....
+         */
+        int controle_dia = calendario.get(Calendar.DAY_OF_YEAR);
+        calendario.set(Calendar.HOUR_OF_DAY, 0);
+        calendario.set(Calendar.MINUTE, 0);
+        calendario.set(Calendar.SECOND, 0);
+        calendario.setTimeInMillis(calendario.getTimeInMillis() + miles);
+        if (calendario.get(Calendar.DAY_OF_YEAR) > controle_dia) {
+            String[] hour_temp = calendarToHorasString(calendario).split(":");
+            hour_temp[0] = Integer.toString(24 * (calendario.get(Calendar.DAY_OF_YEAR) - controle_dia) + Integer.parseInt(hour_temp[0]));
+            return hour_temp[0] + ":" + hour_temp[1];
         }
+        return calendarToHorasString(calendario);
     }
 
-    private void SemHorasExtrasEFaltas() {
-        String op = JOptionPane.showInputDialog(null, "1 >> Dia Selecionado\n2 >> Todos os dias", "1");
-        if (op == null) {
-            return;
-        } else if (op.equals("")) {
-            return;
-        }
-        try {
-            int op_ = Integer.parseInt(op);
-            if (op_ < 1 || op_ > 2) {
-                return;
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Valor inválido.");
-        }
-        int op_ = Integer.parseInt(op);
-        new Thread(() -> {
-            double jornada = CDate.horaPDecimal(jornadaString);
-            double hrs_trab = 0;
-            double dif_hrs_trab_e_jornada;
-
-            int max_rep = 50;
-            int controle_rep = 0;
-            for (int x = 0; x < jTable1.getRowCount(); x++) {
-                if (jTable1.getValueAt(x, 7) != null) { //horas trabalhadas nao pode ser nulo
-                    if (!"00:00".equals((String) jTable1.getValueAt(x, 7))) { //horas trabalhadas nao pode ser 0
-                        hrs_trab = CDate.horaPDecimal((String) jTable1.getValueAt(x, 7));
-                        while ((hrs_trab != jornada) && controle_rep < max_rep) { //enquanto a linha nao conseguir chegar a 07:20
-                            int count = 0;
-                            while (count < 10 && (hrs_trab != jornada)) {
-                                hrs_trab = CDate.horaPDecimal((String) jTable1.getValueAt(x, 7));
-                                dif_hrs_trab_e_jornada = hrs_trab - jornada;
-
-                                if (dif_hrs_trab_e_jornada != 0) {
-
-                                    jTable1.setRowSelectionInterval(x, x);
-                                    jSpinnerDia.setValue(x + 1);
-                                    carregarDiaClickado(x);
-
-                                    if (dif_hrs_trab_e_jornada > 0.01) {
-                                        txt_saida.setText(CDate.decimalPHora(CDate.horaPDecimal(txt_saida.getText()) - 0.01, false));
-                                        lancarDiaImport();
-                                    } else if (dif_hrs_trab_e_jornada < 0.01) {
-                                        txt_saida.setText(CDate.decimalPHora(CDate.horaPDecimal(txt_saida.getText()) + 0.01, false));
-                                        lancarDiaImport();
-                                    }
-                                }
-                                count++;
-                                try {
-                                    Thread.sleep(2);
-                                } catch (Exception e) {
-
-                                }
-                            }
-                            if (count == 10) {
-                                jTable1.setRowSelectionInterval(x, x);
-                                jSpinnerDia.setValue(x + 1);
-                                carregarDiaClickado(x);
-                                txt_entrada_intervalo.setText(CDate.decimalPHora(CDate.horaPDecimal(txt_entrada_intervalo.getText()) - 0.005, false));
-                                lancarDiaImport();
-                            }
-                            controle_rep++;
-                        }
-                        controle_rep = 0;
-                    }
-                }
-            }
-        }).start();
+    private Calendar milesToCalendar(Long miles) {
+        Calendar calendario = Calendar.getInstance();
+        calendario.set(Calendar.HOUR_OF_DAY, 0);
+        calendario.set(Calendar.MINUTE, 0);
+        calendario.set(Calendar.SECOND, 0);
+        calendario.setTimeInMillis(calendario.getTimeInMillis() + miles);
+        return calendario;
     }
-
-    private void imprimir() {
-        Connection conn = ConnectionFactory.getConnection();
-        //String src = "C:\\JCR\\RELATORIOS DESPESA\\CartaoPontojs.jasper";
-        String src = "src/jaspers/CartaoPontojs.jasper";
-        JasperPrint js = null;
-        try {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("cdfun", funcionario.getCodigo());
-            map.put("anofun", ano);
-            map.put("mesfun", mes);
-            String fer = "";
-            if (!feriados.isEmpty()) {
-                for (FeriadosBrasil f : feriados) {
-                    String temp = (String) jTable1.getValueAt(f.getDia() - 1, 7);
-                    String situacao = "";
-                    try {
-                        situacao = (String) jTable1.getValueAt(f.getDia() - 1, 0);
-                    } catch (Exception e) {
-                        situacao = "";
-                    }
-                    //não pode ser nulo, nen horas trabalhadas = 00:00 nem Atestado
-                    if (temp != null && !"00:00".equals(temp) && !"A".equals(situacao)) {
-                        fer += "✔ " + f.toString() + "\n";
-                    } else {
-                        fer += "✖ " + f.toString() + "\n";
-                    }
-                }
-            }
-            System.out.println(fer);
-            map.put("feriados", fer);
-            js = JasperFillManager.fillReport(src, map, conn);
-        } catch (JRException e) {
-            JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
-        }
-        JasperViewer vw = new JasperViewer(js, false);
-        vw.setTitle("Cartão Ponto");
-        vw.setVisible(true);
-        ConnectionFactory.closeConnection(conn);
-    }
-    
-    
-    
 }

@@ -7,21 +7,26 @@ package br.Boleto.Form;
 
 import funcoes.CDate;
 import funcoes.CDbl;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
 import model.DAO.BoletoDAO;
 import model.DAO.ChequeDAO;
 import model.DAO.FeriadosBrasilDAO;
 import model.DAO.ImpostoDAO;
+import model.DAO.VariavelFolhaDAO;
 import model.DAO.funcionario.CartaoPontoDAO;
 import model.DAO.funcionario.FuncionarioDAO;
 import model.bean.CartaoPonto;
 import model.bean.FeriadosBrasil;
 import model.bean.Funcionario;
+import model.bean.VariavelFolha;
 
 /**
  *
@@ -33,6 +38,8 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
     private boolean isRunning = true;
     private List<Funcionario> funcionarios;
     private List<FeriadosBrasil> feriados;
+    private JTextArea area = new JTextArea();
+    private List<VariavelFolha> variaveis;
 
     /**
      * Creates new form frmValorAberto
@@ -41,6 +48,7 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
         initComponents();
         funcionarios = new FuncionarioDAO().findAll();
         feriados = new FeriadosBrasilDAO().findAll();
+        variaveis = new VariavelFolhaDAO().getVariaveis();
         start();
     }
 
@@ -119,6 +127,11 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
         jLabel6.setText("Folhas");
 
         txt_folhas.setEditable(false);
+        txt_folhas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txt_folhasMouseClicked(evt);
+            }
+        });
 
         folhas_pagas.setBackground(new java.awt.Color(255, 255, 255));
         folhas_pagas.setToolTipText("Se selecionado indica que as folhas Já foram pagas.");
@@ -216,6 +229,12 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
         setVerificacaoCartaoPago();
     }//GEN-LAST:event_folhas_pagasActionPerformed
 
+    private void txt_folhasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_folhasMouseClicked
+        if (evt.getClickCount() == 2 && !folhas_pagas.isSelected()) {
+            exibirValoresDaFolhaFuncionarios();
+        }
+    }//GEN-LAST:event_txt_folhasMouseClicked
+
     public String colocarPonto(String s) {
         int index = s.indexOf(",");
         if (index > 3) {
@@ -312,23 +331,31 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
 
     public double verFolhas(Calendar calendario) {
         double valor = 0;
-        for (Funcionario f : funcionarios) {
-            if (f.getSalario() != 0 && new CartaoPontoDAO().lancado(f, calendario.get(Calendar.MONTH), calendario.get(Calendar.YEAR))) {
-                CartaoPonto cartao = new CartaoPontoDAO().getLancado(f, calendario.get(Calendar.MONTH), calendario.get(Calendar.YEAR));
-                valor += calcularAproximacao(f, cartao, calendario);
-            }
-        }
-        return CDbl.CDblDuasCasas(valor);
+        area.setText("");
+//        for (Funcionario f : funcionarios) {
+//            int reg = new CartaoPontoDAO().lancado(f, calendario.get(Calendar.MONTH), calendario.get(Calendar.YEAR));
+//            if (f.getSalario() != 0 && reg != -1) {
+////                CartaoPonto cartao = new CartaoPontoDAO().getLancado2(f, calendario.get(Calendar.MONTH) + 1, calendario.get(Calendar.YEAR));
+////                valor += calcularAproximacao(f, cartao, calendario);
+//            }
+//        }
+        return CDbl.CDblDuasCasas(0);
     }
 
     private double calcularAproximacao(Funcionario funcionario, CartaoPonto cartao, Calendar calendario) {
-        System.out.println("Calculando ######");
-        System.out.println("Codigo: "+funcionario.getCodigo());
-        System.out.println("Funcionario :" + funcionario.getNome());
-        System.out.println("Salario Base: " + CDbl.CDblDuasCasasString(funcionario.getSalario()));
-        System.out.println("Horas Extra: " + cartao.getExtra());
-        System.out.println("Horas Falta: " + cartao.getFalta());
-        System.out.println("Horas Noturna: " + cartao.getNoturna());
+        area.append("\n#######Calculando ######");
+        area.append("\nCodigo: " + funcionario.getCodigo());
+        area.append("\nFuncionario :" + funcionario.getNome());
+        area.append("\nSalario Base: " + CDbl.CDblDuasCasasString(funcionario.getSalario()));
+        variaveis.stream().filter((f) -> (f.getId() == 5)).forEachOrdered((f) -> {
+            area.append("\n" + f.getCodigo() + " Horas Extra: " + cartao.getExtra());
+        });
+        variaveis.stream().filter((f) -> (f.getId() == 2)).forEachOrdered((f) -> {
+            area.append("\n" + f.getCodigo() + " Horas Falta: " + cartao.getFalta());
+        });
+        variaveis.stream().filter((f) -> (f.getId() == 3)).forEachOrdered((f) -> {
+            area.append("\n" + f.getCodigo() + " Horas Noturna: " + cartao.getNoturna());
+        });
         Calendar cal = calendario;
         int domingos = 0;
         int feriados_do_mes = 0;
@@ -338,9 +365,17 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
             if (feriado.getAno() == cartao.getAno() && feriado.getMes() == cartao.getMes()) {
                 feriados_do_mes++;
                 String temp = (String) cartao.getTabela().getValueAt(feriado.getDia() - 1, 7);
+                String situacao = "";
+                try {
+                    situacao = (String) cartao.getTabela().getValueAt(feriado.getDia() - 1, 0);
+                } catch (Exception e) {
+                    situacao = "";
+                }
                 //não pode ser nulo, nen horas trabalhadas = 00:00 nem Atestado
-                if (temp != null && !"00:00".equals(temp) && !"A".equals(temp)) {
-                    System.out.println("Feriado Trabalhado: "+feriado +" +R$ 72,00");
+                if (temp != null && !"00:00".equals(temp) && !"A".equals(situacao)) {
+                    variaveis.stream().filter((f) -> (f.getId() == 4)).forEachOrdered((f) -> {
+                        area.append("\n" + f.getCodigo() + " Feriado Trabalhado: " + feriado + " +R$ 72,00");
+                    });
                     feriados_trabalhados++;
                 }
             }
@@ -354,6 +389,22 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
                 domingos++;
             }
         }
+        for (int x = 0; x < cartao.getTabela().getRowCount(); x++) {
+            String temp = (String) cartao.getTabela().getValueAt(x, 0);
+            String hora_trabalhada_naquele_dia = (String) cartao.getTabela().getValueAt(x, 7);
+            if (temp.equals("F") || (hora_trabalhada_naquele_dia != null && !"00:00".equals(hora_trabalhada_naquele_dia) && CDate.horaPDecimal(hora_trabalhada_naquele_dia) < CDate.horaPDecimal(cartao.getJornada()) / 2)) {
+                int dia = x + 1;
+                variaveis.stream().filter((f) -> (f.getId() == 1)).forEachOrdered((f) -> {
+                    area.append("\n" + f.getCodigo() + " " + f.getDescricao() + ": " + cartao.getJornada() + "  Referente ao dia: " + dia);
+                });
+                if (temp.equals("F")) {
+                    area.append("\nMotivo: Falta");
+                } else if (CDate.horaPDecimal(hora_trabalhada_naquele_dia) < CDate.horaPDecimal(cartao.getJornada()) / 2) {
+                    area.append("\nMotivo: Faltou mais de meio período de Trabalho. (" + hora_trabalhada_naquele_dia + ")");
+                }
+            }
+        }
+
         domingos += feriados_do_mes;
 
         double jornada = CDate.horaPDecimal(cartao.getJornada());
@@ -382,9 +433,9 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
             double inss = total * ((9 / (double) 100)); //9% de INSS
             inss = CDbl.CDblDuasCasas(inss);
             total -= inss;
-            System.out.println("DSR: " + CDbl.CDblDuasCasas(dsr));
-            System.out.println("INSS: " + CDbl.CDblDuasCasas(inss));
-            System.out.println("SALARIO TOTAL : " + CDbl.CDblDuasCasas(total));
+            area.append("\nVALOR DSR: " + CDbl.CDblDuasCasas(dsr));
+            area.append("\nVALOR INSS: " + CDbl.CDblDuasCasas(inss));
+            area.append("\nSALARIO TOTAL : " + CDbl.CDblDuasCasas(total));
             return CDbl.CDblDuasCasas(total);
         } catch (Exception ex) {
             System.out.println(ex);
@@ -394,11 +445,20 @@ public class TotalEmAbertoFrm extends javax.swing.JInternalFrame implements Runn
 
     private void setVerificacaoCartaoPago() {
         Calendar c = Calendar.getInstance();
-        if(!new CartaoPontoDAO().alterarStatusFolhaPago(folhas_pagas.isSelected(), c.get(Calendar.MONTH), c.get(Calendar.YEAR))){
+        if (!new CartaoPontoDAO().alterarStatusFolhaPago(folhas_pagas.isSelected(), c.get(Calendar.MONTH), c.get(Calendar.YEAR))) {
             JOptionPane.showMessageDialog(null, "Problemas ao alterar no banco de dados essa informação.");
-        }
-        else{
+        } else {
             tick();
         }
+    }
+
+    private void exibirValoresDaFolhaFuncionarios() {
+        JFrame frame = new JFrame("Folha");
+        frame.setSize(600, 600);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        area.setSize(200, 200);
+        frame.add(area);
+        frame.setVisible(true);
     }
 }
