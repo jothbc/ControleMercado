@@ -12,18 +12,22 @@ import javax.swing.table.DefaultTableModel;
  * @author User
  */
 public class CartaoPonto {
+
     private Funcionario funcionario;
     private DefaultTableModel tabela;
-    int dias;
-    int mes;
-    int ano;
-    String extra;
-    String falta;
-    String noturna;
-    double reducao;
-    String jornada;
-    int reg_sub;
-    int reg;
+    private int dias;
+    private int mes;
+    private int ano;
+    private String extra;
+    private String extra_100;
+    private String falta;
+    private String falta_dsr;
+    private String noturna;
+    private double reducao;
+    private String jornada;
+    private int reg_sub;
+    private int reg;
+
     public CartaoPonto() {
     }
 
@@ -32,7 +36,6 @@ public class CartaoPonto {
         this.tabela = tabela;
         this.dias = tabela.getRowCount();
     }
-    
 
     /**
      * @return the funcionario
@@ -60,7 +63,7 @@ public class CartaoPonto {
      */
     public void setTabela(DefaultTableModel tabela) {
         this.tabela = tabela;
-        this.dias = tabela.getRowCount();
+        this.setDias(tabela.getRowCount());
     }
 
     public void setAno(int ano) {
@@ -86,7 +89,6 @@ public class CartaoPonto {
     public void setNoturna(String noturna) {
         this.noturna = noturna;
     }
-
 
     public int getAno() {
         return ano;
@@ -144,6 +146,32 @@ public class CartaoPonto {
         this.reg_sub = reg_sub;
     }
 
-   
-    
+    /**
+     * @return the extra_100
+     */
+    public String getExtra_100() {
+        return extra_100;
+    }
+
+    /**
+     * @param extra_100 the extra_100 to set
+     */
+    public void setExtra_100(String extra_100) {
+        this.extra_100 = extra_100;
+    }
+
+    /**
+     * @return the falta_dsr
+     */
+    public String getFalta_dsr() {
+        return falta_dsr;
+    }
+
+    /**
+     * @param falta_dsr the falta_dsr to set
+     */
+    public void setFalta_dsr(String falta_dsr) {
+        this.falta_dsr = falta_dsr;
+    }
+
 }

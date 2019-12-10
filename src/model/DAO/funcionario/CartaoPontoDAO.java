@@ -116,8 +116,8 @@ public class CartaoPontoDAO {
                 stmt.execute();
             }
             sql = "INSERT INTO cartao_ponto_sub"
-                    + "(codigo,nome,mes,ano,hora_extra,hora_falta,hora_noturna,reducao_noturna,jornada,reg)"
-                    + "VALUES (?,?,?,?,?,?,?,?,?,?)";
+                    + "(codigo,nome,mes,ano,hora_extra,hora_falta,hora_falta_dsr,hora_noturna,reducao_noturna,jornada,reg,hora_extra_100)"
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, cartao.getFuncionario().getCodigo()); //codigo
             stmt.setString(2, cartao.getFuncionario().getNome()); //nome
@@ -125,10 +125,12 @@ public class CartaoPontoDAO {
             stmt.setInt(4, ano); //ano
             stmt.setString(5, cartao.getExtra()); //hora_extra
             stmt.setString(6, cartao.getFalta()); //hora_falta
-            stmt.setString(7, cartao.getNoturna()); //hora_noturna
-            stmt.setDouble(8, cartao.getReducao()); //reducao_noturna
-            stmt.setString(9, cartao.getJornada()); //jornada
-            stmt.setInt(10, registro); //reg
+            stmt.setString(7, cartao.getFalta_dsr()); //hora_falta_dsr
+            stmt.setString(8, cartao.getNoturna()); //hora_noturna
+            stmt.setDouble(9, cartao.getReducao()); //reducao_noturna
+            stmt.setString(10, cartao.getJornada()); //jornada
+            stmt.setInt(11, registro); //reg
+            stmt.setString(12, cartao.getExtra_100()); //extra_100
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -176,7 +178,9 @@ public class CartaoPontoDAO {
             cartao.setAno(rs.getInt("ano"));
             cartao.setMes(rs.getInt("mes"));
             cartao.setExtra(rs.getString("hora_extra"));
+            cartao.setExtra_100(rs.getString("hora_extra_100"));
             cartao.setFalta(rs.getString("hora_falta"));
+            cartao.setFalta_dsr(rs.getString("hora_falta_dsr"));
             cartao.setNoturna(rs.getString("hora_noturna"));
             cartao.setReducao(rs.getDouble("reducao_noturna"));
             cartao.setJornada(rs.getString("jornada"));
@@ -328,7 +332,9 @@ public class CartaoPontoDAO {
                     + "mes=?,"
                     + "ano=?,"
                     + "hora_extra=?,"
+                    + "hora_extra_100=?,"
                     + "hora_falta=?,"
+                    + "hora_falta_dsr=?,"
                     + "hora_noturna=?,"
                     + "reducao_noturna=?,"
                     + "jornada=? "
@@ -339,12 +345,15 @@ public class CartaoPontoDAO {
             stmt.setInt(3, mes); //mes
             stmt.setInt(4, ano); //ano
             stmt.setString(5, cartao.getExtra()); //hora_extra
-            stmt.setString(6, cartao.getFalta()); //hora_falta
-            stmt.setString(7, cartao.getNoturna()); //hora_noturna
-            stmt.setDouble(8, cartao.getReducao()); //reducao_noturna
-            stmt.setString(9, cartao.getJornada()); //jornada
-            stmt.setInt(10, cartao.getReg_sub()); //reg
+            stmt.setString(6, cartao.getExtra_100()); //extra_100
+            stmt.setString(7, cartao.getFalta()); //hora_falta
+            stmt.setString(8, cartao.getFalta_dsr()); //hora_falta_dsr
+            stmt.setString(9, cartao.getNoturna()); //hora_noturna
+            stmt.setDouble(10, cartao.getReducao()); //reducao_noturna
+            stmt.setString(11, cartao.getJornada()); //jornada
+            stmt.setInt(12, cartao.getReg_sub()); //reg
             stmt.executeUpdate();
+            
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(CartaoPontoDAO.class.getName()).log(Level.SEVERE, null, ex);

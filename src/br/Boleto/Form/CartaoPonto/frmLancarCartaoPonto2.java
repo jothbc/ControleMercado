@@ -1566,9 +1566,7 @@ public class frmLancarCartaoPonto2 extends javax.swing.JFrame {
             String[] linha = new String[8];
             for (int i = 0; i < 8; i++) {
                 linha[i] = String.valueOf(jTable1.getValueAt(x, i));
-                //System.out.print(linha[i]+"\t");
             }
-            //System.out.println("");
             list.add(linha);
         }
         try {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CartaoPontojs" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="706fe2a2-2048-4eb1-b38a-ccc6e6eef59b">
-	<property name="ireport.zoom" value="2.593742460100027"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="308"/>
+	<property name="ireport.zoom" value="2.5937424601000285"/>
+	<property name="ireport.x" value="424"/>
+	<property name="ireport.y" value="139"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
 	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
@@ -26,7 +26,7 @@
 	<queryString>
 		<![CDATA[select cartao_ponto.nome, cartao_ponto.dia,cartao_ponto.mes,cartao_ponto.ano,cartao_ponto.situacao,cartao_ponto.entrada,cartao_ponto.saida_intervalo,
 cartao_ponto.entrada_intervalo,cartao_ponto.saida,cartao_ponto.entrada2,cartao_ponto.saida2,cartao_ponto.horas_trabalhadas,cartao_ponto_sub.hora_extra,
-cartao_ponto_sub.hora_falta,cartao_ponto_sub.hora_noturna,cartao_ponto_sub.reducao_noturna,cartao_ponto_sub.jornada from cartao_ponto join cartao_ponto_sub on cartao_ponto.codigo = cartao_ponto_sub.codigo where cartao_ponto.codigo = $P{cdfun} and cartao_ponto.ano =$P{anofun} and cartao_ponto.mes = $P{mesfun} and cartao_ponto_sub.reg = cartao_ponto.reg;]]>
+cartao_ponto_sub.hora_falta,cartao_ponto_sub.hora_noturna,cartao_ponto_sub.reducao_noturna,cartao_ponto_sub.jornada,cartao_ponto_sub.hora_extra_100,cartao_ponto_sub.hora_falta_dsr from cartao_ponto join cartao_ponto_sub on cartao_ponto.codigo = cartao_ponto_sub.codigo where cartao_ponto.codigo = $P{cdfun} and cartao_ponto.ano =$P{anofun} and cartao_ponto.mes = $P{mesfun} and cartao_ponto_sub.reg = cartao_ponto.reg;]]>
 	</queryString>
 	<field name="nome" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -77,6 +77,12 @@ cartao_ponto_sub.hora_falta,cartao_ponto_sub.hora_noturna,cartao_ponto_sub.reduc
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="jornada" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_extra_100" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_falta_dsr" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<group name="dia">
@@ -191,150 +197,150 @@ $F{horas_trabalhadas}.toString().substring(0,5)
 					<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="396" y="3" width="37" height="18" uuid="0ab9e642-a60b-4ad2-b1e4-f14c64c9b8f0"/>
+					<reportElement style="Detail" positionType="Float" x="418" y="3" width="37" height="18" uuid="0ab9e642-a60b-4ad2-b1e4-f14c64c9b8f0"/>
 					<textElement>
 						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{ano}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="335" y="3" width="23" height="18" uuid="1ec40cce-0475-4740-a7dc-4439b5ae5c54"/>
+					<reportElement style="Detail" positionType="Float" x="357" y="3" width="23" height="18" uuid="1ec40cce-0475-4740-a7dc-4439b5ae5c54"/>
 					<textElement>
 						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{mes}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="309" y="3" width="26" height="18" forecolor="#000000" uuid="3747dcdb-06cd-49a1-815c-68ad8f56d4d6"/>
+					<reportElement style="Column header" x="331" y="3" width="26" height="18" forecolor="#000000" uuid="3747dcdb-06cd-49a1-815c-68ad8f56d4d6"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Mês]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="370" y="3" width="26" height="18" forecolor="#000000" uuid="50ec0121-d175-4cc3-b017-b1e06ce51dfc"/>
+					<reportElement style="Column header" x="392" y="3" width="26" height="18" forecolor="#000000" uuid="50ec0121-d175-4cc3-b017-b1e06ce51dfc"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Ano]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="4" y="43" width="85" height="18" forecolor="#000000" uuid="227aa322-96dc-4760-b4b6-5b2e19958967"/>
+					<reportElement style="Column header" x="4" y="43" width="78" height="18" forecolor="#000000" uuid="227aa322-96dc-4760-b4b6-5b2e19958967"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Hora Extra]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="89" y="43" width="65" height="18" uuid="9da3cf91-4c3d-4281-b310-63d0a5be7ba9"/>
+					<reportElement style="Detail" positionType="Float" x="82" y="43" width="48" height="18" uuid="9da3cf91-4c3d-4281-b310-63d0a5be7ba9"/>
 					<textElement>
 						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{hora_extra}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="4" y="61" width="85" height="18" forecolor="#000000" uuid="7e2fabb9-5fbe-4773-90d4-3eabcf888bcd"/>
+					<reportElement style="Column header" x="4" y="61" width="78" height="18" forecolor="#000000" uuid="7e2fabb9-5fbe-4773-90d4-3eabcf888bcd"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Horas Faltas]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="89" y="61" width="65" height="18" uuid="06e8a073-6162-47af-897a-b998b7d65485"/>
+					<reportElement style="Detail" positionType="Float" x="82" y="61" width="48" height="18" uuid="06e8a073-6162-47af-897a-b998b7d65485"/>
 					<textElement>
 						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{hora_falta}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="154" y="43" width="89" height="18" forecolor="#000000" uuid="d2d89346-070d-4616-941f-2eea07e04581"/>
+					<reportElement style="Column header" x="135" y="43" width="78" height="18" forecolor="#000000" uuid="d2d89346-070d-4616-941f-2eea07e04581"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Hora Noturna]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="243" y="43" width="53" height="18" uuid="5e71582c-5b4c-488e-9811-ca2a26a21002"/>
+					<reportElement style="Detail" positionType="Float" x="214" y="43" width="53" height="18" uuid="5e71582c-5b4c-488e-9811-ca2a26a21002"/>
 					<textElement>
 						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{hora_noturna}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="154" y="61" width="89" height="18" forecolor="#000000" uuid="ce24b994-be08-4b1b-81f0-923a743bf213"/>
+					<reportElement style="Column header" x="135" y="61" width="78" height="18" forecolor="#000000" uuid="ce24b994-be08-4b1b-81f0-923a743bf213"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Red. Noturna]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="243" y="61" width="53" height="18" uuid="c53d3b7b-ef54-4986-a1a1-c5781842f800"/>
+					<reportElement style="Detail" positionType="Float" x="214" y="61" width="53" height="18" uuid="c53d3b7b-ef54-4986-a1a1-c5781842f800"/>
 					<textElement>
 						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{reducao_noturna}]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="309" y="22" width="185" height="57" uuid="5af99af4-8700-4827-a054-499b5ebdb846"/>
+					<reportElement x="418" y="22" width="137" height="57" uuid="5af99af4-8700-4827-a054-499b5ebdb846"/>
 				</rectangle>
 				<staticText>
-					<reportElement style="Column header" x="355" y="22" width="85" height="18" forecolor="#000000" backcolor="#000000" uuid="69564ddd-8fa1-43c4-a554-8bc9bea8d420"/>
+					<reportElement style="Column header" x="455" y="22" width="85" height="18" forecolor="#000000" backcolor="#000000" uuid="69564ddd-8fa1-43c4-a554-8bc9bea8d420"/>
 					<textElement>
 						<font size="12" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Ocorrências]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="320" y="40" width="85" height="13" forecolor="#000000" backcolor="#000000" uuid="7c4bd803-5711-4c7f-bf53-401c9bb8fae9"/>
+					<reportElement style="Column header" x="435" y="40" width="54" height="13" forecolor="#000000" backcolor="#000000" uuid="7c4bd803-5711-4c7f-bf53-401c9bb8fae9"/>
 					<textElement>
 						<font size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[S: Sábado]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="320" y="53" width="85" height="13" forecolor="#000000" backcolor="#000000" uuid="6ead7d75-4fa5-402a-9880-b86e2ba87e9d"/>
+					<reportElement style="Column header" x="435" y="53" width="54" height="13" forecolor="#000000" backcolor="#000000" uuid="6ead7d75-4fa5-402a-9880-b86e2ba87e9d"/>
 					<textElement>
 						<font size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[D: Domingo]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="320" y="66" width="85" height="13" forecolor="#000000" backcolor="#000000" uuid="4663b39e-5aae-4903-8dc9-bc97a7dfe946"/>
+					<reportElement style="Column header" x="435" y="66" width="54" height="13" forecolor="#000000" backcolor="#000000" uuid="4663b39e-5aae-4903-8dc9-bc97a7dfe946"/>
 					<textElement>
 						<font size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[R: Folga]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="404" y="40" width="85" height="13" forecolor="#000000" backcolor="#000000" uuid="433fcfdf-9e90-4b90-8fe1-29a0ebd45570"/>
+					<reportElement style="Column header" x="495" y="40" width="55" height="13" forecolor="#000000" backcolor="#000000" uuid="433fcfdf-9e90-4b90-8fe1-29a0ebd45570"/>
 					<textElement>
 						<font size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[H: Feriado]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="404" y="53" width="85" height="13" forecolor="#000000" backcolor="#000000" uuid="0d2c1ed0-559e-4b90-bacf-f14391b11e7d"/>
+					<reportElement style="Column header" x="495" y="53" width="55" height="13" forecolor="#000000" backcolor="#000000" uuid="0d2c1ed0-559e-4b90-bacf-f14391b11e7d"/>
 					<textElement>
 						<font size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[A: Atestado]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="404" y="66" width="85" height="13" forecolor="#000000" backcolor="#000000" uuid="56d044b3-fce4-413f-9ac1-89243f615f67"/>
+					<reportElement style="Column header" x="495" y="66" width="55" height="13" forecolor="#000000" backcolor="#000000" uuid="56d044b3-fce4-413f-9ac1-89243f615f67"/>
 					<textElement>
 						<font size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[F: Falta]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="440" y="3" width="47" height="18" forecolor="#000000" uuid="97f7c433-5bd6-4d3e-b335-4a9bd76ce1bf"/>
+					<reportElement style="Column header" x="462" y="3" width="47" height="18" forecolor="#000000" uuid="97f7c433-5bd6-4d3e-b335-4a9bd76ce1bf"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Jornada]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="487" y="3" width="46" height="18" uuid="247fbda3-f824-4586-831f-07c2394f8318"/>
+					<reportElement x="509" y="3" width="46" height="18" uuid="247fbda3-f824-4586-831f-07c2394f8318"/>
 					<textElement>
 						<font fontName="Times New Roman" size="14"/>
 					</textElement>
@@ -353,6 +359,34 @@ $F{horas_trabalhadas}.toString().substring(0,5)
 						<font fontName="Times New Roman" size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{cdfun}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Column header" x="267" y="43" width="90" height="18" forecolor="#000000" uuid="9479de66-7112-4695-b32e-3510b905205f"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Hr. Ext. 100%]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="357" y="43" width="53" height="18" uuid="9c048b1c-92ee-448e-86f2-5e265eb98106"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{hora_extra_100}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Column header" x="267" y="61" width="90" height="18" forecolor="#000000" uuid="65c336e9-80b4-4830-907d-57013d187238"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[Hr. Falta DSR]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="357" y="61" width="53" height="18" uuid="6039afdd-a481-4a1f-9801-551d860e439f"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{hora_falta_dsr}]]></textFieldExpression>
 				</textField>
 			</frame>
 			<textField pattern="EEEEE dd MMMMM yyyy">

@@ -5,23 +5,29 @@
  */
 package br.Boleto.Form.CartaoPonto;
 
+import JDBC.ConnectionFactory;
+import funcoes.CDbl;
 import java.awt.event.KeyEvent;
-import java.text.ParseException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
 import model.DAO.FeriadosBrasilDAO;
+import model.DAO.funcionario.CartaoPontoDAO;
 import model.DAO.funcionario.FuncionarioDAO;
+import model.bean.CartaoPonto;
 import model.bean.FeriadosBrasil;
 import model.bean.Funcionario;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -34,17 +40,18 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     private DefaultTableModel tb;
     private String jornadaString;
     private int reg = 0, reg_sub = 0;
-    private List<FeriadosBrasil> feriados;
+    public static List<FeriadosBrasil> feriados;
     private final DefaultListModel lista_feriados = new DefaultListModel();
     private JFormattedTextField[] horarios;
 
-    private long horas_extra_50, horas_extra_100, horas_faltas, horas_noturnas;
-    private final int COLUNA_HORAS_TRABALHADAS = 7;
-    private final String CONST_FERIADO = "H";
-    private final String CONST_FALTA = "F";
-    private final int COLUNA_SAIDA_3 = 6;
-    private final int COLUNA_SAIDA_2 = 4;
-    private final int COLUNA_SAIDA_1 = 2;
+    private long horas_extra_50, horas_extra_100, horas_faltas, horas_noturnas, horas_faltas_dsr;
+    private static final int COLUNA_HORAS_TRABALHADAS = 7;
+    private static final String CONST_FERIADO = "H";
+    private static final String CONST_FALTA = "F";
+    private static final int COLUNA_SAIDA_3 = 6;
+    private static final int COLUNA_SAIDA_2 = 4;
+    private static final int COLUNA_SAIDA_1 = 2;
+    private static final double FATOR_REDUCAO_NOTURNO = 1.142857;
 
     /**
      * Creates new form frmLancarCartao2
@@ -54,26 +61,27 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     public frmLancarCartaoPonto21(Funcionario funcionario) {
         initComponents();
         horarios = new JFormattedTextField[6];
-        horarios[0] = txt_entrada;
-        horarios[1] = txt_saida_intervalo;
-        horarios[2] = txt_entrada_intervalo;
-        horarios[3] = txt_saida;
-        horarios[4] = txt_entrada_aux;
-        horarios[5] = txt_saida_aux;
+        horarios[0] = txt_hora1;
+        horarios[1] = txt_hora2;
+        horarios[2] = txt_hora3;
+        horarios[3] = txt_hora4;
+        horarios[4] = txt_hora5;
+        horarios[5] = txt_hora6;
         init(funcionario);
+        this.setExtendedState(frmLancarCartaoPonto21.MAXIMIZED_BOTH);
     }
 
     public void init(Funcionario funcionario_) {
         //defini o funcionario
         funcionario = funcionario_;
         nomeLbl.setText(funcionario.getNome());
-        txt_salario_base.setValue(funcionario.getSalario());
         //defini parametros iniciais de controle
         feriados = new ArrayList<>();
         jList1.setModel(lista_feriados);
         reg = -1;
         reg_sub = -1;
         //seta tabela
+        jTable1.setDefaultRenderer(jTable1.getColumnClass(0), new cellRenderCartaoPonto());
         tb = (DefaultTableModel) jTable1.getModel();
         //seta data atual
         Calendar calendario = Calendar.getInstance();
@@ -84,7 +92,7 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         dia_spinner = (SpinnerNumberModel) jSpinnerDia.getModel();
         dia_spinner.setValue(1);
         //defini foco
-        txt_entrada.requestFocus();
+        txt_hora1.requestFocus();
         //grupo de botoes de jornada
         buttonGroup1.add(jornada6);
         buttonGroup1.add(jornada7);
@@ -113,12 +121,12 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        txt_entrada = new javax.swing.JFormattedTextField();
-        txt_saida_intervalo = new javax.swing.JFormattedTextField();
-        txt_entrada_intervalo = new javax.swing.JFormattedTextField();
-        txt_saida = new javax.swing.JFormattedTextField();
-        txt_entrada_aux = new javax.swing.JFormattedTextField();
-        txt_saida_aux = new javax.swing.JFormattedTextField();
+        txt_hora1 = new javax.swing.JFormattedTextField();
+        txt_hora2 = new javax.swing.JFormattedTextField();
+        txt_hora3 = new javax.swing.JFormattedTextField();
+        txt_hora4 = new javax.swing.JFormattedTextField();
+        txt_hora5 = new javax.swing.JFormattedTextField();
+        txt_hora6 = new javax.swing.JFormattedTextField();
         jSpinnerDia = new javax.swing.JSpinner();
         sabadoBtn = new javax.swing.JButton();
         domingoBtn = new javax.swing.JButton();
@@ -144,33 +152,8 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         txt_reducao_noturno = new javax.swing.JTextField();
         txt_horas_extras_100 = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jPanel7 = new javax.swing.JPanel();
+        txt_horas_faltas_dsr = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        txt_valor_hora = new javax.swing.JTextField();
-        txt_valor_hora_extra = new javax.swing.JTextField();
-        txt_valor_total_Salario = new javax.swing.JTextField();
-        txt_valor_total_Extra = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        txt_valor_DSR = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        txt_INSS = new javax.swing.JTextField();
-        txt_hora_DSR = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        txt_numero_feriados = new javax.swing.JSpinner();
-        jButton10 = new javax.swing.JButton();
-        inssSpin = new javax.swing.JSpinner();
-        jLabel15 = new javax.swing.JLabel();
-        txt_salario_base = new javax.swing.JSpinner();
-        jLabel16 = new javax.swing.JLabel();
-        txt_descontos = new javax.swing.JSpinner();
-        jLabel17 = new javax.swing.JLabel();
-        txt_indenizacao = new javax.swing.JSpinner();
-        jLabel18 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         concluirBtn = new javax.swing.JButton();
@@ -178,7 +161,6 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         editbtn = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        importBtn = new javax.swing.JButton();
         fakebtn = new javax.swing.JButton();
         importBtn1 = new javax.swing.JButton();
 
@@ -282,79 +264,79 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         }
 
         try {
-            txt_entrada.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
+            txt_hora1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        txt_entrada.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
-        txt_entrada.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_hora1.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
+        txt_hora1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_entradaKeyPressed(evt);
+                txt_hora1KeyPressed(evt);
             }
         });
 
         try {
-            txt_saida_intervalo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
+            txt_hora2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        txt_saida_intervalo.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
-        txt_saida_intervalo.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_hora2.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
+        txt_hora2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_saida_intervaloKeyPressed(evt);
+                txt_hora2KeyPressed(evt);
             }
         });
 
         try {
-            txt_entrada_intervalo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
+            txt_hora3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        txt_entrada_intervalo.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
-        txt_entrada_intervalo.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_hora3.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
+        txt_hora3.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_entrada_intervaloKeyPressed(evt);
+                txt_hora3KeyPressed(evt);
             }
         });
 
         try {
-            txt_saida.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
+            txt_hora4.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        txt_saida.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
-        txt_saida.addActionListener(new java.awt.event.ActionListener() {
+        txt_hora4.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
+        txt_hora4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_saidaActionPerformed(evt);
+                txt_hora4ActionPerformed(evt);
             }
         });
-        txt_saida.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_hora4.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_saidaKeyPressed(evt);
-            }
-        });
-
-        try {
-            txt_entrada_aux.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        txt_entrada_aux.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
-        txt_entrada_aux.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_entrada_auxKeyPressed(evt);
+                txt_hora4KeyPressed(evt);
             }
         });
 
         try {
-            txt_saida_aux.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
+            txt_hora5.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        txt_saida_aux.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
-        txt_saida_aux.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_hora5.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
+        txt_hora5.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_saida_auxKeyPressed(evt);
+                txt_hora5KeyPressed(evt);
+            }
+        });
+
+        try {
+            txt_hora6.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txt_hora6.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
+        txt_hora6.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_hora6KeyPressed(evt);
             }
         });
 
@@ -508,24 +490,32 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("Horas Extras 100%");
 
+        txt_horas_faltas_dsr.setEditable(false);
+        txt_horas_faltas_dsr.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("DSR Horas Faltas");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txt_horas_faltas)
             .addComponent(txt_horas_noturnas)
             .addComponent(txt_reducao_noturno)
-            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                    .addComponent(txt_horas_extras_50))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(txt_horas_faltas, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                    .addComponent(txt_horas_extras_50, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                    .addComponent(txt_horas_extras_100))
+                    .addComponent(txt_horas_extras_100)
+                    .addComponent(txt_horas_faltas_dsr)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -541,9 +531,15 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
                         .addGap(0, 0, 0)
                         .addComponent(txt_horas_extras_100, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addGap(0, 0, 0)
-                .addComponent(txt_horas_faltas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(0, 0, 0)
+                        .addComponent(txt_horas_faltas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, 0)
+                        .addComponent(txt_horas_faltas_dsr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addGap(0, 0, 0)
@@ -555,155 +551,6 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "Calculo Aproximado"));
-
-        jLabel7.setText("Salário Base");
-
-        jLabel8.setText("Valor Hora");
-
-        jLabel9.setText("Valor H. Extra");
-
-        jLabel10.setText("Valor Total");
-
-        jLabel11.setText("Total Extra");
-
-        jLabel12.setText("Total DSR");
-
-        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("INSS");
-
-        jLabel13.setText("Nº Feriados");
-
-        txt_numero_feriados.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-
-        jButton10.setText("Calcular");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
-            }
-        });
-
-        inssSpin.setModel(new javax.swing.SpinnerNumberModel(9, 0, null, 1));
-
-        jLabel15.setText("%");
-
-        txt_salario_base.setModel(new javax.swing.SpinnerNumberModel(1323.0d, 0.0d, null, 1.0d));
-
-        jLabel16.setText("Descontos");
-
-        txt_descontos.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
-
-        jLabel17.setText("Hora DSR");
-
-        txt_indenizacao.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
-
-        jLabel18.setText("Indenização");
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txt_valor_total_Salario)
-            .addComponent(txt_valor_total_Extra)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(inssSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel15)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txt_INSS))
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_hora_DSR)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txt_valor_DSR, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addComponent(txt_valor_hora, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(txt_valor_hora_extra))
-            .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txt_salario_base, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_descontos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                    .addComponent(txt_numero_feriados))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_indenizacao)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel16))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_salario_base, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_descontos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel18))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_numero_feriados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_indenizacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
-                .addComponent(jButton10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_valor_hora_extra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_valor_hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel14)
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_INSS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(inssSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel15)))
-                .addGap(5, 5, 5)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_valor_DSR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_hora_DSR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11)
-                .addGap(0, 0, 0)
-                .addComponent(txt_valor_total_Extra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel10)
-                .addGap(0, 0, 0)
-                .addComponent(txt_valor_total_Salario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        jScrollPane2.setViewportView(jPanel7);
-
         jList1.setBorder(javax.swing.BorderFactory.createTitledBorder("Feriados"));
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane4.setViewportView(jList1);
@@ -714,7 +561,6 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(nomeLbl)
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane2)
             .addComponent(jScrollPane4)
         );
         jPanel4Layout.setVerticalGroup(
@@ -723,10 +569,8 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
                 .addComponent(nomeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4))
         );
 
         concluirBtn.setText("Concluir");
@@ -770,14 +614,6 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        importBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/page_white_picture.png"))); // NOI18N
-        importBtn.setToolTipText("Importar CVS");
-        importBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importBtnActionPerformed(evt);
-            }
-        });
-
         fakebtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/page_white_code.png"))); // NOI18N
         fakebtn.setToolTipText("Cartão Fictício");
         fakebtn.addActionListener(new java.awt.event.ActionListener() {
@@ -808,17 +644,17 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
                                 .addGap(0, 0, 0)
                                 .addComponent(jSpinnerDia, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_entrada, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_hora1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txt_saida_intervalo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_hora2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(26, 26, 26)
-                                .addComponent(txt_entrada_intervalo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_hora3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(31, 31, 31)
-                                .addComponent(txt_saida, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_hora4, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txt_entrada_aux, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_hora5, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txt_saida_aux, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_hora6, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jScrollPane1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -834,8 +670,7 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(fakebtn)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(importBtn))
-                                    .addComponent(importBtn1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(importBtn1))
                                     .addComponent(folgaBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(feriadoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(atestadoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -860,24 +695,22 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jSpinnerDia, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(txt_entrada)
-                                        .addComponent(txt_saida_intervalo)
-                                        .addComponent(txt_entrada_intervalo)
-                                        .addComponent(txt_saida)
-                                        .addComponent(txt_entrada_aux)
-                                        .addComponent(txt_saida_aux)
+                                        .addComponent(txt_hora1)
+                                        .addComponent(txt_hora2)
+                                        .addComponent(txt_hora3)
+                                        .addComponent(txt_hora4)
+                                        .addComponent(txt_hora5)
+                                        .addComponent(txt_hora6)
                                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(importBtn)
-                                    .addComponent(fakebtn))
-                                .addGap(5, 5, 5)
-                                .addComponent(importBtn1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(fakebtn)
+                                    .addComponent(importBtn1))
+                                .addGap(36, 36, 36)
                                 .addComponent(editbtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(sabadoBtn)
@@ -920,109 +753,173 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
 
     private void ano_spinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ano_spinnerStateChanged
         alterar_dias();
+        obter_cartao_lancado();
     }//GEN-LAST:event_ano_spinnerStateChanged
 
-    private void txt_entradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_entradaKeyPressed
+    private void txt_hora1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora1KeyPressed
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_D:
+                domingoBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_S:
+                sabadoBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_R:
+                folgaBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_F:
+                faltaBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_H:
+                feriadoBtnActionPerformed(null);
+                break;
+            case KeyEvent.VK_A:
+                atestadoBtnActionPerformed(null);
+                break;
+        }
+    }//GEN-LAST:event_txt_hora1KeyPressed
 
-    }//GEN-LAST:event_txt_entradaKeyPressed
+    private void txt_hora2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora2KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txt_hora1.requestFocus();
+        }
+    }//GEN-LAST:event_txt_hora2KeyPressed
 
-    private void txt_saida_intervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_saida_intervaloKeyPressed
+    private void txt_hora3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora3KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txt_hora2.requestFocus();
+        }
+    }//GEN-LAST:event_txt_hora3KeyPressed
 
-    }//GEN-LAST:event_txt_saida_intervaloKeyPressed
-
-    private void txt_entrada_intervaloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_entrada_intervaloKeyPressed
-
-    }//GEN-LAST:event_txt_entrada_intervaloKeyPressed
-
-    private void txt_saidaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_saidaKeyPressed
+    private void txt_hora4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora4KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (lancar_dia()) {
                 calcular_horas();
             }
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txt_hora3.requestFocus();
         }
-    }//GEN-LAST:event_txt_saidaKeyPressed
+    }//GEN-LAST:event_txt_hora4KeyPressed
 
-    private void txt_entrada_auxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_entrada_auxKeyPressed
+    private void txt_hora5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora5KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txt_hora4.requestFocus();
+        }
+    }//GEN-LAST:event_txt_hora5KeyPressed
 
-    }//GEN-LAST:event_txt_entrada_auxKeyPressed
-
-    private void txt_saida_auxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_saida_auxKeyPressed
-
-    }//GEN-LAST:event_txt_saida_auxKeyPressed
+    private void txt_hora6KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora6KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (lancar_dia()) {
+                calcular_horas();
+            }
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            txt_hora5.requestFocus();
+        }
+    }//GEN-LAST:event_txt_hora6KeyPressed
 
     private void jSpinnerDiaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerDiaStateChanged
 
     }//GEN-LAST:event_jSpinnerDiaStateChanged
 
     private void sabadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabadoBtnActionPerformed
-
+        jTable1.setValueAt("S", (int) dia_spinner.getValue() - 1, 0);
+        if (lancar_dia()) {
+            calcular_horas();
+        }
     }//GEN-LAST:event_sabadoBtnActionPerformed
 
     private void domingoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domingoBtnActionPerformed
-
+        jTable1.setValueAt("D", (int) dia_spinner.getValue() - 1, 0);
+        if (lancar_dia()) {
+            calcular_horas();
+        }
     }//GEN-LAST:event_domingoBtnActionPerformed
 
     private void folgaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_folgaBtnActionPerformed
-
+        jTable1.setValueAt("R", (int) dia_spinner.getValue() - 1, 0);
+        if (lancar_dia()) {
+            calcular_horas();
+        }
     }//GEN-LAST:event_folgaBtnActionPerformed
 
     private void feriadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feriadoBtnActionPerformed
-        jTable1.setValueAt("H", 0, 0);
+        jTable1.setValueAt("H", (int) dia_spinner.getValue() - 1, 0);
+        if (lancar_dia()) {
+            calcular_horas();
+        }
     }//GEN-LAST:event_feriadoBtnActionPerformed
 
     private void atestadoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atestadoBtnActionPerformed
-
+        jTable1.setValueAt("A", (int) dia_spinner.getValue() - 1, 0);
+        if (lancar_dia()) {
+            calcular_horas();
+        }
     }//GEN-LAST:event_atestadoBtnActionPerformed
 
     private void faltaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_faltaBtnActionPerformed
-
+        jTable1.setValueAt("F", (int) dia_spinner.getValue() - 1, 0);
+        if (lancar_dia()) {
+            calcular_horas();
+        }
     }//GEN-LAST:event_faltaBtnActionPerformed
 
     private void limpaDiaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpaDiaBtnActionPerformed
-
+        Calendar calendario = Calendar.getInstance();
+        calendario.set(Calendar.YEAR, (int) ano_spinner.getValue());
+        calendario.set(Calendar.MONTH, mes_slider.getValue() - 1);
+        calendario.set(Calendar.DAY_OF_MONTH, (int) dia_spinner.getValue());
+        if (calendario.get(Calendar.DAY_OF_WEEK) == 1) { //se for domingo
+            tb.setValueAt("D", (int) dia_spinner.getValue() - 1, 0);
+        } else {
+            tb.setValueAt((int) dia_spinner.getValue(), (int) dia_spinner.getValue() - 1, 0);
+        }
+        for (int column = 1; column < 8; column++)
+            tb.setValueAt(null, (int) dia_spinner.getValue() - 1, column);
     }//GEN-LAST:event_limpaDiaBtnActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-
+        dia_spinner.setValue(jTable1.getSelectedRow() + 1);
+        txt_hora1.setText((String) jTable1.getValueAt(jTable1.getSelectedRow(), 1));
+        txt_hora2.setText((String) jTable1.getValueAt(jTable1.getSelectedRow(), 2));
+        txt_hora3.setText((String) jTable1.getValueAt(jTable1.getSelectedRow(), 3));
+        txt_hora4.setText((String) jTable1.getValueAt(jTable1.getSelectedRow(), 4));
+        txt_hora5.setText((String) jTable1.getValueAt(jTable1.getSelectedRow(), 5));
+        txt_hora6.setText((String) jTable1.getValueAt(jTable1.getSelectedRow(), 6));
+        txt_hora1.requestFocus();
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jornada6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jornada6MouseClicked
     }//GEN-LAST:event_jornada6MouseClicked
 
     private void jornada7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jornada7ActionPerformed
-
+        jornadaString = "07:20";
+        calcular_horas();
     }//GEN-LAST:event_jornada7ActionPerformed
 
     private void jornada6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jornada6ActionPerformed
-
+        jornadaString = "06:00";
+        calcular_horas();
     }//GEN-LAST:event_jornada6ActionPerformed
 
-    private void txt_saidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_saidaActionPerformed
-    }//GEN-LAST:event_txt_saidaActionPerformed
+    private void txt_hora4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_hora4ActionPerformed
+    }//GEN-LAST:event_txt_hora4ActionPerformed
 
     private void concluirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_concluirBtnActionPerformed
-
+        salvar();
     }//GEN-LAST:event_concluirBtnActionPerformed
 
     private void imprimirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirBtnActionPerformed
-
+        imprimir();
     }//GEN-LAST:event_imprimirBtnActionPerformed
 
     private void editbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editbtnActionPerformed
-
+        alterar_status_visible_btns(false);
     }//GEN-LAST:event_editbtnActionPerformed
 
     private void jornada5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jornada5ActionPerformed
-
+        jornadaString = "05:20";
+        calcular_horas();
     }//GEN-LAST:event_jornada5ActionPerformed
-
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-
-    }//GEN-LAST:event_jButton10ActionPerformed
-
-    private void importBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importBtnActionPerformed
-
-    }//GEN-LAST:event_importBtnActionPerformed
 
     private void fakebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fakebtnActionPerformed
 
@@ -1035,11 +932,13 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     private void mes_sliderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mes_sliderMouseClicked
         alterar_mes();
         alterar_dias();
+        obter_cartao_lancado();
     }//GEN-LAST:event_mes_sliderMouseClicked
 
     private void mes_sliderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mes_sliderKeyPressed
         alterar_mes();
         alterar_dias();
+        obter_cartao_lancado();
     }//GEN-LAST:event_mes_sliderKeyPressed
 
     /**
@@ -1092,21 +991,9 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     private javax.swing.JButton faltaBtn;
     private javax.swing.JButton feriadoBtn;
     private javax.swing.JButton folgaBtn;
-    private javax.swing.JButton importBtn;
     private javax.swing.JButton importBtn1;
     private javax.swing.JButton imprimirBtn;
-    private javax.swing.JSpinner inssSpin;
-    private javax.swing.JButton jButton10;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1114,8 +1001,6 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1123,9 +1008,7 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSpinner jSpinnerDia;
     private javax.swing.JTable jTable1;
@@ -1137,28 +1020,18 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     private javax.swing.JLabel mestxt;
     private javax.swing.JTextField nomeLbl;
     private javax.swing.JButton sabadoBtn;
-    private javax.swing.JTextField txt_INSS;
-    private javax.swing.JSpinner txt_descontos;
-    private javax.swing.JFormattedTextField txt_entrada;
-    private javax.swing.JFormattedTextField txt_entrada_aux;
-    private javax.swing.JFormattedTextField txt_entrada_intervalo;
-    private javax.swing.JTextField txt_hora_DSR;
+    private javax.swing.JFormattedTextField txt_hora1;
+    private javax.swing.JFormattedTextField txt_hora2;
+    private javax.swing.JFormattedTextField txt_hora3;
+    private javax.swing.JFormattedTextField txt_hora4;
+    private javax.swing.JFormattedTextField txt_hora5;
+    private javax.swing.JFormattedTextField txt_hora6;
     private javax.swing.JTextField txt_horas_extras_100;
     private javax.swing.JTextField txt_horas_extras_50;
     private javax.swing.JTextField txt_horas_faltas;
+    private javax.swing.JTextField txt_horas_faltas_dsr;
     private javax.swing.JTextField txt_horas_noturnas;
-    private javax.swing.JSpinner txt_indenizacao;
-    private javax.swing.JSpinner txt_numero_feriados;
     private javax.swing.JTextField txt_reducao_noturno;
-    private javax.swing.JFormattedTextField txt_saida;
-    private javax.swing.JFormattedTextField txt_saida_aux;
-    private javax.swing.JFormattedTextField txt_saida_intervalo;
-    private javax.swing.JSpinner txt_salario_base;
-    private javax.swing.JTextField txt_valor_DSR;
-    private javax.swing.JTextField txt_valor_hora;
-    private javax.swing.JTextField txt_valor_hora_extra;
-    private javax.swing.JTextField txt_valor_total_Extra;
-    private javax.swing.JTextField txt_valor_total_Salario;
     // End of variables declaration//GEN-END:variables
 
     private void alterar_mes() {
@@ -1222,9 +1095,11 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     }
 
     private boolean lancar_dia() {
+        if ((int) dia_spinner.getValue() >= jTable1.getRowCount()) {
+            return false;
+        }
         for (int x = 0; x < horarios.length; x++) {
-            boolean test = hora_valida(horarios[x].getText());
-            if (test) {
+            if (hora_valida(horarios[x].getText())) {
                 if (horarios[x].getText().equals("  :  ")) {
                     jTable1.setValueAt(null, ((int) dia_spinner.getValue() - 1), x + 1);
                 } else {
@@ -1236,6 +1111,13 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
             }
         }
         dia_spinner.setValue((int) dia_spinner.getValue() + 1);
+        txt_hora1.setText("");
+        txt_hora2.setText("");
+        txt_hora3.setText("");
+        txt_hora4.setText("");
+        txt_hora5.setText("");
+        txt_hora6.setText("");
+        txt_hora1.requestFocus();
         return true;
     }
 
@@ -1271,60 +1153,40 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
             jTable1.setValueAt(milesToHoraString(horas_trab_miles), index, COLUNA_HORAS_TRABALHADAS);
 
             Calendar horas_trabalhadas = milesToCalendar(horas_trab_miles);
-
             //Horas extras
             if (horas_trabalhadas.after(getJornadaCalendar())) {
 
                 //Horas Extras noturnas
-                Calendar ultimo_time_22 = Calendar.getInstance();
-                Calendar primeiro_time_5 = Calendar.getInstance();
-                ultimo_time_22.set(Calendar.HOUR_OF_DAY, 22);
-                primeiro_time_5.set(Calendar.HOUR_OF_DAY, 5);
-                ultimo_time_22.set(Calendar.MINUTE, 0);
-                primeiro_time_5.set(Calendar.MINUTE, 0);
-                ultimo_time_22.set(Calendar.SECOND, 0);
-                primeiro_time_5.set(Calendar.SECOND, 0);
-                primeiro_time_5.add(Calendar.DAY_OF_YEAR, 1);
-                long hor_noturno_miles = 0;
-                if (jTable1.getValueAt(index, COLUNA_SAIDA_3) != null) {
-                    if (time[5].after(ultimo_time_22) && time[5].before(primeiro_time_5)) {
-                        hor_noturno_miles = time[5].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
-                    }
-                } else if (jTable1.getValueAt(index, COLUNA_SAIDA_2) != null) {
-                    if (time[3].after(ultimo_time_22) && time[3].before(primeiro_time_5)) {
-                        hor_noturno_miles = time[3].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
-                    }
-                } else if (jTable1.getValueAt(index, COLUNA_SAIDA_1) != null) {
-                    if (time[1].after(ultimo_time_22) && time[1].before(primeiro_time_5)) {
-                        hor_noturno_miles = time[1].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
-                    }
-                }
+                long hor_noturno_miles = getHorasExtrasNoturnas(time, index);
 
                 //se linha atual for marcado como Feriado entao hora extra de 100%
                 if (String.valueOf(jTable1.getValueAt(index, 0)).equals(CONST_FERIADO)) {
                     horas_extra_100 += (horas_trabalhadas.getTimeInMillis() - getJornadaCalendar().getTimeInMillis()) - hor_noturno_miles;
-                    txt_horas_extras_100.setText(milesToHoraString(horas_extra_100));
                 } else {
                     horas_extra_50 += (horas_trabalhadas.getTimeInMillis() - getJornadaCalendar().getTimeInMillis()) - hor_noturno_miles;
-                    txt_horas_extras_50.setText(milesToHoraString(horas_extra_50));
                 }
                 if (hor_noturno_miles > 0) {
                     horas_noturnas += hor_noturno_miles;
-                    txt_horas_noturnas.setText(milesToHoraString(horas_noturnas));
                 }
 
             } //Horas Faltas
-            else if (horas_trabalhadas.before(getJornadaCalendar())) {
+            if (horas_trabalhadas.before(getJornadaCalendar())) {
                 //HORAS Faltas só contabiliza se no cartão o dia for FALTA ou tiver mais de 1 minuto trabalhado no dia
+                //esse controle de minuto se refere ao tempo que o processador demora para fazer o calculo, dependendo do processador
+                //vai retornar alguns milisegundos, sendo assim esse tempo gasto no processamento nao pode afetar o calculo.
+                //por isso o controle de tempo >60000, no caso a diferença de tempo tem que ser maior que 1 minuto.
                 if (String.valueOf(jTable1.getValueAt(index, 0)).equals(CONST_FALTA)
                         || horas_trab_miles > 60000) {
-                    System.out.println(horas_trab_miles);
                     horas_faltas += getJornadaCalendar().getTimeInMillis() - horas_trabalhadas.getTimeInMillis();
-                    txt_horas_faltas.setText(milesToHoraString(horas_faltas));
                 }
             }
-            
         }
+        CalcularHorasFaltasDSR();
+        txt_horas_extras_100.setText(milesToHoraString(horas_extra_100));
+        txt_horas_extras_50.setText(milesToHoraString(horas_extra_50));
+        txt_horas_noturnas.setText(milesToHoraString(horas_noturnas));
+        txt_reducao_noturno.setText(Double.toString(obterReducaoNoturno(milesToHoraString(horas_noturnas))));
+        txt_horas_faltas.setText(milesToHoraString(horas_faltas));
     }
 
     private Calendar[] obterTimeLinhaJTable(int index) {
@@ -1345,11 +1207,6 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
             //se a pessoa colocar 25 HORAS o calendar passa para o proximo dia
             time[x].add(Calendar.HOUR_OF_DAY, Integer.parseInt(split_time[0]));
             time[x].add(Calendar.MINUTE, Integer.parseInt(split_time[1]));
-            /*
-            time[x].set(Calendar.HOUR_OF_DAY, Integer.parseInt(split_time[0]));
-            time[x].set(Calendar.MINUTE, Integer.parseInt(split_time[1]));
-            time[x].set(Calendar.SECOND, 0);
-             */
         }
         return time;
     }
@@ -1402,4 +1259,243 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         calendario.setTimeInMillis(calendario.getTimeInMillis() + miles);
         return calendario;
     }
+
+    private long getHorasExtrasNoturnas(Calendar[] time, int index) {
+        long hor_noturno_miles = 0;
+        Calendar ultimo_time_22 = Calendar.getInstance();
+        Calendar primeiro_time_5 = Calendar.getInstance();
+        ultimo_time_22.set(Calendar.HOUR_OF_DAY, 22);
+        primeiro_time_5.set(Calendar.HOUR_OF_DAY, 5);
+        ultimo_time_22.set(Calendar.MINUTE, 0);
+        primeiro_time_5.set(Calendar.MINUTE, 0);
+        ultimo_time_22.set(Calendar.SECOND, 0);
+        primeiro_time_5.set(Calendar.SECOND, 0);
+        primeiro_time_5.add(Calendar.DAY_OF_YEAR, 1);
+        if (jTable1.getValueAt(index, COLUNA_SAIDA_3) != null) {
+            if (time[5].after(ultimo_time_22) && time[5].before(primeiro_time_5)) {
+                hor_noturno_miles = time[5].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
+            }
+        } else if (jTable1.getValueAt(index, COLUNA_SAIDA_2) != null) {
+            if (time[3].after(ultimo_time_22) && time[3].before(primeiro_time_5)) {
+                hor_noturno_miles = time[3].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
+            }
+        } else if (jTable1.getValueAt(index, COLUNA_SAIDA_1) != null) {
+            if (time[1].after(ultimo_time_22) && time[1].before(primeiro_time_5)) {
+                hor_noturno_miles = time[1].getTimeInMillis() - ultimo_time_22.getTimeInMillis();
+            }
+        }
+        return hor_noturno_miles;
+    }
+
+    private void obter_cartao_lancado() {
+        try {
+            reg = new CartaoPontoDAO().lancado(funcionario, mes_slider.getValue(), (int) ano_spinner.getValue());
+            reg_sub = reg;
+            CartaoPonto cartao_ponto = new CartaoPontoDAO().getLancado(reg, jTable1);
+            txt_horas_extras_50.setText(cartao_ponto.getExtra());
+            txt_horas_extras_100.setText(cartao_ponto.getExtra_100());
+            txt_horas_noturnas.setText(cartao_ponto.getNoturna());
+            txt_reducao_noturno.setText(Double.toString(cartao_ponto.getReducao()));
+            txt_horas_faltas.setText(cartao_ponto.getFalta());
+            txt_horas_faltas_dsr.setText(cartao_ponto.getFalta_dsr());
+            switch (cartao_ponto.getJornada()) {
+                case "07:20":
+                    jornada7.setSelected(true);
+                    break;
+                case "05:20":
+                    jornada5.setSelected(true);
+                    break;
+                case "06:00":
+                    jornada6.setSelected(true);
+                    break;
+            }
+            alterar_status_visible_btns(true);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            reg = -1;
+            reg_sub = 1;
+            limpar_jtable();
+            alterar_status_visible_btns(false);
+            txt_horas_extras_50.setText(null);
+            txt_horas_extras_100.setText(null);
+            txt_horas_noturnas.setText(null);
+            txt_reducao_noturno.setText(null);
+            txt_horas_faltas.setText(null);
+        }
+    }
+
+    private void limpar_jtable() {
+        for (int linha = 0; linha < jTable1.getRowCount(); linha++) {
+            for (int coluna = 1; coluna < jTable1.getColumnCount(); coluna++) {
+                jTable1.setValueAt(null, linha, coluna);
+            }
+        }
+    }
+
+    private void alterar_status_visible_btns(boolean cartao_existe) {
+        editbtn.setVisible(cartao_existe);
+        imprimirBtn.setVisible(cartao_existe);
+
+        sabadoBtn.setVisible(!cartao_existe);
+        domingoBtn.setVisible(!cartao_existe);
+        folgaBtn.setVisible(!cartao_existe);
+        atestadoBtn.setVisible(!cartao_existe);
+        feriadoBtn.setVisible(!cartao_existe);
+        faltaBtn.setVisible(!cartao_existe);
+        limpaDiaBtn.setVisible(!cartao_existe);
+        concluirBtn.setVisible(!cartao_existe);
+    }
+
+    private void salvar() {
+        if (reg != -1) {
+            //cartao vai ser atualizado
+            CartaoPonto cartao = new CartaoPonto();
+            cartao.setFuncionario(funcionario);
+            cartao.setTabela(tb);
+            cartao.setAno((int) ano_spinner.getValue());
+            cartao.setMes(mes_slider.getValue());
+            cartao.setDias(jTable1.getRowCount());
+            cartao.setExtra(txt_horas_extras_50.getText());
+            cartao.setExtra_100(txt_horas_extras_100.getText());
+            cartao.setFalta(txt_horas_faltas.getText());
+            cartao.setFalta_dsr(txt_horas_faltas_dsr.getText());
+            cartao.setNoturna(txt_horas_noturnas.getText());
+            cartao.setReducao(Double.parseDouble(txt_reducao_noturno.getText()));
+            cartao.setJornada(jornadaString);
+
+            cartao.setReg(reg);
+            cartao.setReg_sub(reg_sub);
+
+            List<String[]> list = new ArrayList<>();
+            for (int x = 0; x < jTable1.getRowCount(); x++) {
+                String[] linha = new String[8];
+                for (int i = 0; i < 8; i++) {
+                    linha[i] = String.valueOf(jTable1.getValueAt(x, i));
+                }
+                list.add(linha);
+            }
+
+            if (new CartaoPontoDAO().atualizar(cartao, list)) {
+                JOptionPane.showMessageDialog(this, "Atualizado com sucesso!");
+                obter_cartao_lancado();
+            } else {
+                JOptionPane.showMessageDialog(this, "Algo deu errado!...");
+            }
+        } else {
+            //novo cartao
+            CartaoPonto cartao = new CartaoPonto();
+            cartao.setFuncionario(funcionario);
+            cartao.setTabela(tb);
+            cartao.setAno((int) ano_spinner.getValue());
+            cartao.setMes(mes_slider.getValue());
+            cartao.setDias(jTable1.getRowCount());
+            cartao.setExtra(txt_horas_extras_50.getText());
+            cartao.setExtra_100(txt_horas_extras_100.getText());
+            cartao.setFalta(txt_horas_faltas.getText());
+            cartao.setFalta_dsr(txt_horas_faltas_dsr.getText());
+            cartao.setNoturna(txt_horas_noturnas.getText());
+            cartao.setReducao(Double.parseDouble(txt_reducao_noturno.getText()));
+            cartao.setJornada(jornadaString);
+            List<String[]> list = new ArrayList<>();
+            for (int x = 0; x < jTable1.getRowCount(); x++) {
+                String[] linha = new String[8];
+                for (int i = 0; i < 8; i++) {
+                    linha[i] = String.valueOf(jTable1.getValueAt(x, i));
+                }
+                list.add(linha);
+            }
+            try {
+                int registro = new CartaoPontoDAO().nextReg();
+                if (new CartaoPontoDAO().salvar(cartao, registro, list)) {
+                    //na linha abaixo é dado um refresh para tudo que estiver sido exibido é exatamente o que veio do banco de dados
+                    //ficando facil de conferir se as informações realmente foram completas.
+                    obter_cartao_lancado();
+                    JOptionPane.showMessageDialog(this, "Salvo com sucesso!", "Concluído", JOptionPane.PLAIN_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Algo deu errado! Desfazendo alterações no banco de dados...", "Erro", JOptionPane.WARNING_MESSAGE);
+                    if (!new CartaoPontoDAO().removerAlteracoes(cartao)) {
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar remover alterações no banco de dados, por favor informe o programador passando as informações do Funcionário, mês e ano, para serem removidas manualmente", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
+
+    private double obterReducaoNoturno(String noturno) {
+        String[] hora = noturno.split(":");
+        double valor = ((double) ((Integer.parseInt(hora[1]) / 100.0) * 1.666666) + (Integer.parseInt(hora[0])));
+        valor *= FATOR_REDUCAO_NOTURNO;
+        return CDbl.CDblDuasCasas(valor);
+    }
+
+    private void imprimir() {
+        Connection conn = ConnectionFactory.getConnection();
+        String src = "src/jaspers/CartaoPontojs.jasper";
+        JasperPrint js = null;
+        try {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("cdfun", funcionario.getCodigo());
+            map.put("anofun", (int) ano_spinner.getValue());
+            map.put("mesfun", mes_slider.getValue());
+            String fer = "";
+            if (!feriados.isEmpty()) {
+                for (FeriadosBrasil f : feriados) {
+                    String temp = (String) jTable1.getValueAt(f.getDia() - 1, 7);
+                    String situacao = String.valueOf(jTable1.getValueAt(f.getDia() - 1, 0));
+                    //não pode ser nulo, nen horas trabalhadas = 00:00 nem Atestado
+                    if (temp != null && !"00:00".equals(temp) && !"A".equals(situacao)) {
+                        fer += "✔ " + f.toString() + "\n";
+                    } else {
+                        fer += "✖ " + f.toString() + "\n";
+                    }
+                }
+            }
+            System.out.println(fer);
+            map.put("feriados", fer);
+            js = JasperFillManager.fillReport(src, map, conn);
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
+        }
+        JasperViewer vw = new JasperViewer(js, false);
+        vw.setTitle("Cartão Ponto");
+        vw.setVisible(true);
+        vw.requestFocus();
+        ConnectionFactory.closeConnection(conn);
+    }
+
+    private void CalcularHorasFaltasDSR() {
+        Calendar dia_calendar = Calendar.getInstance();
+        dia_calendar.set(Calendar.DAY_OF_MONTH, 1);
+        dia_calendar.set(Calendar.MONTH, mes_slider.getValue() - 1);
+        dia_calendar.set(Calendar.YEAR, (int) ano_spinner.getValue());
+        dia_calendar.set(Calendar.HOUR_OF_DAY, 0);
+        dia_calendar.set(Calendar.MINUTE, 0);
+        dia_calendar.set(Calendar.SECOND, 0);
+        dia_calendar.setFirstDayOfWeek(Calendar.SUNDAY); //domingo
+        int semana = 0;
+        long falta_dsr = 0;
+
+        int horas = getJornadaCalendar().get(Calendar.HOUR_OF_DAY) * 3600000;
+        int minutos = getJornadaCalendar().get(Calendar.MINUTE) * 60000;
+        long jornada_miles = horas + minutos;
+        for (int index = 0; index < jTable1.getRowCount(); index++) {
+            if (dia_calendar.get(Calendar.DAY_OF_WEEK) == dia_calendar.getFirstDayOfWeek()) {
+                semana = 0;
+                //System.out.println("PRIMEIRO DIA DA SEMANA: " + dia_calendar.get(Calendar.DAY_OF_MONTH));
+            }
+            String verificacao = String.valueOf(jTable1.getValueAt(index, 0));
+            if (verificacao.equals("F") && semana <= 0) {
+                semana = 7;
+                falta_dsr += jornada_miles;
+            }
+            semana--;
+            dia_calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        //System.out.println("HORAS FALTAS DSR: " + milesToHoraString(falta_dsr));
+        horas_faltas_dsr = falta_dsr;
+        txt_horas_faltas_dsr.setText(milesToHoraString(falta_dsr));
+    }
+
 }

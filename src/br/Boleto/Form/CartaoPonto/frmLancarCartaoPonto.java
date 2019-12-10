@@ -176,7 +176,8 @@ public class frmLancarCartaoPonto extends javax.swing.JFrame {
             return;
         }
         Funcionario funcionario = new Funcionario((String) jTable1.getValueAt(jTable1.getSelectedRow(), 0), (int) jTable1.getValueAt(jTable1.getSelectedRow(), 1));
-        frmLancarCartaoPonto2 frm2 = new frmLancarCartaoPonto2(funcionario);
+        //frmLancarCartaoPonto2 frm2 = new frmLancarCartaoPonto2(funcionario);
+        frmLancarCartaoPonto21 frm2 = new frmLancarCartaoPonto21(funcionario);
         frm2.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
