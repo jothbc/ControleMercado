@@ -5,7 +5,7 @@
  */
 package br.Boleto.Form;
 
-import br.Boleto.Form.CartaoPonto.frmLancarCartaoPonto;
+import br.Boleto.Form.CartaoPonto.PreCartaoPontoJF;
 import br.Boleto.Form.Feriado.FeriadoJF;
 import br.Boleto.Form.funcionario.frmFuncionarios;
 import java.awt.Dimension;
@@ -295,7 +295,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
-        new frmLancarCartaoPonto().setVisible(true);
+        new PreCartaoPontoJF().setVisible(true);
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed

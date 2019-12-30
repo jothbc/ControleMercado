@@ -17,14 +17,14 @@ import model.bean.Funcionario;
  *
  * @author User
  */
-public class frmLancarCartaoPonto extends javax.swing.JFrame {
+public class PreCartaoPontoJF extends javax.swing.JFrame {
 
     DefaultTableModel tb;
 
     /**
      * Creates new form frmLancarCartaoPonto
      */
-    public frmLancarCartaoPonto() {
+    public PreCartaoPontoJF() {
         initComponents();
         tb = (DefaultTableModel) jTable1.getModel();
         jTable1.setRowSorter(new TableRowSorter(tb));
@@ -177,7 +177,7 @@ public class frmLancarCartaoPonto extends javax.swing.JFrame {
         }
         Funcionario funcionario = new Funcionario((String) jTable1.getValueAt(jTable1.getSelectedRow(), 0), (int) jTable1.getValueAt(jTable1.getSelectedRow(), 1));
         //frmLancarCartaoPonto2 frm2 = new frmLancarCartaoPonto2(funcionario);
-        frmLancarCartaoPonto21 frm2 = new frmLancarCartaoPonto21(funcionario);
+        CartaoPontoJF frm2 = new CartaoPontoJF(funcionario);
         frm2.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -222,20 +222,21 @@ public class frmLancarCartaoPonto extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PreCartaoPontoJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PreCartaoPontoJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PreCartaoPontoJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PreCartaoPontoJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmLancarCartaoPonto().setVisible(true);
+                new PreCartaoPontoJF().setVisible(true);
             }
         });
     }

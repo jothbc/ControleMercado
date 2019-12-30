@@ -20,7 +20,7 @@ public class cellRenderCartaoPonto extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable jtable, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(jtable, value, isSelected, hasFocus, row, column); //To change body of generated methods, choose Tools | Templates.
         boolean test = true;
-        for (FeriadosBrasil f : frmLancarCartaoPonto21.feriados) {
+        for (FeriadosBrasil f : CartaoPontoJF.feriados) {
             if (f.getDia() == row + 1) {
                 setBackground(Color.CYAN);
                 setForeground(Color.BLACK);

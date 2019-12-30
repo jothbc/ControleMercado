@@ -25,6 +25,7 @@ import model.bean.CartaoPonto;
 import model.bean.FeriadosBrasil;
 import model.bean.Funcionario;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
@@ -33,7 +34,7 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author Jonathan CR
  */
-public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
+public class CartaoPontoJF extends javax.swing.JFrame {
 
     private Funcionario funcionario;
     private SpinnerNumberModel dia_spinner;
@@ -58,7 +59,7 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
      *
      * @param funcionario
      */
-    public frmLancarCartaoPonto21(Funcionario funcionario) {
+    public CartaoPontoJF(Funcionario funcionario) {
         initComponents();
         horarios = new JFormattedTextField[6];
         horarios[0] = txt_hora1;
@@ -68,7 +69,7 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         horarios[4] = txt_hora5;
         horarios[5] = txt_hora6;
         init(funcionario);
-        this.setExtendedState(frmLancarCartaoPonto21.MAXIMIZED_BOTH);
+        this.setExtendedState(CartaoPontoJF.MAXIMIZED_BOTH);
     }
 
     public void init(Funcionario funcionario_) {
@@ -776,18 +777,25 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
             case KeyEvent.VK_A:
                 atestadoBtnActionPerformed(null);
                 break;
+            case KeyEvent.VK_ENTER:
+                txt_hora2.requestFocus();
+                break;
         }
     }//GEN-LAST:event_txt_hora1KeyPressed
 
     private void txt_hora2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora2KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txt_hora1.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txt_hora3.requestFocus();
         }
     }//GEN-LAST:event_txt_hora2KeyPressed
 
     private void txt_hora3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora3KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txt_hora2.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txt_hora4.requestFocus();
         }
     }//GEN-LAST:event_txt_hora3KeyPressed
 
@@ -804,6 +812,8 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
     private void txt_hora5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_hora5KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             txt_hora4.requestFocus();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            txt_hora6.requestFocus();
         }
     }//GEN-LAST:event_txt_hora5KeyPressed
 
@@ -958,14 +968,18 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto21.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CartaoPontoJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto21.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CartaoPontoJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto21.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CartaoPontoJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmLancarCartaoPonto21.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CartaoPontoJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -974,7 +988,7 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmLancarCartaoPonto21(new FuncionarioDAO().getFuncionario(2)).setVisible(true);
+                new CartaoPontoJF(new FuncionarioDAO().getFuncionario(2)).setVisible(true);
             }
         });
     }
@@ -1455,6 +1469,7 @@ public class frmLancarCartaoPonto21 extends javax.swing.JFrame {
             System.out.println(fer);
             map.put("feriados", fer);
             js = JasperFillManager.fillReport(src, map, conn);
+            JasperExportManager.exportReportToPdfFile(js, "src/jaspers/backup/" + funcionario.getNome() + " " + String.valueOf(ano_spinner.getValue()) + " " + mestxt.getText() + ".pdf");
         } catch (JRException e) {
             JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
         }
