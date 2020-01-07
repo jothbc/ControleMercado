@@ -14,9 +14,11 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import model.DAO.FeriadosBrasilDAO;
 import model.DAO.funcionario.CartaoPontoDAO;
@@ -162,8 +164,7 @@ public class CartaoPontoJF extends javax.swing.JFrame {
         editbtn = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        fakebtn = new javax.swing.JButton();
-        importBtn1 = new javax.swing.JButton();
+        btn_pdf_export = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cartão Ponto");
@@ -615,19 +616,12 @@ public class CartaoPontoJF extends javax.swing.JFrame {
             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        fakebtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/page_white_code.png"))); // NOI18N
-        fakebtn.setToolTipText("Cartão Fictício");
-        fakebtn.addActionListener(new java.awt.event.ActionListener() {
+        btn_pdf_export.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/page_white_acrobat.png"))); // NOI18N
+        btn_pdf_export.setText("PDF");
+        btn_pdf_export.setToolTipText("Cartão Fictício");
+        btn_pdf_export.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fakebtnActionPerformed(evt);
-            }
-        });
-
-        importBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/page_white_code_red.png"))); // NOI18N
-        importBtn1.setToolTipText("Diminuir Diferença de Horas");
-        importBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importBtn1ActionPerformed(evt);
+                btn_pdf_exportActionPerformed(evt);
             }
         });
 
@@ -663,20 +657,20 @@ public class CartaoPontoJF extends javax.swing.JFrame {
                             .addComponent(limpaDiaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(domingoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(imprimirBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(editbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sabadoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(fakebtn)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(importBtn1))
-                                    .addComponent(folgaBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(feriadoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(atestadoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(faltaBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(concluirBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(14, 14, 14)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(folgaBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(feriadoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(atestadoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(faltaBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(concluirBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(btn_pdf_export, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(editbtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -708,9 +702,7 @@ public class CartaoPontoJF extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(fakebtn)
-                                    .addComponent(importBtn1))
+                                .addComponent(btn_pdf_export)
                                 .addGap(36, 36, 36)
                                 .addComponent(editbtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -919,7 +911,7 @@ public class CartaoPontoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_concluirBtnActionPerformed
 
     private void imprimirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirBtnActionPerformed
-        imprimir();
+        imprimir(true,false);
     }//GEN-LAST:event_imprimirBtnActionPerformed
 
     private void editbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editbtnActionPerformed
@@ -931,13 +923,9 @@ public class CartaoPontoJF extends javax.swing.JFrame {
         calcular_horas();
     }//GEN-LAST:event_jornada5ActionPerformed
 
-    private void fakebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fakebtnActionPerformed
-
-    }//GEN-LAST:event_fakebtnActionPerformed
-
-    private void importBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importBtn1ActionPerformed
-
-    }//GEN-LAST:event_importBtn1ActionPerformed
+    private void btn_pdf_exportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pdf_exportActionPerformed
+        imprimir(false,true);
+    }//GEN-LAST:event_btn_pdf_exportActionPerformed
 
     private void mes_sliderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mes_sliderMouseClicked
         alterar_mes();
@@ -997,15 +985,14 @@ public class CartaoPontoJF extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner ano_spinner;
     private javax.swing.JButton atestadoBtn;
+    private javax.swing.JButton btn_pdf_export;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton concluirBtn;
     private javax.swing.JButton domingoBtn;
     private javax.swing.JButton editbtn;
-    private javax.swing.JButton fakebtn;
     private javax.swing.JButton faltaBtn;
     private javax.swing.JButton feriadoBtn;
     private javax.swing.JButton folgaBtn;
-    private javax.swing.JButton importBtn1;
     private javax.swing.JButton imprimirBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel19;
@@ -1109,7 +1096,7 @@ public class CartaoPontoJF extends javax.swing.JFrame {
     }
 
     private boolean lancar_dia() {
-        if ((int) dia_spinner.getValue() >= jTable1.getRowCount()) {
+        if ((int) dia_spinner.getValue() > jTable1.getRowCount()) {
             return false;
         }
         for (int x = 0; x < horarios.length; x++) {
@@ -1358,6 +1345,12 @@ public class CartaoPontoJF extends javax.swing.JFrame {
         faltaBtn.setVisible(!cartao_existe);
         limpaDiaBtn.setVisible(!cartao_existe);
         concluirBtn.setVisible(!cartao_existe);
+        txt_hora1.setEnabled(!cartao_existe);
+        txt_hora2.setEnabled(!cartao_existe);
+        txt_hora3.setEnabled(!cartao_existe);
+        txt_hora4.setEnabled(!cartao_existe);
+        txt_hora5.setEnabled(!cartao_existe);
+        txt_hora6.setEnabled(!cartao_existe);
     }
 
     private void salvar() {
@@ -1392,6 +1385,7 @@ public class CartaoPontoJF extends javax.swing.JFrame {
             if (new CartaoPontoDAO().atualizar(cartao, list)) {
                 JOptionPane.showMessageDialog(this, "Atualizado com sucesso!");
                 obter_cartao_lancado();
+                imprimir(false,false);
             } else {
                 JOptionPane.showMessageDialog(this, "Algo deu errado!...");
             }
@@ -1425,6 +1419,7 @@ public class CartaoPontoJF extends javax.swing.JFrame {
                     //ficando facil de conferir se as informações realmente foram completas.
                     obter_cartao_lancado();
                     JOptionPane.showMessageDialog(this, "Salvo com sucesso!", "Concluído", JOptionPane.PLAIN_MESSAGE);
+                    imprimir(false,false);
                 } else {
                     JOptionPane.showMessageDialog(this, "Algo deu errado! Desfazendo alterações no banco de dados...", "Erro", JOptionPane.WARNING_MESSAGE);
                     if (!new CartaoPontoDAO().removerAlteracoes(cartao)) {
@@ -1444,7 +1439,13 @@ public class CartaoPontoJF extends javax.swing.JFrame {
         return CDbl.CDblDuasCasas(valor);
     }
 
-    private void imprimir() {
+    /*
+        Caso deseje visualizar o arquivo gerado selecione true para o @param visualizar
+        Caso deseje exportar o arquivo selecione true para o @param exportar
+        Caso seja passado os dois parametros como false vai ser gerado um arquivo backup pdf
+        na pasta src/jasper/backup
+    */
+    private void imprimir(boolean visualizar, boolean exportar) {
         Connection conn = ConnectionFactory.getConnection();
         String src = "src/jaspers/CartaoPontojs.jasper";
         JasperPrint js = null;
@@ -1469,14 +1470,35 @@ public class CartaoPontoJF extends javax.swing.JFrame {
             System.out.println(fer);
             map.put("feriados", fer);
             js = JasperFillManager.fillReport(src, map, conn);
-            JasperExportManager.exportReportToPdfFile(js, "src/jaspers/backup/" + funcionario.getNome() + " " + String.valueOf(ano_spinner.getValue()) + " " + mestxt.getText() + ".pdf");
         } catch (JRException e) {
             JOptionPane.showMessageDialog(null, "Erro:" + e.getMessage());
         }
-        JasperViewer vw = new JasperViewer(js, false);
-        vw.setTitle("Cartão Ponto");
-        vw.setVisible(true);
-        vw.requestFocus();
+        if (!visualizar) {
+            try {
+                if (exportar) {
+                    JFileChooser chooser = new JFileChooser();
+                    chooser.setDialogTitle("Exportação para PDF");
+                    chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                    FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("PDF", "pdf");
+                    chooser.setFileFilter(extensionFilter);
+                    int op = chooser.showSaveDialog(null);
+                    if (op == JFileChooser.APPROVE_OPTION) {
+                        JasperExportManager.exportReportToPdfFile(js, chooser.getSelectedFile().getPath() + ".pdf");
+                        JOptionPane.showMessageDialog(null, "Exportado com sucesso!");
+                    }
+                } else {
+                    JasperExportManager.exportReportToPdfFile(js, "src/jaspers/backup/" + String.valueOf(ano_spinner.getValue()) + " " + mestxt.getText() + " " + funcionario.getNome() + ".pdf");
+                }
+            } catch (JRException e) {
+                JOptionPane.showMessageDialog(null, "ERRO: " + e);
+            }
+        }
+        if (visualizar) {
+            JasperViewer vw = new JasperViewer(js, false);
+            vw.setTitle("Cartão Ponto");
+            vw.setVisible(true);
+            vw.requestFocus();
+        }
         ConnectionFactory.closeConnection(conn);
     }
 
@@ -1488,7 +1510,8 @@ public class CartaoPontoJF extends javax.swing.JFrame {
         dia_calendar.set(Calendar.HOUR_OF_DAY, 0);
         dia_calendar.set(Calendar.MINUTE, 0);
         dia_calendar.set(Calendar.SECOND, 0);
-        dia_calendar.setFirstDayOfWeek(Calendar.SUNDAY); //domingo
+        //o dsr contabiliza como primeiro dia da semana a segunda feira
+        dia_calendar.setFirstDayOfWeek(Calendar.MONDAY);
         int semana = 0;
         long falta_dsr = 0;
 

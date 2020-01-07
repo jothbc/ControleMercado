@@ -81,22 +81,23 @@
                               <Component id="limpaDiaBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
                               <Component id="domingoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
                               <Component id="imprimirBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
-                              <Component id="editbtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
                               <Component id="sabadoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
                               <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jPanel3" alignment="1" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="fakebtn" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="importBtn1" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="folgaBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                                          <Component id="feriadoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                                          <Component id="atestadoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                                          <Component id="faltaBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
+                                          <Component id="concluirBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="folgaBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
-                                      <Component id="feriadoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
-                                      <Component id="atestadoBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
-                                      <Component id="faltaBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
-                                      <Component id="concluirBtn" alignment="1" min="-2" pref="90" max="-2" attributes="0"/>
                                   </Group>
+                              </Group>
+                              <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="btn_pdf_export" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="editbtn" alignment="1" pref="90" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -137,10 +138,7 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="fakebtn" min="-2" max="-2" attributes="0"/>
-                                      <Component id="importBtn1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="btn_pdf_export" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                                   <Component id="editbtn" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -861,26 +859,16 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="fakebtn">
+        <Component class="javax.swing.JButton" name="btn_pdf_export">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Imagens/page_white_code.png"/>
+              <Image iconType="3" name="/Imagens/page_white_acrobat.png"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="PDF"/>
             <Property name="toolTipText" type="java.lang.String" value="Cart&#xe3;o Fict&#xed;cio"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fakebtnActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="importBtn1">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Imagens/page_white_code_red.png"/>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Diminuir Diferen&#xe7;a de Horas"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importBtn1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_pdf_exportActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

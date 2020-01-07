@@ -171,18 +171,15 @@ public class PreCartaoPontoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         if (jTable1.getSelectedRow() < 0) {
             return;
         }
         Funcionario funcionario = new Funcionario((String) jTable1.getValueAt(jTable1.getSelectedRow(), 0), (int) jTable1.getValueAt(jTable1.getSelectedRow(), 1));
-        //frmLancarCartaoPonto2 frm2 = new frmLancarCartaoPonto2(funcionario);
         CartaoPontoJF frm2 = new CartaoPontoJF(funcionario);
         frm2.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
         if (jTable1.getSelectedRow() < 0) {
             return;
         }
@@ -195,13 +192,11 @@ public class PreCartaoPontoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         frmFuncionariosInativos frm = new frmFuncionariosInativos();
         frm.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-        // TODO add your handling code here:
         atualizartb();
     }//GEN-LAST:event_formWindowGainedFocus
 
